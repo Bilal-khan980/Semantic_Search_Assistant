@@ -11,7 +11,7 @@ import hashlib
 import mimetypes
 # Document processing libraries
 import PyPDF2
-import docx
+from docx import Document
 import markdown
 from bs4 import BeautifulSoup
 
@@ -169,7 +169,7 @@ class DocumentProcessor:
     async def _process_docx(self, file_path: Path) -> tuple[str, Dict[str, Any]]:
         """Process DOCX file and extract text."""
         try:
-            doc = docx.Document(file_path)
+            doc = Document(file_path)
             
             # Extract text from paragraphs
             content = ""
