@@ -1,0 +1,8 @@
+lancedb
+sentence_transformers
+PyPDF2
+docx
+markdown
+bs4
+langchain
+pandas

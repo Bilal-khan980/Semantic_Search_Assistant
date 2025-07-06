@@ -1,0 +1,22 @@
+[package]
+name = "local-document-search"
+version = "1.0.0"
+description = "Privacy-first semantic search desktop application"
+authors = ["you"]
+license = ""
+repository = ""
+default-run = "local-document-search"
+edition = "2021"
+rust-version = "1.60"
+
+[build-dependencies]
+tauri-build = { version = "1.5.0", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5.0", features = [ "window-start-dragging", "fs-remove-file", "window-maximize", "window-hide", "fs-write-file", "window-minimize", "window-unminimize", "fs-read-dir", "window-show", "fs-rename-file", "fs-exists", "window-unmaximize", "fs-remove-dir", "fs-copy-file", "window-close", "fs-read-file", "fs-create-dir", "dialog-open", "dialog-save", "path-all", "shell-open"] }
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]
