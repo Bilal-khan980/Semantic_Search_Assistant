@@ -1,0 +1,65 @@
+{
+  "name": "semantic-search-assistant",
+  "version": "1.0.0",
+  "description": "Privacy-first semantic search desktop application",
+  "main": "src/main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build": "cd src/renderer && npm run build",
+    "build-electron": "npm run build && electron-builder",
+    "dist": "npm run build && electron-builder --publish=never",
+    "pack": "electron-builder --dir"
+  },
+  "build": {
+    "appId": "com.semanticsearch.assistant",
+    "productName": "Semantic Search Assistant",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!frontend/**/*",
+          "!electron-app/**/*",
+          "!**/__pycache__/**/*",
+          "!**/venv/**/*",
+          "!**/node_modules/**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-store": "^8.1.0",
+    "canvas": "^2.11.2"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "author": "Semantic Search Assistant",
+  "license": "MIT"
+}

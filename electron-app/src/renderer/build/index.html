@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Semantic Search Assistant</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
+        background: #f8fafc;
+        color: #1e293b;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo {
+        width: 32px;
+        height: 32px;
+        background: #3b82f6;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+      }
+
+      .title {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      .status {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+      }
+
+      .sidebar {
+        width: 250px;
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+        padding: 1rem;
+      }
+
+      .nav-item {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .nav-item:hover {
+        background: #f1f5f9;
+      }
+
+      .nav-item.active {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .content {
+        flex: 1;
+        padding: 2rem;
+      }
+
+      .search-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        transition: border-color 0.2s;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #3b82f6;
+      }
+
+      .results {
+        space-y: 1rem;
+      }
+
+      .result-item {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: box-shadow 0.2s;
+      }
+
+      .result-item:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .result-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .result-content {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .result-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.875rem;
+        color: #94a3b8;
+      }
+
+      .btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background-color 0.2s;
+      }
+
+      .btn:hover {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        background: #f1f5f9;
+        color: #475569;
+      }
+
+      .btn-secondary:hover {
+        background: #e2e8f0;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">⚡</div>
+      <div class="title">Semantic Search Assistant</div>
+      <div class="status">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="sidebar">
+        <div class="nav-item active" onclick="showView('search')">
+          🔍 Search
+        </div>
+        <div class="nav-item" onclick="showView('documents')">📄 Documents</div>
+        <div class="nav-item" onclick="showView('readwise')">📚 Readwise</div>
+        <div class="nav-item" onclick="showView('settings')">⚙️ Settings</div>
+      </div>
+
+      <div class="content">
+        <!-- Search View -->
+        <div id="searchView" class="view">
+          <div class="search-container">
+            <input
+              type="text"
+              class="search-box"
+              placeholder="Search your documents and highlights..."
+              id="searchInput"
+              onkeyup="handleSearch(event)"
+            />
+
+            <div class="loading" id="searchLoading">
+              <div class="spinner"></div>
+              <div>Searching...</div>
+            </div>
+
+            <div class="results" id="searchResults"></div>
+          </div>
+        </div>
+
+        <!-- Documents View -->
+        <div id="documentsView" class="view hidden">
+          <h2 style="margin-bottom: 2rem">Document Management</h2>
+          <div
+            style="
+              text-align: center;
+              padding: 3rem;
+              border: 2px solid #e2e8f0;
+              border-radius: 12px;
+              margin-bottom: 2rem;
+            "
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">📄</div>
+            <h3>Document Processing</h3>
+            <p style="color: #64748b; margin-top: 0.5rem">
+              Browse and process documents from your connected folders
+            </p>
+            <p style="color: #64748b; margin-top: 0.5rem">
+              Select files to index for semantic search
+            </p>
+          </div>
+        </div>
+
+        <!-- Readwise View -->
+        <div id="readwiseView" class="view hidden">
+          <h2 style="margin-bottom: 2rem">Readwise Integration</h2>
+          <div
+            style="
+              background: white;
+              padding: 2rem;
+              border-radius: 12px;
+              border: 1px solid #e2e8f0;
+            "
+          >
+            <h3 style="margin-bottom: 1rem">Import Readwise Exports</h3>
+            <p style="color: #64748b; margin-bottom: 2rem">
+              Select the folder containing your Readwise markdown exports
+            </p>
+            <button class="btn" onclick="selectReadwiseFolder()">
+              Select Readwise Folder
+            </button>
+          </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settingsView" class="view hidden">
+          <h2 style="margin-bottom: 2rem">Settings</h2>
+          <div
+            style="
+              background: white;
+              padding: 2rem;
+              border-radius: 12px;
+              border: 1px solid #e2e8f0;
+            "
+          >
+            <h3 style="margin-bottom: 1rem">Configuration</h3>
+            <p style="color: #64748b">
+              Configure your semantic search assistant preferences, themes, and
+              processing settings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let backendReady = false;
+
+      // Check backend status
+      async function checkBackend() {
+        try {
+          const response = await fetch("http://127.0.0.1:8000/health");
+          const data = await response.json();
+          if (data.status === "healthy") {
+            backendReady = true;
+            document.getElementById("statusDot").style.background = "#10b981";
+            document.getElementById("statusText").textContent = "Ready";
+          } else {
+            throw new Error("Backend not ready");
+          }
+        } catch (error) {
+          backendReady = false;
+          document.getElementById("statusDot").style.background = "#ef4444";
+          document.getElementById("statusText").textContent = "Disconnected";
+          setTimeout(checkBackend, 2000); // Retry in 2 seconds
+        }
+      }
+
+      // Show different views
+      function showView(viewName) {
+        // Hide all views
+        document
+          .querySelectorAll(".view")
+          .forEach((view) => view.classList.add("hidden"));
+        // Show selected view
+        document.getElementById(viewName + "View").classList.remove("hidden");
+
+        // Update nav
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((item) => item.classList.remove("active"));
+        event.target.classList.add("active");
+      }
+
+      // Handle search
+      async function handleSearch(event) {
+        if (event.key === "Enter" || event.type === "input") {
+          const query = event.target.value.trim();
+          if (!query || !backendReady) return;
+
+          const loading = document.getElementById("searchLoading");
+          const results = document.getElementById("searchResults");
+
+          loading.style.display = "block";
+          results.innerHTML = "";
+
+          try {
+            const response = await fetch("http://127.0.0.1:8000/search", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                query,
+                limit: 10,
+                similarity_threshold: 0.3,
+              }),
+            });
+
+            const data = await response.json();
+            displayResults(data.results || []);
+          } catch (error) {
+            results.innerHTML =
+              '<div class="result-item">Error searching: ' +
+              error.message +
+              "</div>";
+          } finally {
+            loading.style.display = "none";
+          }
+        }
+      }
+
+      // Display search results
+      function displayResults(results) {
+        const container = document.getElementById("searchResults");
+
+        if (results.length === 0) {
+          container.innerHTML =
+            '<div class="result-item">No results found</div>';
+          return;
+        }
+
+        container.innerHTML = results
+          .map(
+            (result) => `
+                <div class="result-item">
+                    <div class="result-title">${
+                      result.title || result.source.split("/").pop()
+                    }</div>
+                    <div class="result-content">${result.content.substring(
+                      0,
+                      200
+                    )}...</div>
+                    <div class="result-meta">
+                        <span>Score: ${(result.score * 100).toFixed(0)}%</span>
+                        <span>Source: ${result.source.split("/").pop()}</span>
+                        ${
+                          result.is_readwise
+                            ? '<span style="color: #3b82f6;">📚 Readwise</span>'
+                            : ""
+                        }
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Upload functionality removed - now using folder-based processing
+
+      // Select Readwise folder
+      function selectReadwiseFolder() {
+        // This functionality is handled by the React component
+        // when the full app is loaded
+        console.log(
+          "Readwise folder selection - use React app for full functionality"
+        );
+      }
+
+      // Initialize
+      checkBackend();
+
+      // Auto-search on input
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", debounce(handleSearch, 500));
+
+      // Debounce function
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+    </script>
+  </body>
+</html>
