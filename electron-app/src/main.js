@@ -120,20 +120,27 @@ class SemanticSearchApp {
   positionWindow() {
     if (!this.mainWindow) return;
 
-    const { screen } = require('electron');
+    const { screen } = require("electron");
     const primaryDisplay = screen.getPrimaryDisplay();
-    const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+    const { width: screenWidth, height: screenHeight } =
+      primaryDisplay.workAreaSize;
 
     // Get saved position or use default (centered)
     const windowBounds = this.mainWindow.getBounds();
-    const savedPosition = store.get('windowPosition', {
+    const savedPosition = store.get("windowPosition", {
       x: Math.floor((screenWidth - windowBounds.width) / 2),
-      y: Math.floor((screenHeight - windowBounds.height) / 2)
+      y: Math.floor((screenHeight - windowBounds.height) / 2),
     });
 
     // Ensure window is within screen bounds
-    const x = Math.max(0, Math.min(savedPosition.x, screenWidth - windowBounds.width));
-    const y = Math.max(0, Math.min(savedPosition.y, screenHeight - windowBounds.height));
+    const x = Math.max(
+      0,
+      Math.min(savedPosition.x, screenWidth - windowBounds.width)
+    );
+    const y = Math.max(
+      0,
+      Math.min(savedPosition.y, screenHeight - windowBounds.height)
+    );
 
     this.mainWindow.setPosition(x, y);
   }
@@ -142,21 +149,21 @@ class SemanticSearchApp {
     if (!this.mainWindow) return;
 
     // Save window position when moved
-    this.mainWindow.on('moved', () => {
+    this.mainWindow.on("moved", () => {
       const position = this.mainWindow.getPosition();
-      store.set('windowPosition', { x: position[0], y: position[1] });
+      store.set("windowPosition", { x: position[0], y: position[1] });
     });
 
     // Save window size when resized
-    this.mainWindow.on('resized', () => {
+    this.mainWindow.on("resized", () => {
       const size = this.mainWindow.getSize();
-      store.set('windowSize', { width: size[0], height: size[1] });
+      store.set("windowSize", { width: size[0], height: size[1] });
     });
 
     // Auto-hide when losing focus (optional, can be toggled)
-    const autoHide = store.get('autoHide', false);
+    const autoHide = store.get("autoHide", false);
     if (autoHide) {
-      this.mainWindow.on('blur', () => {
+      this.mainWindow.on("blur", () => {
         if (!this.mainWindow.webContents.isDevToolsOpened()) {
           this.mainWindow.hide();
         }
@@ -164,7 +171,7 @@ class SemanticSearchApp {
     }
 
     // Show/hide with global shortcut
-    this.mainWindow.on('show', () => {
+    this.mainWindow.on("show", () => {
       this.mainWindow.focus();
     });
   }
@@ -461,10 +468,10 @@ class SemanticSearchApp {
       this.mainWindow.setAlwaysOnTop(!isOnTop);
 
       // Save preference
-      store.set('alwaysOnTop', !isOnTop);
+      store.set("alwaysOnTop", !isOnTop);
 
       // Notify frontend
-      this.mainWindow.webContents.send('always-on-top-changed', !isOnTop);
+      this.mainWindow.webContents.send("always-on-top-changed", !isOnTop);
     }
   }
 
@@ -586,6 +593,12 @@ class SemanticSearchApp {
   startDrag(data) {
     // Enhanced cross-application drag and drop
     try {
+      console.log("Starting drag operation with data:", {
+        type: data.type,
+        contentLength: data.content?.length,
+        hasMetadata: !!data.metadata,
+      });
+
       const { clipboard, nativeImage, shell } = require("electron");
 
       // Create a more sophisticated drag image
@@ -595,6 +608,7 @@ class SemanticSearchApp {
       if (data.type === "text") {
         // Plain text for basic compatibility
         clipboard.writeText(data.content);
+        console.log("Set plain text to clipboard");
 
         // Rich text with enhanced metadata
         if (data.metadata) {
@@ -607,6 +621,7 @@ class SemanticSearchApp {
             html: htmlContent,
             rtf: richText,
           });
+          console.log("Set rich text formats to clipboard");
         }
 
         // Store drag data for potential file creation
@@ -616,9 +631,19 @@ class SemanticSearchApp {
       // Show visual feedback
       this.showDragFeedback(data);
 
+      console.log("Drag operation completed successfully");
       return true;
     } catch (error) {
       console.error("Drag operation failed:", error);
+      // Show error notification
+      const { Notification } = require("electron");
+      if (Notification.isSupported()) {
+        new Notification({
+          title: "Drag Operation Failed",
+          body: "Could not prepare content for dragging. Content copied to clipboard instead.",
+          silent: true,
+        }).show();
+      }
       return false;
     }
   }
@@ -627,12 +652,12 @@ class SemanticSearchApp {
     // Create a visual representation of the dragged content
     const { nativeImage } = require("electron");
 
-    // Create a simple drag image with content preview
-    const canvas = require("canvas");
-    const canvasWidth = 200;
-    const canvasHeight = 100;
-
     try {
+      // Try to use canvas for better drag image
+      const canvas = require("canvas");
+      const canvasWidth = 200;
+      const canvasHeight = 100;
+
       const canvasElement = canvas.createCanvas(canvasWidth, canvasHeight);
       const ctx = canvasElement.getContext("2d");
 
@@ -662,6 +687,10 @@ class SemanticSearchApp {
       const buffer = canvasElement.toBuffer("image/png");
       return nativeImage.createFromBuffer(buffer);
     } catch (error) {
+      console.warn(
+        "Canvas drag image creation failed, using fallback:",
+        error.message
+      );
       // Fallback to simple image
       return nativeImage.createFromDataURL(
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
