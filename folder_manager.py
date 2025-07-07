@@ -38,7 +38,7 @@ class DocumentFolderHandler(FileSystemEventHandler):
 
 class FolderManager:
     """Manages folder connections and automatic document processing."""
-    
+
     def __init__(self, config, document_processor=None):
         self.config = config
         self.document_processor = document_processor
@@ -47,6 +47,8 @@ class FolderManager:
         self.processing_queue = asyncio.Queue()
         self.removal_queue = asyncio.Queue()
         self.processed_files = {}  # file_path -> {hash, last_modified, status}
+        self.indexing_status = {}  # file_path -> {status, progress, started_at, completed_at, error}
+        self.status_subscribers = []  # List of queues for real-time status updates
         self.is_monitoring = False
         self.processing_task = None
         
@@ -192,14 +194,43 @@ class FolderManager:
                         # Check if file needs processing
                         needs_processing = self.file_needs_processing(str(file_path), stat.st_mtime)
                         file_info['needs_processing'] = needs_processing
-                        
+
+                        # Add indexing status to file info
+                        indexing_status = self.get_indexing_status(str(file_path))
+                        file_info['indexing_status'] = indexing_status.get('status', 'unknown')
+                        file_info['indexing_progress'] = indexing_status.get('progress', 0.0)
+                        file_info['indexing_error'] = indexing_status.get('error')
+
                         if needs_processing:
-                            # Queue for processing
-                            await self.processing_queue.put({
-                                'file_path': str(file_path),
-                                'action': 'process',
-                                'priority': 'normal'
-                            })
+                            # Set initial status and queue for processing
+                            self.set_indexing_status(str(file_path), 'pending', progress=0.0)
+                            try:
+                                self.processing_queue.put_nowait({
+                                    'file_path': str(file_path),
+                                    'action': 'process',
+                                    'priority': 'normal'
+                                })
+                            except Exception as e:
+                                logger.warning(f"Failed to queue file {file_path}: {e}")
+                        elif str(file_path) in self.processed_files:
+                            # File is already processed, set status based on processing result
+                            processed_info = self.processed_files[str(file_path)]
+                            if processed_info.get('status') == 'success':
+                                self.set_indexing_status(str(file_path), 'indexed', progress=100.0)
+                            else:
+                                self.set_indexing_status(str(file_path), 'failed', progress=100.0,
+                                                       error=processed_info.get('error', 'Processing failed'))
+                        else:
+                            # File has never been processed, mark as needing processing
+                            self.set_indexing_status(str(file_path), 'pending', progress=0.0)
+                            try:
+                                self.processing_queue.put_nowait({
+                                    'file_path': str(file_path),
+                                    'action': 'process',
+                                    'priority': 'normal'
+                                })
+                            except Exception as e:
+                                logger.warning(f"Failed to queue file {file_path}: {e}")
                         
                         discovered_files.append(file_info)
                         
@@ -232,24 +263,88 @@ class FolderManager:
         """Queue a file for processing (called by file system events)."""
         if Path(file_path).suffix.lower() in self.supported_extensions:
             try:
-                asyncio.create_task(self.processing_queue.put({
+                # Set initial status
+                self.set_indexing_status(file_path, 'pending', progress=0.0)
+
+                # Use put_nowait to avoid async issues
+                self.processing_queue.put_nowait({
                     'file_path': file_path,
                     'action': 'process',
                     'priority': 'high',  # Real-time changes get high priority
                     'trigger': action
-                }))
+                })
+                logger.info(f"Queued file for processing: {file_path} (trigger: {action})")
             except Exception as e:
+                self.set_indexing_status(file_path, 'failed', error=f"Failed to queue: {e}")
                 logger.warning(f"Failed to queue file for processing: {e}")
     
     def queue_file_for_removal(self, file_path: str):
         """Queue a file for removal from the vector store."""
         try:
-            asyncio.create_task(self.removal_queue.put({
+            self.removal_queue.put_nowait({
                 'file_path': file_path,
                 'action': 'remove'
-            }))
+            })
         except Exception as e:
             logger.warning(f"Failed to queue file for removal: {e}")
+
+    def set_indexing_status(self, file_path: str, status: str, progress: float = 0.0, error: str = None):
+        """Set the indexing status for a file."""
+        current_time = time.time()
+
+        if file_path not in self.indexing_status:
+            self.indexing_status[file_path] = {}
+
+        self.indexing_status[file_path].update({
+            'status': status,  # 'pending', 'indexing', 'indexed', 'failed'
+            'progress': progress,
+            'error': error,
+            'updated_at': current_time
+        })
+
+        if status == 'indexing':
+            self.indexing_status[file_path]['started_at'] = current_time
+        elif status in ['indexed', 'failed']:
+            self.indexing_status[file_path]['completed_at'] = current_time
+
+        # Notify subscribers
+        self.notify_status_subscribers(file_path, self.indexing_status[file_path])
+
+    def get_indexing_status(self, file_path: str = None) -> Dict[str, Any]:
+        """Get indexing status for a specific file or all files."""
+        if file_path:
+            return self.indexing_status.get(file_path, {'status': 'unknown'})
+        return self.indexing_status.copy()
+
+    def add_status_subscriber(self, queue: asyncio.Queue):
+        """Add a subscriber for real-time status updates."""
+        self.status_subscribers.append(queue)
+
+    def remove_status_subscriber(self, queue: asyncio.Queue):
+        """Remove a status subscriber."""
+        if queue in self.status_subscribers:
+            self.status_subscribers.remove(queue)
+
+    def notify_status_subscribers(self, file_path: str, status_data: Dict[str, Any]):
+        """Notify all subscribers about status changes."""
+        notification = {
+            'type': 'indexing_status',
+            'file_path': file_path,
+            'status': status_data,
+            'timestamp': time.time()
+        }
+
+        # Remove closed queues and notify active ones
+        active_subscribers = []
+        for queue in self.status_subscribers:
+            try:
+                queue.put_nowait(notification)
+                active_subscribers.append(queue)
+            except:
+                # Queue is closed or full, remove it
+                pass
+
+        self.status_subscribers = active_subscribers
     
     async def start_monitoring(self):
         """Start folder monitoring and background processing."""
@@ -357,22 +452,36 @@ class FolderManager:
         try:
             if not os.path.exists(file_path):
                 logger.warning(f"File no longer exists: {file_path}")
+                self.set_indexing_status(file_path, 'failed', error='File not found')
                 return
 
             # Check if file is still supported
             if Path(file_path).suffix.lower() not in self.supported_extensions:
+                self.set_indexing_status(file_path, 'failed', error='Unsupported file type')
                 return
 
             logger.info(f"Processing file: {file_path}")
+
+            # Set status to indexing
+            self.set_indexing_status(file_path, 'indexing', progress=0.0)
 
             # Get file stats
             stat = os.stat(file_path)
             file_hash = self.calculate_file_hash(file_path)
 
+            # Update progress
+            self.set_indexing_status(file_path, 'indexing', progress=25.0)
+
             # Process the document
             if self.document_processor:
                 try:
+                    # Update progress
+                    self.set_indexing_status(file_path, 'indexing', progress=50.0)
+
                     results = await self.document_processor.process_documents([file_path])
+
+                    # Update progress
+                    self.set_indexing_status(file_path, 'indexing', progress=75.0)
 
                     if results and len(results) > 0:
                         result = results[0]
@@ -388,7 +497,13 @@ class FolderManager:
                             'error': result.get('error', None)
                         }
 
-                        logger.info(f"Successfully processed: {file_path} ({result.get('chunks_created', 0)} chunks)")
+                        # Set final status
+                        if result.get('status') == 'success':
+                            self.set_indexing_status(file_path, 'indexed', progress=100.0)
+                            logger.info(f"Successfully processed: {file_path} ({result.get('chunks_created', 0)} chunks)")
+                        else:
+                            self.set_indexing_status(file_path, 'failed', progress=100.0, error=result.get('error', 'Processing failed'))
+                            logger.warning(f"Processing failed: {file_path}")
                     else:
                         # Processing failed
                         self.processed_files[file_path] = {
@@ -398,6 +513,7 @@ class FolderManager:
                             'processed_at': time.time(),
                             'error': 'No results returned'
                         }
+                        self.set_indexing_status(file_path, 'failed', progress=100.0, error='No results returned')
                         logger.warning(f"Processing failed: {file_path}")
 
                 except Exception as e:
@@ -409,6 +525,7 @@ class FolderManager:
                         'processed_at': time.time(),
                         'error': str(e)
                     }
+                    self.set_indexing_status(file_path, 'failed', progress=100.0, error=str(e))
                     logger.error(f"Error processing {file_path}: {e}")
 
             # Save progress periodically
@@ -416,6 +533,7 @@ class FolderManager:
                 self.save_connected_folders()
 
         except Exception as e:
+            self.set_indexing_status(file_path, 'failed', progress=100.0, error=str(e))
             logger.error(f"Failed to process file {file_path}: {e}")
 
     async def process_queued_removals(self):

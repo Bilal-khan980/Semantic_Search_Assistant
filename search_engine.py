@@ -310,32 +310,35 @@ class SearchEngine:
         seen_content_hashes = set()
 
         for result in results:
-            # Apply similarity threshold to final score
-            # Use a higher threshold for better relevance
-            effective_threshold = max(similarity_threshold, 0.35)  # Minimum 35% relevance
+            # Convert final_score to percentage (0-100) for display
+            score_percentage = result['final_score'] * 100
 
-            # Additional relevance check: if score is low, check for keyword matches
-            if result['final_score'] < 0.4:
-                # For low scores, require some keyword overlap
-                if not self._has_keyword_overlap(result, results[0] if results else None):
-                    continue
+            # Apply a more reasonable minimum score threshold
+            # Most good matches are in the 20-40% range, so use 15% as minimum
+            min_score_threshold = 15.0
 
-            if result['final_score'] >= effective_threshold:
-                # Create content hash for deduplication
-                content = result.get('content', '').strip().lower()
-                content_hash = hash(content)
-                
-                # Skip duplicates
-                if content_hash in seen_content_hashes:
-                    continue
-                seen_content_hashes.add(content_hash)
-                
-                # Add display-friendly fields
-                result['display_title'] = self._generate_display_title(result)
-                result['display_snippet'] = self._generate_display_snippet(result)
-                result['highlight_terms'] = self._extract_highlight_terms(result)
-                
-                filtered_results.append(result)
+            # Only show results with score > 15%
+            if score_percentage <= min_score_threshold:
+                continue
+
+            # Update the result with percentage score for display
+            result['score'] = score_percentage
+
+            # Create content hash for deduplication
+            content = result.get('content', '').strip().lower()
+            content_hash = hash(content)
+
+            # Skip duplicates
+            if content_hash in seen_content_hashes:
+                continue
+            seen_content_hashes.add(content_hash)
+
+            # Add display-friendly fields
+            result['display_title'] = self._generate_display_title(result)
+            result['display_snippet'] = self._generate_display_snippet(result)
+            result['highlight_terms'] = self._extract_highlight_terms(result)
+
+            filtered_results.append(result)
         
         return filtered_results
     
@@ -570,7 +573,7 @@ class SearchEngine:
             return False
 
         # For medium scores (40-50%), require some validation
-        if final_score < 0.5:
+        if final_score < 0.1:
             # If there's a much better result, this one is probably not relevant
             if top_result and top_result.get('final_score', 0) > final_score + 0.15:
                 return False

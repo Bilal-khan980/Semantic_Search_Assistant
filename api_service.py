@@ -66,6 +66,12 @@ class FolderScanRequest(BaseModel):
 class FolderAddRequest(BaseModel):
     folder_path: str
 
+class IndexingStatusRequest(BaseModel):
+    file_path: Optional[str] = None
+
+class TriggerIndexingRequest(BaseModel):
+    file_paths: List[str]
+
 class DocumentProcessingStatus(BaseModel):
     task_id: str
     status: str  # "processing", "completed", "error"
@@ -124,10 +130,19 @@ async def health_check():
     """Detailed health check."""
     try:
         stats = await backend.get_stats()
+        folder_manager_status = "not_available"
+        if hasattr(backend, 'folder_manager'):
+            folder_manager_status = {
+                "connected_folders": backend.folder_manager.get_connected_folders(),
+                "is_monitoring": backend.folder_manager.is_monitoring,
+                "processed_files_count": len(backend.folder_manager.processed_files)
+            }
+
         return {
             "status": "healthy",
             "backend_initialized": backend is not None,
-            "database_stats": stats
+            "database_stats": stats,
+            "folder_manager": folder_manager_status
         }
     except Exception as e:
         return {"status": "unhealthy", "error": str(e)}
@@ -468,17 +483,42 @@ async def scan_folder(request: FolderScanRequest):
         supported_extensions = {'.txt', '.md', '.pdf', '.docx'}
         files = []
 
+        # Get folder manager for indexing status if available
+        folder_manager = None
+        if backend and hasattr(backend, 'folder_manager'):
+            folder_manager = backend.folder_manager
+
         for file_path in folder_path.rglob('*'):
             if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
                 stat = file_path.stat()
-                files.append({
+                file_info = {
                     "name": file_path.name,
                     "path": str(file_path),
                     "size": stat.st_size,
                     "modified": stat.st_mtime,
                     "extension": file_path.suffix.lower(),
-                    "type": "file"
-                })
+                    "type": "file",
+                    "relative_path": str(file_path.relative_to(folder_path))
+                }
+
+                # Add indexing status if folder manager is available
+                if folder_manager:
+                    indexing_status = folder_manager.get_indexing_status(str(file_path))
+                    file_info.update({
+                        "indexing_status": indexing_status.get('status', 'unknown'),
+                        "indexing_progress": indexing_status.get('progress', 0.0),
+                        "indexing_error": indexing_status.get('error'),
+                        "needs_processing": folder_manager.file_needs_processing(str(file_path), stat.st_mtime)
+                    })
+                else:
+                    file_info.update({
+                        "indexing_status": "unknown",
+                        "indexing_progress": 0.0,
+                        "indexing_error": None,
+                        "needs_processing": True
+                    })
+
+                files.append(file_info)
 
         return {"files": files, "folder_path": str(folder_path)}
 
@@ -501,6 +541,109 @@ async def add_folder(request: FolderAddRequest):
     """Add a folder to monitoring."""
     # For now, just return success
     return {"message": f"Folder {request.folder_path} added successfully"}
+
+@app.get("/indexing/status")
+async def get_indexing_status(file_path: Optional[str] = None):
+    """Get indexing status for files."""
+    if not backend or not hasattr(backend, 'folder_manager'):
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        folder_manager = backend.folder_manager
+        if file_path:
+            status = folder_manager.get_indexing_status(file_path)
+            return {"file_path": file_path, "status": status}
+        else:
+            all_status = folder_manager.get_indexing_status()
+            return {"indexing_status": all_status}
+    except Exception as e:
+        logger.error(f"Error getting indexing status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/indexing/trigger")
+async def trigger_indexing(request: TriggerIndexingRequest):
+    """Trigger indexing for specific files."""
+    if not backend or not hasattr(backend, 'folder_manager'):
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        folder_manager = backend.folder_manager
+
+        # Queue files for processing
+        for file_path in request.file_paths:
+            folder_manager.queue_file_for_processing(file_path, 'manual_trigger')
+
+        return {
+            "message": f"Triggered indexing for {len(request.file_paths)} files",
+            "file_paths": request.file_paths
+        }
+    except Exception as e:
+        logger.error(f"Error triggering indexing: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/indexing/process-direct")
+async def process_files_directly(request: TriggerIndexingRequest):
+    """Directly process files using the backend (for testing)."""
+    if not backend:
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        # Process files directly using the backend
+        results = await backend.process_documents(request.file_paths)
+
+        return {
+            "message": f"Processed {len(request.file_paths)} files directly",
+            "results": results
+        }
+    except Exception as e:
+        logger.error(f"Error processing files directly: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/indexing/status/stream")
+async def stream_indexing_status():
+    """Stream real-time indexing status updates via Server-Sent Events."""
+    if not backend or not hasattr(backend, 'folder_manager'):
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    async def event_stream():
+        # Create a queue for this subscriber
+        queue = asyncio.Queue()
+        folder_manager = backend.folder_manager
+
+        # Add to subscribers
+        folder_manager.add_status_subscriber(queue)
+
+        try:
+            # Send initial status
+            initial_status = folder_manager.get_indexing_status()
+            yield f"data: {json.dumps({'type': 'initial', 'data': initial_status})}\n\n"
+
+            # Stream updates
+            while True:
+                try:
+                    # Wait for updates with timeout
+                    update = await asyncio.wait_for(queue.get(), timeout=30.0)
+                    yield f"data: {json.dumps(update)}\n\n"
+
+                except asyncio.TimeoutError:
+                    # Send heartbeat
+                    yield f"data: {json.dumps({'type': 'heartbeat', 'timestamp': time.time()})}\n\n"
+
+        except asyncio.CancelledError:
+            pass
+        finally:
+            # Remove subscriber
+            folder_manager.remove_status_subscriber(queue)
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "text/event-stream",
+        }
+    )
 
 if __name__ == "__main__":
     import uvicorn

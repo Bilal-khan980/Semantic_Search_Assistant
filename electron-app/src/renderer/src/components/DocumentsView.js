@@ -1,14 +1,15 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
-    AlertCircle,
-    CheckCircle,
-    Clock,
-    FileText,
-    Play,
-    RefreshCw,
-    Search,
-    X
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  FileText,
+  Loader2,
+  Play,
+  RefreshCw,
+  Search,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "../utils/cn";
@@ -21,6 +22,8 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
   const [fileFilter, setFileFilter] = useState("all");
   const [processing, setProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] = useState(null);
+  const [indexingStatus, setIndexingStatus] = useState({});
+  const [overallIndexingStatus, setOverallIndexingStatus] = useState(null);
 
   // Hardcoded test_docs folder path
   const TEST_DOCS_FOLDER = "test_docs";
@@ -30,13 +33,25 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
     if (isBackendReady) {
       console.log("🔄 Loading test_docs files...");
       loadTestDocsFiles();
+      checkIndexingStatus();
     }
   }, [isBackendReady]);
 
-  // Cleanup progress tracking on unmount
+  // Periodic status check
+  useEffect(() => {
+    if (!isBackendReady) return;
+
+    const interval = setInterval(() => {
+      checkIndexingStatus();
+    }, 2000); // Check every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [isBackendReady]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      progressService.stopAllTracking();
+      // Cleanup any intervals or subscriptions if needed
     };
   }, []);
 
@@ -89,8 +104,69 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
     }
   };
 
+  const checkIndexingStatus = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/indexing/status");
+      const allStatus = response.data.indexing_status || {};
+
+      // Calculate overall status
+      const statusCounts = {
+        pending: 0,
+        indexing: 0,
+        indexed: 0,
+        failed: 0,
+      };
+
+      Object.values(allStatus).forEach((status) => {
+        const statusType = status.status || "unknown";
+        if (statusCounts.hasOwnProperty(statusType)) {
+          statusCounts[statusType]++;
+        }
+      });
+
+      let overallStatus = null;
+      if (statusCounts.indexing > 0) {
+        overallStatus = {
+          status: "indexing",
+          message: `Indexing ${statusCounts.indexing} files...`,
+          progress: 0, // Could calculate average progress if needed
+        };
+      } else if (statusCounts.pending > 0) {
+        overallStatus = {
+          status: "pending",
+          message: `${statusCounts.pending} files pending indexing`,
+          progress: 0,
+        };
+      } else if (statusCounts.indexed > 0 || statusCounts.failed > 0) {
+        overallStatus = {
+          status: "completed",
+          message: `${statusCounts.indexed} indexed, ${statusCounts.failed} failed`,
+          progress: 100,
+        };
+      }
+
+      setOverallIndexingStatus(overallStatus);
+      setIndexingStatus(allStatus);
+    } catch (error) {
+      console.error("Failed to check indexing status:", error);
+    }
+  };
+
   const refreshFiles = async () => {
+    setOverallIndexingStatus({
+      status: "checking",
+      message: "Checking files...",
+      progress: 0,
+    });
     await loadTestDocsFiles();
+    await checkIndexingStatus();
+
+    // Clear status after a delay if no active indexing
+    setTimeout(() => {
+      if (overallIndexingStatus?.status === "completed") {
+        setOverallIndexingStatus(null);
+      }
+    }, 3000);
   };
 
   const toggleFileSelection = (file) => {
@@ -161,51 +237,49 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
   };
 
   const trackProcessingProgress = (taskId) => {
-    // Use real-time progress tracking with SSE
-    progressService.track(
-      taskId,
-      // onProgress callback
-      (progressData) => {
+    // Simple polling-based progress tracking
+    const pollProgress = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/process/status/${taskId}`
+        );
+        const progressData = response.data;
+
         setProcessingProgress({
           status: progressData.status,
-          message: progressData.message || "Processing...",
-          progress: progressData.progress || 0,
-        });
-      },
-      // onComplete callback
-      (completedData) => {
-        setProcessingProgress({
-          status: "completed",
-          message: "Processing completed successfully!",
-          progress: 100,
+          message: progressData.message,
+          progress: progressData.progress,
         });
 
-        // Refresh stats after completion
-        if (onStatsUpdate) {
-          onStatsUpdate();
-        }
-
-        // Clear selection and hide progress after delay
-        setSelectedFiles([]);
-        setTimeout(() => {
-          setProcessingProgress(null);
+        if (progressData.status === "completed") {
+          if (onStatsUpdate) {
+            onStatsUpdate();
+          }
+          setSelectedFiles([]);
           setProcessing(false);
-        }, 2000);
-      },
-      // onError callback
-      (errorData) => {
+          setTimeout(() => setProcessingProgress(null), 2000);
+          // Also refresh indexing status
+          checkIndexingStatus();
+        } else if (progressData.status === "error") {
+          setProcessing(false);
+          setTimeout(() => setProcessingProgress(null), 5000);
+        } else {
+          // Continue polling
+          setTimeout(pollProgress, 1000);
+        }
+      } catch (error) {
+        console.error("Error tracking progress:", error);
         setProcessingProgress({
           status: "error",
-          message: errorData.message || "Processing failed",
+          message: "Error tracking progress",
           progress: 0,
         });
-
-        setTimeout(() => {
-          setProcessingProgress(null);
-          setProcessing(false);
-        }, 5000);
+        setProcessing(false);
+        setTimeout(() => setProcessingProgress(null), 5000);
       }
-    );
+    };
+
+    pollProgress();
   };
 
   // Filter files based on search query and file type filter
@@ -238,6 +312,57 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
         return "📄";
       default:
         return "📄";
+    }
+  };
+
+  const getIndexingStatusBadge = (file) => {
+    const status = file.indexing_status || "unknown";
+    const progress = file.indexing_progress || 0;
+    const error = file.indexing_error;
+
+    switch (status) {
+      case "pending":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+            <Clock className="w-3 h-3" />
+            Pending
+          </span>
+        );
+      case "indexing":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Indexing... {Math.round(progress)}%
+          </span>
+        );
+      case "indexed":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+            <CheckCircle className="w-3 h-3" />
+            Indexed
+          </span>
+        );
+      case "failed":
+        return (
+          <span
+            className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full cursor-help"
+            title={error || "Indexing failed"}
+          >
+            <AlertCircle className="w-3 h-3" />
+            Failed
+          </span>
+        );
+      case "unknown":
+      default:
+        if (file.needs_processing) {
+          return (
+            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">
+              <Clock className="w-3 h-3" />
+              Unprocessed
+            </span>
+          );
+        }
+        return null;
     }
   };
 
@@ -286,6 +411,36 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
                 />
                 Refresh Files
               </button>
+
+              {/* Overall Indexing Status */}
+              {overallIndexingStatus && (
+                <div className="mt-2 flex items-center gap-2 text-sm">
+                  {overallIndexingStatus.status === "indexing" && (
+                    <div className="flex items-center gap-2 text-blue-600">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>{overallIndexingStatus.message}</span>
+                    </div>
+                  )}
+                  {overallIndexingStatus.status === "pending" && (
+                    <div className="flex items-center gap-2 text-yellow-600">
+                      <Clock className="w-4 h-4" />
+                      <span>{overallIndexingStatus.message}</span>
+                    </div>
+                  )}
+                  {overallIndexingStatus.status === "completed" && (
+                    <div className="flex items-center gap-2 text-green-600">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>{overallIndexingStatus.message}</span>
+                    </div>
+                  )}
+                  {overallIndexingStatus.status === "checking" && (
+                    <div className="flex items-center gap-2 text-blue-600">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>{overallIndexingStatus.message}</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {selectedFiles.length > 0 && (
@@ -398,7 +553,8 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
                 {/* Additional info */}
                 {processingProgress.status === "processing" && (
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Processing {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''}...
+                    Processing {selectedFiles.length} file
+                    {selectedFiles.length !== 1 ? "s" : ""}...
                   </div>
                 )}
               </div>
@@ -453,11 +609,7 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <h4 className="font-medium truncate">{file.name}</h4>
-                          {file.needs_processing && (
-                            <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
-                              Unprocessed
-                            </span>
-                          )}
+                          {getIndexingStatusBadge(file)}
                         </div>
 
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">

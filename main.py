@@ -15,6 +15,7 @@ from document_processor import DocumentProcessor
 from database import VectorStore
 from readwise_importer import ReadwiseImporter
 from search_engine import SearchEngine
+from folder_manager import FolderManager
 from config import Config
 
 # Setup logging
@@ -33,14 +34,36 @@ class DocumentSearchBackend:
         self.vector_store = VectorStore(self.config)
         self.readwise_importer = ReadwiseImporter(self.config)
         self.search_engine = SearchEngine(self.vector_store, self.config)
+        self.folder_manager = FolderManager(self.config, self)
         
     async def initialize(self):
         """Initialize all components."""
         logger.info("Initializing document search backend...")
         await self.vector_store.initialize()
         await self.document_processor.initialize()
+
+        # Add test_docs folder to monitoring
+        test_docs_path = Path("test_docs")
+        if test_docs_path.exists():
+            await self.folder_manager.add_folder(str(test_docs_path))
+            logger.info(f"Added test_docs folder to monitoring: {test_docs_path.absolute()}")
+        else:
+            logger.warning("test_docs folder not found, creating it...")
+            test_docs_path.mkdir(exist_ok=True)
+            await self.folder_manager.add_folder(str(test_docs_path))
+
+        # Start folder monitoring
+        await self.folder_manager.start_monitoring()
+
         logger.info("Backend initialization complete")
-        
+
+    async def cleanup(self):
+        """Cleanup resources and stop monitoring."""
+        logger.info("Cleaning up backend...")
+        if hasattr(self, 'folder_manager'):
+            await self.folder_manager.stop_monitoring()
+        logger.info("Backend cleanup complete")
+
     async def process_documents(self, file_paths: List[str], progress_callback=None):
         """Process multiple documents and add them to the vector store."""
         results = []
