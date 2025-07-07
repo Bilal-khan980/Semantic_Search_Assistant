@@ -5,7 +5,7 @@ Provides endpoints for document processing, search, and Readwise integration.
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import asyncio
@@ -14,6 +14,8 @@ import tempfile
 import os
 from pathlib import Path
 import uuid
+import json
+import time
 
 from main import DocumentSearchBackend
 
@@ -55,6 +57,15 @@ class SearchResponse(BaseModel):
 class ReadwiseImportRequest(BaseModel):
     markdown_content: str
 
+class ProcessDocumentsRequest(BaseModel):
+    file_paths: List[str]
+
+class FolderScanRequest(BaseModel):
+    folder_path: str
+
+class FolderAddRequest(BaseModel):
+    folder_path: str
+
 class DocumentProcessingStatus(BaseModel):
     task_id: str
     status: str  # "processing", "completed", "error"
@@ -72,6 +83,16 @@ class StatsResponse(BaseModel):
 
 # In-memory task storage (use Redis in production)
 processing_tasks: Dict[str, DocumentProcessingStatus] = {}
+progress_subscribers: Dict[str, List] = {}  # task_id -> list of queues for SSE
+
+async def notify_progress_subscribers(task_id: str, update: Dict[str, Any]):
+    """Notify all SSE subscribers of a progress update."""
+    if task_id in progress_subscribers:
+        for queue in progress_subscribers[task_id]:
+            try:
+                await queue.put(update)
+            except Exception as e:
+                logger.error(f"Failed to notify subscriber: {e}")
 
 @app.on_event("startup")
 async def startup_event():
@@ -165,6 +186,57 @@ async def upload_documents(
     
     return {"task_id": task_id, "message": "Document processing started"}
 
+@app.post("/process")
+async def process_documents_from_paths(
+    background_tasks: BackgroundTasks,
+    request: ProcessDocumentsRequest
+):
+    """Process documents from file paths."""
+    if not backend:
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    # Generate task ID
+    task_id = str(uuid.uuid4())
+
+    # Initialize task status
+    processing_tasks[task_id] = DocumentProcessingStatus(
+        task_id=task_id,
+        status="processing",
+        progress=0.0,
+        message="Starting document processing..."
+    )
+
+    # Start background processing
+    background_tasks.add_task(process_file_paths_background, task_id, request.file_paths)
+
+    return {"task_id": task_id, "message": "Document processing started"}
+
+async def process_file_paths_background(task_id: str, file_paths: List[str]):
+    """Background task for processing documents from file paths."""
+    try:
+        # Update progress callback
+        async def progress_callback(progress: float, message: str):
+            if task_id in processing_tasks:
+                processing_tasks[task_id].progress = progress
+                processing_tasks[task_id].message = message
+
+                # Notify SSE subscribers
+                await notify_progress_subscribers(task_id, processing_tasks[task_id].dict())
+
+        # Process documents
+        results = await backend.process_documents(file_paths, progress_callback)
+
+        # Update final status
+        processing_tasks[task_id].status = "completed"
+        processing_tasks[task_id].progress = 100.0
+        processing_tasks[task_id].message = "Processing completed"
+        processing_tasks[task_id].results = results
+
+    except Exception as e:
+        logger.error(f"Document processing error: {e}")
+        processing_tasks[task_id].status = "error"
+        processing_tasks[task_id].message = str(e)
+
 async def process_documents_background(task_id: str, files: List[UploadFile]):
     """Background task for processing documents."""
     try:
@@ -182,6 +254,9 @@ async def process_documents_background(task_id: str, files: List[UploadFile]):
             if task_id in processing_tasks:
                 processing_tasks[task_id].progress = progress
                 processing_tasks[task_id].message = message
+
+                # Notify SSE subscribers
+                await notify_progress_subscribers(task_id, processing_tasks[task_id].dict())
         
         # Process documents
         results = await backend.process_documents(temp_files, progress_callback)
@@ -209,8 +284,74 @@ async def get_processing_status(task_id: str):
     """Get the status of a document processing task."""
     if task_id not in processing_tasks:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     return processing_tasks[task_id]
+
+@app.get("/process/status/{task_id}")
+async def get_process_status(task_id: str):
+    """Get the status of a document processing task (alternative endpoint)."""
+    if task_id not in processing_tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return processing_tasks[task_id]
+
+@app.get("/documents/processing/{task_id}/stream")
+async def stream_processing_status(task_id: str):
+    """Stream real-time processing status updates via Server-Sent Events."""
+    if task_id not in processing_tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    async def event_stream():
+        # Create a queue for this subscriber
+        queue = asyncio.Queue()
+
+        # Add to subscribers
+        if task_id not in progress_subscribers:
+            progress_subscribers[task_id] = []
+        progress_subscribers[task_id].append(queue)
+
+        try:
+            # Send initial status
+            initial_status = processing_tasks[task_id]
+            yield f"data: {json.dumps(initial_status.dict())}\n\n"
+
+            # Stream updates
+            while True:
+                try:
+                    # Wait for updates with timeout
+                    update = await asyncio.wait_for(queue.get(), timeout=30.0)
+                    yield f"data: {json.dumps(update)}\n\n"
+
+                    # Break if task is completed
+                    if update.get('status') in ['completed', 'error']:
+                        break
+
+                except asyncio.TimeoutError:
+                    # Send heartbeat
+                    yield f"data: {json.dumps({'type': 'heartbeat', 'timestamp': time.time()})}\n\n"
+
+        except Exception as e:
+            logger.error(f"SSE stream error: {e}")
+        finally:
+            # Remove subscriber
+            if task_id in progress_subscribers:
+                try:
+                    progress_subscribers[task_id].remove(queue)
+                    if not progress_subscribers[task_id]:
+                        del progress_subscribers[task_id]
+                except ValueError:
+                    pass
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Cache-Control"
+        }
+    )
 
 @app.post("/readwise/import")
 async def import_readwise(
@@ -245,6 +386,9 @@ async def import_readwise_background(task_id: str, markdown_content: str):
             if task_id in processing_tasks:
                 processing_tasks[task_id].progress = progress
                 processing_tasks[task_id].message = message
+
+                # Notify SSE subscribers
+                await notify_progress_subscribers(task_id, processing_tasks[task_id].dict())
         
         # Import highlights
         results = await backend.import_readwise_data(markdown_content, progress_callback)
@@ -296,14 +440,67 @@ async def clear_all_documents():
     """Clear all documents from the database (for testing)."""
     if not backend:
         raise HTTPException(status_code=500, detail="Backend not initialized")
-    
+
     try:
-        # This would require implementing a clear method in the backend
-        # For now, return a message
-        return {"message": "Clear functionality not implemented yet"}
+        # Clear all documents from the vector store
+        if backend.vector_store and backend.vector_store.table:
+            # Delete all rows from the table
+            backend.vector_store.table.delete("id IS NOT NULL")
+            logger.info("All documents cleared from database")
+            return {"message": "All documents cleared successfully", "cleared_count": "all"}
+        else:
+            return {"message": "No database table found"}
     except Exception as e:
         logger.error(f"Clear error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/folders/scan")
+async def scan_folder(request: FolderScanRequest):
+    """Scan a folder for supported files."""
+    try:
+        import os
+        from pathlib import Path
+
+        folder_path = Path(request.folder_path)
+        if not folder_path.exists():
+            raise HTTPException(status_code=404, detail="Folder not found")
+
+        supported_extensions = {'.txt', '.md', '.pdf', '.docx'}
+        files = []
+
+        for file_path in folder_path.rglob('*'):
+            if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
+                stat = file_path.stat()
+                files.append({
+                    "name": file_path.name,
+                    "path": str(file_path),
+                    "size": stat.st_size,
+                    "modified": stat.st_mtime,
+                    "extension": file_path.suffix.lower(),
+                    "type": "file"
+                })
+
+        return {"files": files, "folder_path": str(folder_path)}
+
+    except Exception as e:
+        logger.error(f"Folder scan error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/folders/list")
+async def list_connected_folders():
+    """List connected folders."""
+    # Return only test_docs as the primary folder
+    return {
+        "connected_folders": [
+            "test_docs"
+        ]
+    }
+
+@app.post("/folders/add")
+async def add_folder(request: FolderAddRequest):
+    """Add a folder to monitoring."""
+    # For now, just return success
+    return {"message": f"Folder {request.folder_path} added successfully"}
 
 if __name__ == "__main__":
     import uvicorn

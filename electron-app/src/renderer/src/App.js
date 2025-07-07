@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 // Components
-import Sidebar from "./components/Sidebar";
-import SearchInterface from "./components/SearchInterface";
 import DocumentsView from "./components/DocumentsView";
-import FolderManager from "./components/FolderManager";
 import FolderFileBrowser from "./components/FolderFileBrowser";
+import FolderManager from "./components/FolderManager";
 import ReadwiseImporter from "./components/ReadwiseImporter";
+import SearchInterface from "./components/SearchInterface";
 import SettingsPanel from "./components/SettingsPanel";
-import StatusBar from "./components/StatusBar";
-import TitleBar from "./components/TitleBar";
+import Sidebar from "./components/Sidebar";
 
 // Services
 import ApiService from "./services/ApiService";
@@ -33,12 +30,15 @@ function App() {
   });
   const [settings, setSettings] = useState({
     theme: "light",
-    floatingWindow: false,
+    floatingWindow: true, // Now always floating
     autoIndex: true,
     chunkSize: 1000,
     chunkOverlap: 200,
+    alwaysOnTop: true,
   });
   const [showFolderBrowser, setShowFolderBrowser] = useState(false);
+  const [isCompactMode, setIsCompactMode] = useState(false);
+  const [showClipboardPanel, setShowClipboardPanel] = useState(false);
 
   // Initialize API service
   const apiService = new ApiService();
@@ -47,6 +47,11 @@ function App() {
   useHotkeys("ctrl+k, cmd+k", (e) => {
     e.preventDefault();
     focusSearch();
+  });
+
+  useHotkeys("ctrl+shift+c, cmd+shift+c", (e) => {
+    e.preventDefault();
+    setShowClipboardPanel(!showClipboardPanel);
   });
 
   useHotkeys("ctrl+shift+f, cmd+shift+f", (e) => {
@@ -238,16 +243,42 @@ function App() {
   return (
     <div
       className={cn(
-        "h-screen flex flex-col bg-background text-foreground",
+        "h-screen flex flex-col bg-white dark:bg-gray-900 text-foreground",
         settings.theme === "dark" && "dark"
       )}
     >
-      {/* Custom title bar for desktop */}
-      <TitleBar
-        isBackendReady={isBackendReady}
-        onToggleFloating={toggleFloatingWindow}
-      />
+      {/* Custom title bar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 drag-region">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer no-drag transition-colors"
+               onClick={() => window.electronAPI?.close?.()}></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 cursor-pointer no-drag transition-colors"
+               onClick={() => window.electronAPI?.minimize?.()}></div>
+          <div className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 cursor-pointer no-drag transition-colors"
+               onClick={() => window.electronAPI?.maximize?.()}></div>
+        </div>
+        <h1 className="text-sm font-medium text-gray-700 dark:text-gray-300 select-none">
+          Semantic Search Assistant
+        </h1>
+        <div className="flex items-center space-x-2">
+          <button
+            className="w-4 h-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 no-drag"
+            onClick={() => setShowClipboardPanel(!showClipboardPanel)}
+            title="Toggle Clipboard Context (Ctrl+Shift+C)"
+          >
+            📋
+          </button>
+          <button
+            className="w-4 h-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 no-drag"
+            onClick={() => setSettings(prev => ({ ...prev, alwaysOnTop: !prev.alwaysOnTop }))}
+            title="Toggle Always on Top"
+          >
+            📌
+          </button>
+        </div>
+      </div>
 
+      {/* Main layout with sidebar */}
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <Sidebar
@@ -275,11 +306,21 @@ function App() {
       </div>
 
       {/* Status bar */}
-      <StatusBar
-        isBackendReady={isBackendReady}
-        stats={stats}
-        currentView={currentView}
-      />
+      <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex items-center space-x-4">
+            <span className="flex items-center space-x-2">
+              <span className={`w-2 h-2 rounded-full ${isBackendReady ? 'bg-green-500' : 'bg-red-500'}`}></span>
+              <span>{isBackendReady ? 'Backend Ready' : 'Connecting...'}</span>
+            </span>
+            <span>{stats.totalChunks} chunks indexed</span>
+            <span>{stats.totalDocuments} documents</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span>Press Ctrl+K to search</span>
+          </div>
+        </div>
+      </div>
 
       {/* Folder File Browser Modal */}
       <FolderFileBrowser
@@ -303,6 +344,13 @@ function App() {
           }
           setShowFolderBrowser(false);
         }}
+      />
+
+      {/* Clipboard Context Panel */}
+      <ClipboardContextPanel
+        isVisible={showClipboardPanel}
+        onClose={() => setShowClipboardPanel(false)}
+        searchService={apiService}
       />
     </div>
   );

@@ -249,23 +249,28 @@
         <!-- Documents View -->
         <div id="documentsView" class="view hidden">
           <h2 style="margin-bottom: 2rem">Document Management</h2>
-          <div
-            style="
-              text-align: center;
-              padding: 3rem;
-              border: 2px solid #e2e8f0;
-              border-radius: 12px;
-              margin-bottom: 2rem;
-            "
-          >
-            <div style="font-size: 3rem; margin-bottom: 1rem">📄</div>
-            <h3>Document Processing</h3>
-            <p style="color: #64748b; margin-top: 0.5rem">
-              Browse and process documents from your connected folders
-            </p>
-            <p style="color: #64748b; margin-top: 0.5rem">
-              Select files to index for semantic search
-            </p>
+          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong>test_docs folder</strong>
+              <span id="fileCount" style="color: #64748b; margin-left: 0.5rem;">Loading...</span>
+            </div>
+            <button onclick="loadDocuments()" style="padding: 0.5rem 1rem; background: #3b82f6; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">
+              🔄 Refresh
+            </button>
+          </div>
+
+          <div id="documentsLoading" style="text-align: center; padding: 2rem; display: none;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+            <p>Loading documents...</p>
+          </div>
+
+          <div id="documentsError" style="text-align: center; padding: 2rem; color: #ef4444; display: none;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">❌</div>
+            <p>Failed to load documents</p>
+          </div>
+
+          <div id="documentsList" style="display: grid; gap: 1rem;">
+            <!-- Documents will be loaded here -->
           </div>
         </div>
 
@@ -348,6 +353,11 @@
           .querySelectorAll(".nav-item")
           .forEach((item) => item.classList.remove("active"));
         event.target.classList.add("active");
+
+        // Load documents when documents view is shown
+        if (viewName === 'documents') {
+          loadDocuments();
+        }
       }
 
       // Handle search
@@ -408,7 +418,10 @@
                       200
                     )}...</div>
                     <div class="result-meta">
-                        <span>Score: ${(result.score * 100).toFixed(0)}%</span>
+                        <span>Score: ${(() => {
+                          const score = result.final_score || result.similarity || 0;
+                          return isNaN(score) ? '0' : (score * 100).toFixed(0);
+                        })()}%</span>
                         <span>Source: ${result.source.split("/").pop()}</span>
                         ${
                           result.is_readwise
@@ -440,6 +453,92 @@
       document
         .getElementById("searchInput")
         .addEventListener("input", debounce(handleSearch, 500));
+
+      // Load documents from test_docs folder
+      async function loadDocuments() {
+        const loading = document.getElementById("documentsLoading");
+        const error = document.getElementById("documentsError");
+        const list = document.getElementById("documentsList");
+        const fileCount = document.getElementById("fileCount");
+
+        // Show loading state
+        loading.style.display = "block";
+        error.style.display = "none";
+        list.innerHTML = "";
+        fileCount.textContent = "Loading...";
+
+        try {
+          // Scan test_docs folder
+          const response = await fetch("http://127.0.0.1:8000/folders/scan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ folder_path: "test_docs" }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          const files = data.files || [];
+
+          // Hide loading
+          loading.style.display = "none";
+
+          // Update file count
+          fileCount.textContent = `${files.length} files`;
+
+          if (files.length === 0) {
+            list.innerHTML = `
+              <div style="text-align: center; padding: 2rem; color: #64748b;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📂</div>
+                <p>No files found in test_docs folder</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Display files
+          list.innerHTML = files.map(file => `
+            <div style="
+              padding: 1rem;
+              border: 1px solid #e2e8f0;
+              border-radius: 0.5rem;
+              background: white;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            ">
+              <div>
+                <div style="font-weight: 500; margin-bottom: 0.25rem;">
+                  📄 ${file.name}
+                </div>
+                <div style="color: #64748b; font-size: 0.875rem;">
+                  ${file.extension.toUpperCase()} • ${formatFileSize(file.size)}
+                </div>
+              </div>
+              <div style="color: #10b981; font-size: 0.875rem;">
+                ✅ Indexed
+              </div>
+            </div>
+          `).join('');
+
+        } catch (err) {
+          console.error("Failed to load documents:", err);
+          loading.style.display = "none";
+          error.style.display = "block";
+          fileCount.textContent = "Error";
+        }
+      }
+
+      // Format file size helper
+      function formatFileSize(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+      }
 
       // Debounce function
       function debounce(func, wait) {

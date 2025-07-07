@@ -1,17 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Filter, 
-  Copy, 
-  ExternalLink, 
-  FileText, 
-  Bookmark, 
-  Clock,
-  Star,
-  Download,
-  Eye
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+    Bookmark,
+    Clock,
+    Copy,
+    ExternalLink,
+    Eye,
+    FileText,
+    Filter,
+    Search,
+    Star
 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '../utils/cn';
 
 function SearchInterface({ 
@@ -35,6 +34,7 @@ function SearchInterface({
   
   const searchInputRef = useRef(null);
   const debounceRef = useRef(null);
+  const dragPreviewRef = useRef(null);
 
   useEffect(() => {
     if (searchInputRef.current) {
@@ -92,13 +92,80 @@ function SearchInterface({
   };
 
   const startDrag = (result) => {
+    // Create formatted content with citation
+    const citation = formatCitation(result);
+    const contentWithCitation = `${result.content}\n\n${citation}`;
+
     if (window.electronAPI) {
+      // Use Electron's native drag-and-drop
       window.electronAPI.startDrag({
         type: 'text',
-        content: result.content,
-        metadata: result.metadata
+        content: contentWithCitation,
+        metadata: {
+          ...result.metadata,
+          source: result.source,
+          score: result.final_score,
+          timestamp: new Date().toISOString(),
+          citation: citation
+        }
       });
     }
+  };
+
+  const formatCitation = (result) => {
+    const filename = result.source.split('/').pop();
+    const date = new Date(result.created_at * 1000).toLocaleDateString();
+    const score = Math.round(result.final_score * 100);
+
+    if (result.is_readwise) {
+      return `— From ${filename} (Readwise highlight, ${score}% relevance, ${date})`;
+    } else {
+      return `— From ${filename} (${score}% relevance, ${date})`;
+    }
+  };
+
+  const handleDragStart = (e, result) => {
+    e.stopPropagation();
+
+    // Create formatted content with citation
+    const citation = formatCitation(result);
+    const contentWithCitation = `${result.content}\n\n${citation}`;
+
+    // Set drag data for web compatibility
+    e.dataTransfer.setData('text/plain', contentWithCitation);
+    e.dataTransfer.setData('application/json', JSON.stringify({
+      content: result.content,
+      citation: citation,
+      metadata: result.metadata,
+      source: result.source,
+      score: result.final_score,
+      isReadwise: result.is_readwise
+    }));
+
+    // Set drag effect
+    e.dataTransfer.effectAllowed = 'copy';
+
+    // Create custom drag preview
+    const dragPreview = document.createElement('div');
+    dragPreview.className = 'drag-preview';
+    dragPreview.innerHTML = `
+      <div class="flex items-center space-x-2 bg-primary text-primary-foreground px-3 py-2 rounded-md shadow-lg">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zM6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+        </svg>
+        <span>Dragging content with citation</span>
+      </div>
+    `;
+
+    document.body.appendChild(dragPreview);
+    e.dataTransfer.setDragImage(dragPreview, 0, 0);
+
+    // Clean up drag preview after drag starts
+    setTimeout(() => {
+      if (document.body.contains(dragPreview)) {
+        document.body.removeChild(dragPreview);
+      }
+    }, 0);
   };
 
   const formatSnippet = (content, query, maxLength = 200) => {
@@ -260,11 +327,14 @@ function SearchInterface({
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ delay: index * 0.05 }}
                         className={cn(
-                          "p-4 border border-border rounded-lg hover:border-primary/50 transition-colors group",
+                          "p-4 border border-border rounded-lg hover:border-primary/50 transition-colors group cursor-pointer",
                           result.is_readwise && "border-l-4 border-l-blue-500",
                           selectedResult?.id === result.id && "bg-primary/5 border-primary"
                         )}
                         onClick={() => setSelectedResult(result)}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, result)}
+                        title="Click to select, drag to copy with citation"
                       >
                         <div className="flex items-start gap-3">
                           <SourceIcon className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
@@ -277,7 +347,10 @@ function SearchInterface({
                               <div className="flex items-center gap-1 ml-2">
                                 <Star className="w-4 h-4 text-yellow-500" />
                                 <span className="text-sm text-muted-foreground">
-                                  {(result.score * 100).toFixed(0)}%
+                                  {(() => {
+                                    const score = result.final_score || result.similarity || 0;
+                                    return isNaN(score) ? '0' : (score * 100).toFixed(0);
+                                  })()}%
                                 </span>
                               </div>
                             </div>
@@ -323,18 +396,18 @@ function SearchInterface({
                                 >
                                   <Copy className="w-4 h-4" />
                                 </button>
-                                <button
+                                <div
+                                  className="p-2 hover:bg-muted rounded cursor-grab active:cursor-grabbing"
+                                  title="Drag to other app"
+                                  draggable
+                                  onDragStart={(e) => handleDragStart(e, result)}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     startDrag(result);
                                   }}
-                                  className="p-2 hover:bg-muted rounded"
-                                  title="Drag to other app"
-                                  draggable
-                                  onDragStart={() => startDrag(result)}
                                 >
                                   <ExternalLink className="w-4 h-4" />
-                                </button>
+                                </div>
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();

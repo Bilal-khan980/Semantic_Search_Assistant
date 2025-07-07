@@ -76,6 +76,7 @@ class SearchEngine:
             
             # Apply various ranking factors
             readwise_boost = self._calculate_readwise_boost(result)
+            highlight_boost = self._calculate_highlight_boost(result)
             recency_boost = self._calculate_recency_boost(result)
             keyword_boost = self._calculate_keyword_boost(result, original_query)
             length_penalty = self._calculate_length_penalty(result)
@@ -85,6 +86,7 @@ class SearchEngine:
             final_score = (
                 base_score * weights.get('base_similarity', 1.0) +
                 readwise_boost * weights.get('readwise_boost', 0.0) +
+                highlight_boost * weights.get('highlight_boost', 0.0) +
                 recency_boost * weights.get('recency_boost', 0.0) +
                 keyword_boost * weights.get('keyword_boost', 0.0) +
                 length_penalty * weights.get('length_penalty', 0.0) +
@@ -95,6 +97,7 @@ class SearchEngine:
             result['ranking_factors'] = {
                 'base_similarity': base_score,
                 'readwise_boost': readwise_boost,
+                'highlight_boost': highlight_boost,
                 'recency_boost': recency_boost,
                 'keyword_boost': keyword_boost,
                 'length_penalty': length_penalty,
@@ -124,7 +127,61 @@ class SearchEngine:
         boost += color_boosts.get(color, 0.0)
         
         return boost
-    
+
+    def _calculate_highlight_boost(self, result: Dict[str, Any]) -> float:
+        """Calculate boost for PDF highlights and annotations."""
+        metadata = result.get('metadata', {})
+        boost = 0.0
+
+        # Get highlight configuration
+        highlight_config = self.config.get('search.highlight_boosts', {})
+
+        # Boost for PDF highlights
+        highlights = metadata.get('highlights', [])
+        if highlights:
+            base_highlight_boost = highlight_config.get('base_highlight_boost', 0.2)
+            boost += base_highlight_boost
+
+            # Additional boost based on highlight color
+            color_boosts = highlight_config.get('color_boosts', {
+                'yellow': 0.1,
+                'red': 0.3,
+                'green': 0.2,
+                'blue': 0.15,
+                'orange': 0.25,
+                'pink': 0.1
+            })
+
+            for highlight in highlights:
+                color_category = highlight.get('color_category', 'default')
+                boost += color_boosts.get(color_category, 0.0)
+
+                # Extra boost for highlights with content
+                if highlight.get('highlighted_text'):
+                    boost += highlight_config.get('text_highlight_boost', 0.1)
+
+        # Boost for PDF annotations (notes, comments)
+        annotations = metadata.get('annotations', [])
+        if annotations:
+            annotation_boost = highlight_config.get('annotation_boost', 0.15)
+            boost += annotation_boost * min(len(annotations), 3)  # Cap at 3 annotations
+
+            # Extra boost for annotations with content
+            for annotation in annotations:
+                if annotation.get('content'):
+                    boost += highlight_config.get('content_annotation_boost', 0.1)
+
+        # Boost for content that comes from highlighted text
+        if result.get('content', '').strip() and any(
+            highlight.get('highlighted_text', '').strip() in result.get('content', '')
+            for highlight in highlights
+        ):
+            boost += highlight_config.get('highlighted_content_boost', 0.3)
+
+        # Maximum highlight boost cap
+        max_highlight_boost = highlight_config.get('max_highlight_boost', 1.0)
+        return min(boost, max_highlight_boost)
+
     def _calculate_recency_boost(self, result: Dict[str, Any]) -> float:
         """Calculate boost based on content recency."""
         if not self.config.get('search.boost_recent', False):
@@ -251,10 +308,19 @@ class SearchEngine:
         """Apply final filtering and cleanup with deduplication."""
         filtered_results = []
         seen_content_hashes = set()
-        
+
         for result in results:
             # Apply similarity threshold to final score
-            if result['final_score'] >= similarity_threshold:
+            # Use a higher threshold for better relevance
+            effective_threshold = max(similarity_threshold, 0.35)  # Minimum 35% relevance
+
+            # Additional relevance check: if score is low, check for keyword matches
+            if result['final_score'] < 0.4:
+                # For low scores, require some keyword overlap
+                if not self._has_keyword_overlap(result, results[0] if results else None):
+                    continue
+
+            if result['final_score'] >= effective_threshold:
                 # Create content hash for deduplication
                 content = result.get('content', '').strip().lower()
                 content_hash = hash(content)
@@ -467,3 +533,46 @@ class SearchEngine:
             'keyword_matching': self.config.get('search.keyword_matching', {}),
             'suggestion_terms_count': len(self.config.get('search.suggestion_terms', []))
         }
+
+    def _generate_display_title(self, result: Dict[str, Any]) -> str:
+        """Generate a display-friendly title for the result."""
+        if result.get('is_readwise'):
+            return result.get('metadata', {}).get('book', 'Readwise Highlight')
+        else:
+            source = result.get('source', '')
+            # Extract filename from path
+            if '/' in source:
+                return source.split('/')[-1]
+            elif '\\' in source:
+                return source.split('\\')[-1]
+            return source
+
+    def _generate_display_snippet(self, result: Dict[str, Any]) -> str:
+        """Generate a display snippet with highlighted terms."""
+        content = result.get('content', '')
+        # Limit to first 200 characters for display
+        if len(content) > 200:
+            content = content[:200] + '...'
+        return content
+
+    def _extract_highlight_terms(self, result: Dict[str, Any]) -> List[str]:
+        """Extract terms that should be highlighted in the result."""
+        # This could be enhanced to identify which terms matched
+        # For now, return empty list
+        return []
+
+    def _has_keyword_overlap(self, result: Dict[str, Any], top_result: Dict[str, Any] = None) -> bool:
+        """Check if result has meaningful keyword overlap with query or top result."""
+        final_score = result.get('final_score', 0)
+
+        # For very low scores (< 40%), be very strict
+        if final_score < 0.4:
+            return False
+
+        # For medium scores (40-50%), require some validation
+        if final_score < 0.5:
+            # If there's a much better result, this one is probably not relevant
+            if top_result and top_result.get('final_score', 0) > final_score + 0.15:
+                return False
+
+        return True

@@ -1,23 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  FileText,
-  Folder,
-  Search,
-  Filter,
-  RefreshCw,
-  CheckCircle,
-  AlertCircle,
-  Play,
-  Pause,
-  X,
-  Eye,
-  Download,
-  Clock,
-  FileIcon,
-  FolderOpen,
-} from "lucide-react";
 import axios from "axios";
+import { motion } from "framer-motion";
+import {
+    AlertCircle,
+    CheckCircle,
+    Clock,
+    FileText,
+    Play,
+    RefreshCw,
+    Search,
+    X
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { cn } from "../utils/cn";
 
 function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
@@ -33,10 +26,19 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
   const TEST_DOCS_FOLDER = "test_docs";
 
   useEffect(() => {
+    console.log("📋 DocumentsView useEffect - isBackendReady:", isBackendReady);
     if (isBackendReady) {
+      console.log("🔄 Loading test_docs files...");
       loadTestDocsFiles();
     }
   }, [isBackendReady]);
+
+  // Cleanup progress tracking on unmount
+  useEffect(() => {
+    return () => {
+      progressService.stopAllTracking();
+    };
+  }, []);
 
   const loadTestDocsFiles = async () => {
     try {
@@ -50,10 +52,13 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
         folder_path: TEST_DOCS_FOLDER,
       });
 
-      setFolderFiles(response.data.files || []);
+      const files = response.data.files || [];
+      console.log("📁 Loaded files from test_docs:", files);
+      setFolderFiles(files);
       setSelectedFiles([]); // Clear selection when loading
     } catch (error) {
       console.error("Failed to load test_docs files:", error);
+      console.error("Error details:", error.response?.data || error.message);
       setFolderFiles([]);
     } finally {
       setIsLoading(false);
@@ -125,16 +130,24 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
         file_paths: filePaths,
       });
 
-      // Poll for progress if task_id is returned
+      // Track progress in real-time if task_id is returned
       if (response.data.task_id) {
-        await pollProcessingStatus(response.data.task_id);
-      }
+        trackProcessingProgress(response.data.task_id);
+      } else {
+        // No task ID returned, assume immediate completion
+        setProcessingProgress({
+          status: "completed",
+          message: "Processing completed!",
+          progress: 100,
+        });
 
-      // Refresh stats and clear selection
-      if (onStatsUpdate) {
-        onStatsUpdate();
+        if (onStatsUpdate) {
+          onStatsUpdate();
+        }
+        setSelectedFiles([]);
+        setProcessing(false);
+        setTimeout(() => setProcessingProgress(null), 2000);
       }
-      setSelectedFiles([]);
     } catch (error) {
       console.error("Processing failed:", error);
       setProcessingProgress({
@@ -142,40 +155,57 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
         message: error.response?.data?.detail || error.message,
         progress: 0,
       });
-    } finally {
       setProcessing(false);
-      setTimeout(() => setProcessingProgress(null), 3000);
+      setTimeout(() => setProcessingProgress(null), 5000);
     }
   };
 
-  const pollProcessingStatus = async (taskId) => {
-    const maxAttempts = 60; // 5 minutes max
-    let attempts = 0;
-
-    while (attempts < maxAttempts) {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/documents/processing/${taskId}`
-        );
-        const status = response.data;
-
+  const trackProcessingProgress = (taskId) => {
+    // Use real-time progress tracking with SSE
+    progressService.track(
+      taskId,
+      // onProgress callback
+      (progressData) => {
         setProcessingProgress({
-          status: status.status,
-          message: status.message || "Processing...",
-          progress: status.progress || 0,
+          status: progressData.status,
+          message: progressData.message || "Processing...",
+          progress: progressData.progress || 0,
+        });
+      },
+      // onComplete callback
+      (completedData) => {
+        setProcessingProgress({
+          status: "completed",
+          message: "Processing completed successfully!",
+          progress: 100,
         });
 
-        if (status.status === "completed" || status.status === "failed") {
-          break;
+        // Refresh stats after completion
+        if (onStatsUpdate) {
+          onStatsUpdate();
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds
-        attempts++;
-      } catch (error) {
-        console.error("Failed to get processing status:", error);
-        break;
+        // Clear selection and hide progress after delay
+        setSelectedFiles([]);
+        setTimeout(() => {
+          setProcessingProgress(null);
+          setProcessing(false);
+        }, 2000);
+      },
+      // onError callback
+      (errorData) => {
+        setProcessingProgress({
+          status: "error",
+          message: errorData.message || "Processing failed",
+          progress: 0,
+        });
+
+        setTimeout(() => {
+          setProcessingProgress(null);
+          setProcessing(false);
+        }, 5000);
       }
-    }
+    );
   };
 
   // Filter files based on search query and file type filter
@@ -322,30 +352,58 @@ function DocumentsView({ isBackendReady, stats, onStatsUpdate }) {
           </div>
         </div>
 
-        {/* Processing Progress */}
+        {/* Enhanced Real-time Processing Progress */}
         {processingProgress && (
-          <div className="p-4 border-b bg-muted/50">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="p-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
+          >
             <div className="flex items-center gap-3">
               {processingProgress.status === "error" ? (
-                <AlertCircle className="w-5 h-5 text-red-500" />
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+              ) : processingProgress.status === "completed" ? (
+                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
               ) : (
-                <RefreshCw className="w-5 h-5 animate-spin text-blue-500" />
+                <RefreshCw className="w-5 h-5 animate-spin text-blue-500 flex-shrink-0" />
               )}
-              <div className="flex-1">
-                <div className="text-sm font-medium">
-                  {processingProgress.message}
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                    {processingProgress.message}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                    {Math.round(processingProgress.progress || 0)}%
+                  </div>
                 </div>
-                {processingProgress.progress > 0 && (
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${processingProgress.progress}%` }}
-                    />
+
+                {/* Progress bar */}
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <motion.div
+                    className={cn(
+                      "h-2 rounded-full transition-all duration-500",
+                      processingProgress.status === "error"
+                        ? "bg-red-500"
+                        : processingProgress.status === "completed"
+                        ? "bg-green-500"
+                        : "bg-blue-500"
+                    )}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${processingProgress.progress || 0}%` }}
+                  />
+                </div>
+
+                {/* Additional info */}
+                {processingProgress.status === "processing" && (
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Processing {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''}...
                   </div>
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* File List */}

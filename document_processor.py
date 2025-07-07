@@ -11,6 +11,7 @@ import hashlib
 import mimetypes
 # Document processing libraries
 import PyPDF2
+import fitz  # PyMuPDF for advanced PDF processing
 from docx import Document
 import markdown
 from bs4 import BeautifulSoup
@@ -115,25 +116,240 @@ class DocumentProcessor:
         return content, metadata
     
     async def _process_pdf(self, file_path: Path) -> tuple[str, Dict[str, Any]]:
-        """Process PDF file and extract text."""
+        """Process PDF file and extract text with advanced highlight detection."""
         content = ""
-        metadata = {'pages': 0, 'highlights': []}
-        
+        metadata = {
+            'pages': 0,
+            'highlights': [],
+            'annotations': [],
+            'highlight_count': 0,
+            'annotation_count': 0
+        }
+
+        try:
+            # Use PyMuPDF for advanced PDF processing
+            pdf_document = fitz.open(str(file_path))
+            metadata['pages'] = len(pdf_document)
+
+            for page_num in range(len(pdf_document)):
+                page = pdf_document[page_num]
+
+                # Extract text
+                page_text = page.get_text()
+                content += f"\n--- Page {page_num + 1} ---\n{page_text}\n"
+
+                # Extract highlights and annotations
+                if self.config.get('processing.extract_highlights', True):
+                    page_highlights, page_annotations = self._extract_pdf_annotations(page, page_num + 1)
+                    metadata['highlights'].extend(page_highlights)
+                    metadata['annotations'].extend(page_annotations)
+
+            # Update counts
+            metadata['highlight_count'] = len(metadata['highlights'])
+            metadata['annotation_count'] = len(metadata['annotations'])
+
+            # Extract PDF metadata
+            pdf_metadata = pdf_document.metadata
+            if pdf_metadata:
+                metadata.update({
+                    'title': pdf_metadata.get('title', ''),
+                    'author': pdf_metadata.get('author', ''),
+                    'subject': pdf_metadata.get('subject', ''),
+                    'creator': pdf_metadata.get('creator', ''),
+                    'producer': pdf_metadata.get('producer', ''),
+                    'creation_date': pdf_metadata.get('creationDate', ''),
+                    'modification_date': pdf_metadata.get('modDate', '')
+                })
+
+            pdf_document.close()
+
+        except Exception as e:
+            logger.error(f"Error processing PDF {file_path}: {str(e)}")
+            # Fallback to PyPDF2 if PyMuPDF fails
+            try:
+                content, fallback_metadata = await self._process_pdf_fallback(file_path)
+                metadata.update(fallback_metadata)
+            except Exception as fallback_error:
+                logger.error(f"Fallback PDF processing also failed: {fallback_error}")
+                raise e
+
+        return content.strip(), metadata
+    
+    def _extract_pdf_annotations(self, page, page_num: int) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Extract highlights and annotations from PDF page using PyMuPDF."""
+        highlights = []
+        annotations = []
+
+        try:
+            # Get all annotations on the page
+            annot_list = page.annots()
+
+            for annot in annot_list:
+                annot_dict = annot.info
+                annot_type = annot_dict.get('type', '')
+
+                # Extract annotation content
+                content = annot_dict.get('content', '').strip()
+
+                # Get annotation rectangle (position)
+                rect = annot.rect
+
+                # Get annotation color if available
+                color = None
+                if hasattr(annot, 'colors') and annot.colors:
+                    color = annot.colors.get('stroke', annot.colors.get('fill'))
+
+                # Base annotation data
+                base_data = {
+                    'page': page_num,
+                    'type': annot_type,
+                    'content': content,
+                    'position': {
+                        'x0': rect.x0,
+                        'y0': rect.y0,
+                        'x1': rect.x1,
+                        'y1': rect.y1
+                    },
+                    'color': self._format_color(color) if color else None,
+                    'author': annot_dict.get('title', ''),
+                    'creation_date': annot_dict.get('creationDate', ''),
+                    'modification_date': annot_dict.get('modDate', '')
+                }
+
+                # Handle different annotation types
+                if annot_type in ['Highlight', 'Squiggly', 'StrikeOut', 'Underline']:
+                    # These are highlight-type annotations
+                    highlight_data = base_data.copy()
+
+                    # Try to extract the highlighted text
+                    highlighted_text = self._extract_highlighted_text(page, rect)
+                    if highlighted_text:
+                        highlight_data['highlighted_text'] = highlighted_text
+                        highlight_data['text_length'] = len(highlighted_text)
+
+                    # Determine highlight color category
+                    highlight_data['color_category'] = self._categorize_highlight_color(color)
+
+                    highlights.append(highlight_data)
+
+                elif annot_type in ['Text', 'FreeText', 'Note']:
+                    # These are note/comment annotations
+                    note_data = base_data.copy()
+
+                    # Try to get associated text
+                    if not content:
+                        # Try to extract text near the annotation
+                        nearby_text = self._extract_nearby_text(page, rect)
+                        if nearby_text:
+                            note_data['nearby_text'] = nearby_text
+
+                    annotations.append(note_data)
+
+                else:
+                    # Other annotation types (stamps, drawings, etc.)
+                    annotations.append(base_data)
+
+        except Exception as e:
+            logger.warning(f"Error extracting annotations from page {page_num}: {e}")
+
+        return highlights, annotations
+
+    def _extract_highlighted_text(self, page, rect) -> str:
+        """Extract text that is highlighted within the given rectangle."""
+        try:
+            # Get text blocks that intersect with the highlight rectangle
+            text_blocks = page.get_text("dict")
+            highlighted_text = ""
+
+            for block in text_blocks.get("blocks", []):
+                if "lines" in block:
+                    for line in block["lines"]:
+                        line_rect = fitz.Rect(line["bbox"])
+                        # Check if line intersects with highlight rectangle
+                        if line_rect.intersects(rect):
+                            for span in line.get("spans", []):
+                                span_rect = fitz.Rect(span["bbox"])
+                                if span_rect.intersects(rect):
+                                    highlighted_text += span.get("text", "")
+
+            return highlighted_text.strip()
+        except Exception as e:
+            logger.warning(f"Error extracting highlighted text: {e}")
+            return ""
+
+    def _extract_nearby_text(self, page, rect, margin=50) -> str:
+        """Extract text near an annotation for context."""
+        try:
+            # Expand rectangle to get nearby text
+            expanded_rect = fitz.Rect(
+                rect.x0 - margin,
+                rect.y0 - margin,
+                rect.x1 + margin,
+                rect.y1 + margin
+            )
+
+            # Get text in the expanded area
+            nearby_text = page.get_textbox(expanded_rect)
+            return nearby_text.strip()
+        except Exception as e:
+            logger.warning(f"Error extracting nearby text: {e}")
+            return ""
+
+    def _format_color(self, color) -> str:
+        """Format color information to a readable string."""
+        try:
+            if isinstance(color, (list, tuple)) and len(color) >= 3:
+                # RGB color
+                r, g, b = color[:3]
+                return f"rgb({int(r*255)}, {int(g*255)}, {int(b*255)})"
+            elif isinstance(color, dict):
+                # Color dictionary
+                if 'rgb' in color:
+                    rgb = color['rgb']
+                    return f"rgb({int(rgb[0]*255)}, {int(rgb[1]*255)}, {int(rgb[2]*255)})"
+            return str(color)
+        except:
+            return "unknown"
+
+    def _categorize_highlight_color(self, color) -> str:
+        """Categorize highlight color into common categories."""
+        if not color:
+            return "default"
+
+        try:
+            color_str = str(color).lower()
+            if "yellow" in color_str or "255, 255, 0" in color_str:
+                return "yellow"
+            elif "red" in color_str or "255, 0, 0" in color_str:
+                return "red"
+            elif "green" in color_str or "0, 255, 0" in color_str:
+                return "green"
+            elif "blue" in color_str or "0, 0, 255" in color_str:
+                return "blue"
+            elif "orange" in color_str or "255, 165, 0" in color_str:
+                return "orange"
+            elif "pink" in color_str or "255, 192, 203" in color_str:
+                return "pink"
+            else:
+                return "other"
+        except:
+            return "unknown"
+
+    async def _process_pdf_fallback(self, file_path: Path) -> tuple[str, Dict[str, Any]]:
+        """Fallback PDF processing using PyPDF2 when PyMuPDF fails."""
+        content = ""
+        metadata = {'pages': 0, 'highlights': [], 'annotations': []}
+
         try:
             with open(file_path, 'rb') as file:
                 pdf_reader = PyPDF2.PdfReader(file)
                 metadata['pages'] = len(pdf_reader.pages)
-                
+
                 for page_num, page in enumerate(pdf_reader.pages):
                     page_text = page.extract_text()
                     content += f"\n--- Page {page_num + 1} ---\n{page_text}\n"
-                    
-                    # Extract highlights if available
-                    if self.config.get('processing.extract_highlights', True):
-                        highlights = self._extract_pdf_highlights(page, page_num + 1)
-                        metadata['highlights'].extend(highlights)
-                
-                # Extract PDF metadata
+
+                # Extract basic PDF metadata
                 if pdf_reader.metadata:
                     metadata.update({
                         'title': pdf_reader.metadata.get('/Title', ''),
@@ -141,30 +357,12 @@ class DocumentProcessor:
                         'subject': pdf_reader.metadata.get('/Subject', ''),
                         'creator': pdf_reader.metadata.get('/Creator', '')
                     })
-        
+
         except Exception as e:
-            logger.error(f"Error processing PDF {file_path}: {str(e)}")
+            logger.error(f"Fallback PDF processing failed for {file_path}: {str(e)}")
             raise
-        
+
         return content.strip(), metadata
-    
-    def _extract_pdf_highlights(self, page, page_num: int) -> List[Dict[str, Any]]:
-        """Extract highlights from PDF page (simplified implementation)."""
-        highlights = []
-        
-        # This is a simplified implementation
-        # In a real application, you'd use more sophisticated PDF parsing
-        # to extract actual annotations and highlights
-        
-        try:
-            if '/Annots' in page:
-                # PDF has annotations - could contain highlights
-                # This would require more complex PDF parsing
-                pass
-        except:
-            pass
-        
-        return highlights
     
     async def _process_docx(self, file_path: Path) -> tuple[str, Dict[str, Any]]:
         """Process DOCX file and extract text."""

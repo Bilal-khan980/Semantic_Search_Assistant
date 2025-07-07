@@ -49,6 +49,7 @@ class Config:
             "ranking_weights": {
                 "base_similarity": 1.0,
                 "readwise_boost": 0.0,
+                "highlight_boost": 0.3,
                 "recency_boost": 0.0,
                 "keyword_boost": 0.0,
                 "length_penalty": 0.0,
@@ -71,6 +72,23 @@ class Config:
                 "exact_word_boost": 0.0,
                 "phrase_match_boost": 0.0,
                 "max_keyword_boost": 0.0
+            },
+            "highlight_boosts": {
+                "base_highlight_boost": 0.2,
+                "annotation_boost": 0.15,
+                "text_highlight_boost": 0.1,
+                "content_annotation_boost": 0.1,
+                "highlighted_content_boost": 0.3,
+                "max_highlight_boost": 1.0,
+                "color_boosts": {
+                    "yellow": 0.1,
+                    "red": 0.3,
+                    "green": 0.2,
+                    "blue": 0.15,
+                    "orange": 0.25,
+                    "pink": 0.1,
+                    "default": 0.05
+                }
             },
             "suggestions": {
                 "min_query_length": 2,

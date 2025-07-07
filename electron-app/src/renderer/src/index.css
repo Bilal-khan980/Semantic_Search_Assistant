@@ -107,6 +107,17 @@
   .drag-handle {
     @apply cursor-move select-none;
   }
+
+  /* Electron drag regions */
+  .drag-region {
+    -webkit-app-region: drag;
+    cursor: move;
+  }
+
+  .no-drag {
+    -webkit-app-region: no-drag;
+    cursor: default;
+  }
   
   /* Loading spinner */
   .spinner {

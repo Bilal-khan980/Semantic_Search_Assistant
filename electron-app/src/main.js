@@ -9,7 +9,7 @@ const {
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
-const Store = require("electron-store");
+const Store = require("electron-store").default || require("electron-store");
 const { spawn } = require("child_process");
 const fs = require("fs");
 
@@ -58,12 +58,18 @@ class SemanticSearchApp {
   }
 
   createMainWindow() {
-    // Create the main browser window
+    // Create the main application window
     this.mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
       minWidth: 800,
       minHeight: 600,
+      frame: false, // Custom title bar
+      transparent: false, // Solid background for better performance
+      alwaysOnTop: false, // Normal window behavior
+      skipTaskbar: false, // Show in taskbar
+      resizable: true,
+      movable: true,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -72,7 +78,7 @@ class SemanticSearchApp {
       },
       icon: path.join(__dirname, "../assets/icon.png"),
       show: false,
-      titleBarStyle: "default",
+      titleBarStyle: "hidden",
     });
 
     // Load the app
@@ -98,10 +104,68 @@ class SemanticSearchApp {
       this.mainWindow = null;
     });
 
+    // Set initial position (top-right corner by default)
+    this.positionWindow();
+
+    // Add window positioning and context awareness
+    this.setupWindowBehavior();
+
     // Handle external links
     this.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
       shell.openExternal(url);
       return { action: "deny" };
+    });
+  }
+
+  positionWindow() {
+    if (!this.mainWindow) return;
+
+    const { screen } = require('electron');
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+
+    // Get saved position or use default (centered)
+    const windowBounds = this.mainWindow.getBounds();
+    const savedPosition = store.get('windowPosition', {
+      x: Math.floor((screenWidth - windowBounds.width) / 2),
+      y: Math.floor((screenHeight - windowBounds.height) / 2)
+    });
+
+    // Ensure window is within screen bounds
+    const x = Math.max(0, Math.min(savedPosition.x, screenWidth - windowBounds.width));
+    const y = Math.max(0, Math.min(savedPosition.y, screenHeight - windowBounds.height));
+
+    this.mainWindow.setPosition(x, y);
+  }
+
+  setupWindowBehavior() {
+    if (!this.mainWindow) return;
+
+    // Save window position when moved
+    this.mainWindow.on('moved', () => {
+      const position = this.mainWindow.getPosition();
+      store.set('windowPosition', { x: position[0], y: position[1] });
+    });
+
+    // Save window size when resized
+    this.mainWindow.on('resized', () => {
+      const size = this.mainWindow.getSize();
+      store.set('windowSize', { width: size[0], height: size[1] });
+    });
+
+    // Auto-hide when losing focus (optional, can be toggled)
+    const autoHide = store.get('autoHide', false);
+    if (autoHide) {
+      this.mainWindow.on('blur', () => {
+        if (!this.mainWindow.webContents.isDevToolsOpened()) {
+          this.mainWindow.hide();
+        }
+      });
+    }
+
+    // Show/hide with global shortcut
+    this.mainWindow.on('show', () => {
+      this.mainWindow.focus();
     });
   }
 
@@ -235,14 +299,19 @@ class SemanticSearchApp {
   }
 
   setupGlobalShortcuts() {
-    // Global shortcut to toggle floating window
+    // Global shortcut to toggle main window (now floating)
     globalShortcut.register("CommandOrControl+Shift+Space", () => {
-      this.toggleFloatingWindow();
+      this.toggleMainWindow();
     });
 
     // Global shortcut to focus search
     globalShortcut.register("CommandOrControl+Alt+F", () => {
       this.focusSearch();
+    });
+
+    // Global shortcut to toggle always on top
+    globalShortcut.register("CommandOrControl+Shift+T", () => {
+      this.toggleAlwaysOnTop();
     });
   }
 
@@ -370,19 +439,42 @@ class SemanticSearchApp {
   }
 
   // Window management methods
+  toggleMainWindow() {
+    if (this.mainWindow) {
+      if (this.mainWindow.isVisible()) {
+        this.mainWindow.hide();
+      } else {
+        this.mainWindow.show();
+        this.mainWindow.focus();
+      }
+    }
+  }
+
   toggleFloatingWindow() {
-    if (this.floatingWindow) {
-      this.floatingWindow.close();
-    } else {
-      this.createFloatingWindow();
+    // For backward compatibility, delegate to toggleMainWindow
+    this.toggleMainWindow();
+  }
+
+  toggleAlwaysOnTop() {
+    if (this.mainWindow) {
+      const isOnTop = this.mainWindow.isAlwaysOnTop();
+      this.mainWindow.setAlwaysOnTop(!isOnTop);
+
+      // Save preference
+      store.set('alwaysOnTop', !isOnTop);
+
+      // Notify frontend
+      this.mainWindow.webContents.send('always-on-top-changed', !isOnTop);
     }
   }
 
   focusSearch() {
-    const targetWindow = this.floatingWindow || this.mainWindow;
-    if (targetWindow) {
-      targetWindow.focus();
-      targetWindow.webContents.send("focus-search");
+    if (this.mainWindow) {
+      if (!this.mainWindow.isVisible()) {
+        this.mainWindow.show();
+      }
+      this.mainWindow.focus();
+      this.mainWindow.webContents.send("focus-search");
     }
   }
 

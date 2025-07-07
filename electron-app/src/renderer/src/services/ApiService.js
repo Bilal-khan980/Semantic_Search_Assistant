@@ -23,7 +23,7 @@ class ApiService {
     try {
       const response = await this.client.post("/search", {
         query,
-        limit: options.limit || 20,
+        limit: options.limit || 50,
         similarity_threshold: options.similarity_threshold || 0.3,
       });
       return response.data;

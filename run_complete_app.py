@@ -32,16 +32,21 @@ class SemanticSearchLauncher:
         
         # Check Python dependencies
         python_deps = [
-            'lancedb', 'sentence_transformers', 'PyMuPDF', 'fastapi', 
-            'uvicorn', 'pynput', 'psutil'
+            ('lancedb', 'lancedb'),
+            ('sentence_transformers', 'sentence_transformers'),
+            ('PyMuPDF', 'fitz'),
+            ('fastapi', 'fastapi'),
+            ('uvicorn', 'uvicorn'),
+            ('pynput', 'pynput'),
+            ('psutil', 'psutil')
         ]
-        
+
         missing_deps = []
-        for dep in python_deps:
+        for dep_name, import_name in python_deps:
             try:
-                __import__(dep.replace('-', '_'))
+                __import__(import_name.replace('-', '_'))
             except ImportError:
-                missing_deps.append(dep)
+                missing_deps.append(dep_name)
         
         if missing_deps:
             logger.error(f"Missing Python dependencies: {', '.join(missing_deps)}")
@@ -50,10 +55,12 @@ class SemanticSearchLauncher:
         
         # Check Node.js and npm
         try:
-            subprocess.run(['node', '--version'], check=True, capture_output=True)
-            subprocess.run(['npm', '--version'], check=True, capture_output=True)
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            logger.error("Node.js and npm are required for the Electron frontend")
+            node_result = subprocess.run(['node', '--version'], check=True, capture_output=True, text=True)
+            npm_result = subprocess.run(['npm', '--version'], check=True, capture_output=True, text=True)
+            logger.info(f"Node.js version: {node_result.stdout.strip()}")
+            logger.info(f"npm version: {npm_result.stdout.strip()}")
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            logger.error(f"Node.js and npm are required for the Electron frontend. Error: {e}")
             return False
         
         logger.info("✅ All dependencies are available")
