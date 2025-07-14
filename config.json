@@ -7,12 +7,7 @@
   "chunking": {
     "chunk_size": 500,
     "chunk_overlap": 100,
-    "separators": [
-      "\n\n",
-      "\n",
-      " ",
-      ""
-    ]
+    "separators": ["\n\n", "\n", " ", ""]
   },
   "vector_store": {
     "db_path": "./data/vector_db",
@@ -21,12 +16,7 @@
   },
   "processing": {
     "max_file_size_mb": 100,
-    "supported_extensions": [
-      ".pdf",
-      ".docx",
-      ".md",
-      ".txt"
-    ],
+    "supported_extensions": [".pdf", ".docx", ".md", ".txt"],
     "extract_highlights": true
   },
   "readwise": {
@@ -92,5 +82,24 @@
       "strategy",
       "planning"
     ]
+  },
+  "folders": {
+    "config_path": "connected_folders.json",
+    "batch_size": 10,
+    "scan_interval_hours": 24,
+    "auto_index": true,
+    "watch_for_changes": true
+  },
+  "api": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "cors_origins": ["*"],
+    "max_upload_size_mb": 100
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "app.log",
+    "max_size_mb": 10,
+    "backup_count": 3
   }
 }

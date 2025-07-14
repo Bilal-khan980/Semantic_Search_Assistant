@@ -1,60 +1,71 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Bookmark, 
-  FolderOpen, 
-  Upload, 
-  CheckCircle, 
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Bookmark,
+  FolderOpen,
+  Upload,
+  CheckCircle,
   AlertCircle,
   Loader,
   FileText,
-  Star
-} from 'lucide-react';
-import { cn } from '../utils/cn';
-import ApiService from '../services/ApiService';
+  Star,
+} from "lucide-react";
+import { cn } from "../utils/cn";
+import ApiService from "../services/ApiService";
 
 function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
-  const [selectedFolder, setSelectedFolder] = useState('');
+  const [selectedFolder, setSelectedFolder] = useState("");
   const [importing, setImporting] = useState(false);
   const [importProgress, setImportProgress] = useState(null);
   const [recentImports, setRecentImports] = useState([]);
-  
+
   const apiService = new ApiService();
 
   const selectReadwiseFolder = async () => {
     try {
       if (window.electronAPI) {
-        const folderPath = await window.electronAPI.selectFolder();
-        if (folderPath) {
-          setSelectedFolder(folderPath);
+        const result = await window.electronAPI.selectFolder();
+        if (
+          result &&
+          !result.canceled &&
+          result.filePaths &&
+          result.filePaths.length > 0
+        ) {
+          setSelectedFolder(result.filePaths[0]);
         }
       }
     } catch (error) {
-      console.error('Failed to select folder:', error);
+      console.error("Failed to select folder:", error);
     }
   };
 
   const startImport = async () => {
     if (!selectedFolder || !isBackendReady) return;
-    
+
     setImporting(true);
-    setImportProgress({ status: 'scanning', message: 'Scanning Readwise exports...', progress: 0 });
-    
+    setImportProgress({
+      status: "scanning",
+      message: "Scanning Readwise exports...",
+      progress: 0,
+    });
+
     try {
-      const result = await apiService.importReadwise(selectedFolder, (progress) => {
-        setImportProgress(progress);
-      });
-      
-      setRecentImports(prev => [...result.results, ...prev]);
+      const result = await apiService.importReadwise(
+        selectedFolder,
+        (progress) => {
+          setImportProgress(progress);
+        }
+      );
+
+      setRecentImports((prev) => [...result.results, ...prev]);
       onStatsUpdate();
-      setSelectedFolder('');
-      
+      setSelectedFolder("");
     } catch (error) {
-      console.error('Readwise import failed:', error);
-      setImportProgress({ 
-        status: 'error', 
-        message: error.message, 
-        progress: 0 
+      console.error("Readwise import failed:", error);
+      setImportProgress({
+        status: "error",
+        message: error.message,
+        progress: 0,
       });
     } finally {
       setImporting(false);
@@ -79,7 +90,7 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
       <div className="mb-8">
         <div className="border border-border rounded-lg p-6">
           <h3 className="font-medium mb-4">Import Readwise Exports</h3>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">
@@ -102,7 +113,8 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
                 </button>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Select the folder containing your exported Readwise markdown files
+                Select the folder containing your exported Readwise markdown
+                files
               </p>
             </div>
 
@@ -132,9 +144,9 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
             className="mb-6 p-4 border border-border rounded-lg"
           >
             <div className="flex items-center gap-3 mb-2">
-              {importProgress.status === 'error' ? (
+              {importProgress.status === "error" ? (
                 <AlertCircle className="w-5 h-5 text-destructive" />
-              ) : importProgress.status === 'completed' ? (
+              ) : importProgress.status === "completed" ? (
                 <CheckCircle className="w-5 h-5 text-green-500" />
               ) : (
                 <Loader className="w-5 h-5 animate-spin text-primary" />
@@ -162,7 +174,7 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
           </div>
           <div className="text-2xl font-bold">{stats.readwiseHighlights}</div>
         </div>
-        
+
         <div className="p-4 border border-border rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <FileText className="w-4 h-4 text-green-500" />
@@ -170,13 +182,13 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
           </div>
           <div className="text-2xl font-bold">{stats.readwiseBooks || 0}</div>
         </div>
-        
+
         <div className="p-4 border border-border rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-4 h-4 text-yellow-500" />
             <span className="text-sm font-medium">Avg. Rating</span>
           </div>
-          <div className="text-2xl font-bold">{stats.avgRating || 'N/A'}</div>
+          <div className="text-2xl font-bold">{stats.avgRating || "N/A"}</div>
         </div>
       </div>
 
@@ -194,7 +206,9 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
               >
                 <CheckCircle className="w-5 h-5 text-green-500" />
                 <div className="flex-1">
-                  <div className="font-medium">{item.title || item.book_title}</div>
+                  <div className="font-medium">
+                    {item.title || item.book_title}
+                  </div>
                   <div className="text-sm text-muted-foreground">
                     {item.highlights_count} highlights imported
                   </div>
@@ -215,7 +229,8 @@ function ReadwiseImporter({ isBackendReady, stats, onStatsUpdate }) {
             <Bookmark className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
             <h3 className="text-lg font-medium mb-2">No Readwise Data Yet</h3>
             <p className="text-muted-foreground mb-6">
-              Export your highlights from Readwise and import them here to enhance your search experience.
+              Export your highlights from Readwise and import them here to
+              enhance your search experience.
             </p>
             <div className="text-sm text-muted-foreground space-y-2">
               <p>1. Go to Readwise → Export → Markdown</p>

@@ -579,3 +579,63 @@ class SearchEngine:
                 return False
 
         return True
+
+    async def get_suggestions(self, partial_query: str, limit: int = 10) -> List[str]:
+        """Get search suggestions based on partial query."""
+        try:
+            if not partial_query or len(partial_query.strip()) < 2:
+                return []
+
+            # Get recent search terms from vector store
+            # This is a simplified implementation - in production you'd want to store search history
+            suggestions = []
+
+            # Add some common search patterns based on the partial query
+            query_lower = partial_query.lower().strip()
+
+            # Common search suggestions based on content
+            common_suggestions = [
+                f"{query_lower} definition",
+                f"{query_lower} example",
+                f"{query_lower} explanation",
+                f"what is {query_lower}",
+                f"how to {query_lower}",
+                f"{query_lower} benefits",
+                f"{query_lower} process",
+                f"{query_lower} method"
+            ]
+
+            # Filter suggestions that make sense
+            for suggestion in common_suggestions:
+                if len(suggestion) > len(partial_query) and suggestion.startswith(query_lower):
+                    suggestions.append(suggestion)
+
+            # Try to get actual content-based suggestions by doing a quick search
+            try:
+                search_results = await self.vector_store.search(
+                    partial_query,
+                    limit=5,
+                    similarity_threshold=0.3
+                )
+
+                # Extract key terms from search results
+                for result in search_results:
+                    content = result.get('content', '')
+                    # Extract meaningful phrases that contain the query
+                    words = content.lower().split()
+                    for i, word in enumerate(words):
+                        if query_lower in word and i < len(words) - 2:
+                            phrase = ' '.join(words[i:i+3])
+                            if phrase not in suggestions and len(phrase) > len(partial_query):
+                                suggestions.append(phrase)
+
+            except Exception as e:
+                logger.debug(f"Error getting content-based suggestions: {e}")
+
+            # Remove duplicates and limit results
+            unique_suggestions = list(dict.fromkeys(suggestions))
+            return unique_suggestions[:limit]
+
+        except Exception as e:
+            logger.error(f"Error getting suggestions: {e}")
+            return []

@@ -55,7 +55,7 @@ class SearchResponse(BaseModel):
     processing_time_ms: float
 
 class ReadwiseImportRequest(BaseModel):
-    markdown_content: str
+    folder_path: str
 
 class ProcessDocumentsRequest(BaseModel):
     file_paths: List[str]
@@ -389,11 +389,11 @@ async def import_readwise(
     )
     
     # Start background processing
-    background_tasks.add_task(import_readwise_background, task_id, request.markdown_content)
+    background_tasks.add_task(import_readwise_background, task_id, request.folder_path)
     
     return {"task_id": task_id, "message": "Readwise import started"}
 
-async def import_readwise_background(task_id: str, markdown_content: str):
+async def import_readwise_background(task_id: str, folder_path: str):
     """Background task for importing Readwise data."""
     try:
         # Update progress callback
@@ -405,8 +405,69 @@ async def import_readwise_background(task_id: str, markdown_content: str):
                 # Notify SSE subscribers
                 await notify_progress_subscribers(task_id, processing_tasks[task_id].dict())
         
-        # Import highlights
-        results = await backend.import_readwise_data(markdown_content, progress_callback)
+        # Import highlights from folder
+        from pathlib import Path
+
+        folder = Path(folder_path)
+        if not folder.exists():
+            raise ValueError(f"Folder does not exist: {folder_path}")
+
+        await progress_callback(10.0, "Scanning for markdown files...")
+
+        # Find markdown files
+        markdown_files = list(folder.glob("*.md")) + list(folder.glob("*.markdown"))
+
+        if not markdown_files:
+            raise ValueError("No markdown files found in the specified folder")
+
+        await progress_callback(20.0, f"Found {len(markdown_files)} markdown files")
+
+        total_highlights = 0
+        processed_files = 0
+
+        for i, file_path in enumerate(markdown_files):
+            try:
+                await progress_callback(20.0 + (i / len(markdown_files)) * 60.0, f"Processing {file_path.name}...")
+
+                # Import highlights from this file
+                highlights = await backend.readwise_importer.import_from_file(str(file_path))
+
+                if highlights:
+                    # Store highlights in vector database
+                    for highlight in highlights:
+                        # Create a document-like structure for the highlight
+                        highlight_doc = {
+                            'content': highlight['text'],
+                            'metadata': {
+                                'source': f"readwise_{highlight['book']}",
+                                'book': highlight['book'],
+                                'author': highlight['author'],
+                                'highlight_id': highlight['id'],
+                                'tags': highlight.get('tags', []),
+                                'location': highlight.get('location', ''),
+                                'note': highlight.get('note', ''),
+                                'source_type': 'readwise'
+                            }
+                        }
+
+                        # Add to vector store
+                        await backend.vector_store.add_single_document(
+                            content=highlight_doc['content'],
+                            metadata=highlight_doc['metadata']
+                        )
+
+                    total_highlights += len(highlights)
+                    processed_files += 1
+
+            except Exception as e:
+                logger.error(f"Error processing {file_path}: {e}")
+                continue
+
+        results = {
+            "highlights_imported": total_highlights,
+            "files_processed": processed_files,
+            "total_files": len(markdown_files)
+        }
         
         # Update final status
         processing_tasks[task_id].status = "completed"
@@ -644,6 +705,148 @@ async def stream_indexing_status():
             "Content-Type": "text/event-stream",
         }
     )
+
+# Readwise Integration Endpoints
+
+
+
+
+
+# Settings Management Endpoints
+class SettingsRequest(BaseModel):
+    theme: Optional[str] = "system"
+    chunkSize: Optional[int] = 1000
+    chunkOverlap: Optional[int] = 200
+    autoIndex: Optional[bool] = True
+    alwaysOnTop: Optional[bool] = False
+    autoHide: Optional[bool] = True
+    showNotifications: Optional[bool] = True
+    showErrors: Optional[bool] = True
+
+@app.get("/settings")
+async def get_settings():
+    """Get current application settings."""
+    try:
+        # Load settings from config
+        settings_file = Path("settings.json")
+        if settings_file.exists():
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+        else:
+            # Default settings
+            settings = {
+                "theme": "system",
+                "chunkSize": 1000,
+                "chunkOverlap": 200,
+                "autoIndex": True,
+                "alwaysOnTop": False,
+                "autoHide": True,
+                "showNotifications": True,
+                "showErrors": True
+            }
+
+        return settings
+
+    except Exception as e:
+        logger.error(f"Error getting settings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/settings")
+async def update_settings(request: SettingsRequest):
+    """Update application settings."""
+    try:
+        # Convert to dict
+        settings = request.dict()
+
+        # Save to file
+        settings_file = Path("settings.json")
+        with open(settings_file, 'w') as f:
+            json.dump(settings, f, indent=2)
+
+        # Update backend config if needed
+        if backend and hasattr(backend, 'config'):
+            backend.config.chunk_size = settings.get('chunkSize', 1000)
+            backend.config.chunk_overlap = settings.get('chunkOverlap', 200)
+
+        return {"status": "success", "message": "Settings updated successfully"}
+
+    except Exception as e:
+        logger.error(f"Error updating settings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Document Management Endpoints
+@app.get("/documents")
+async def get_documents(limit: int = 50, offset: int = 0):
+    """Get list of indexed documents."""
+    if not backend:
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        # Get documents from vector store
+        documents = await backend.vector_store.get_documents(limit=limit, offset=offset)
+        return {
+            "documents": documents,
+            "total": len(documents),
+            "limit": limit,
+            "offset": offset
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting documents: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/documents/{document_id}")
+async def delete_document(document_id: str):
+    """Delete a specific document."""
+    if not backend:
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        # Delete from vector store
+        await backend.vector_store.delete_document(document_id)
+        return {"status": "success", "message": f"Document {document_id} deleted"}
+
+    except Exception as e:
+        logger.error(f"Error deleting document: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/database/clear")
+async def clear_database():
+    """Clear all data from the database."""
+    if not backend:
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        # Clear vector store
+        await backend.vector_store.clear()
+        return {"status": "success", "message": "Database cleared successfully"}
+
+    except Exception as e:
+        logger.error(f"Error clearing database: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/suggestions")
+async def get_suggestions(q: str = ""):
+    """Get search suggestions based on partial query."""
+    if not backend:
+        raise HTTPException(status_code=500, detail="Backend not initialized")
+
+    try:
+        # Get suggestions from search engine
+        suggestions = await backend.search_engine.get_suggestions(q)
+        return {"suggestions": suggestions}
+
+    except Exception as e:
+        logger.error(f"Error getting suggestions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/process/status/{task_id}")
+async def get_processing_status(task_id: str):
+    """Get the status of a processing task."""
+    if task_id not in processing_tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return processing_tasks[task_id].dict()
 
 if __name__ == "__main__":
     import uvicorn

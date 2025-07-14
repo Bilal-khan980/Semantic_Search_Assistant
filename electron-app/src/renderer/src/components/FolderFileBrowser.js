@@ -5,7 +5,6 @@ import {
   Folder,
   File,
   FileText,
-  FilePdf,
   FileImage,
   X,
   Search,
@@ -86,7 +85,7 @@ const FolderFileBrowser = ({
     const extension = fileName.split(".").pop()?.toLowerCase();
     switch (extension) {
       case "pdf":
-        return <FilePdf className="w-5 h-5 text-red-500" />;
+        return <FileText className="w-5 h-5 text-red-500" />;
       case "docx":
       case "doc":
         return <FileText className="w-5 h-5 text-blue-500" />;

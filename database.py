@@ -97,11 +97,21 @@ class VectorStore:
     
     async def add_document(self, file_path: str, chunks: List) -> str:
         """Add document chunks to the vector store."""
+        logger.info(f"add_document called with {len(chunks)} chunks, type: {type(chunks)}")
+        if chunks:
+            logger.info(f"First chunk type: {type(chunks[0])}")
+
         if not chunks:
+            logger.info(f"No chunks to add for {file_path}")
             return None
-        
+
         # Generate embeddings for all chunks
-        texts = [chunk.content for chunk in chunks]
+        try:
+            texts = [chunk.content for chunk in chunks]
+        except AttributeError as e:
+            logger.error(f"Chunk object missing content attribute: {e}")
+            logger.error(f"Chunk type: {type(chunks[0])}, Chunk: {chunks[0]}")
+            raise
         embeddings = await self._generate_embeddings(texts)
         
         # Prepare data for insertion
@@ -110,11 +120,18 @@ class VectorStore:
         current_timestamp = int(time.time())
         
         for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+            logger.info(f"Processing chunk {i}: metadata type = {type(chunk.metadata)}, metadata = {chunk.metadata}")
+            try:
+                metadata_json = json.dumps(chunk.metadata)
+            except Exception as e:
+                logger.error(f"Failed to serialize metadata: {e}, metadata type: {type(chunk.metadata)}, metadata: {chunk.metadata}")
+                raise
+
             data.append({
                 "id": f"{document_id}_chunk_{i}",
                 "content": chunk.content,
                 "embedding": embedding.tolist(),
-                "metadata": json.dumps(chunk.metadata),
+                "metadata": metadata_json,
                 "source": file_path,
                 "chunk_index": i,
                 "created_at": current_timestamp,
@@ -303,7 +320,97 @@ class VectorStore:
             logger.info(f"Deleted document: {document_id}")
         except Exception as e:
             logger.error(f"Error deleting document {document_id}: {e}")
-    
+
+    async def get_documents(self, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+        """Get list of documents with metadata."""
+        try:
+            if not self.table:
+                return []
+
+            # Get all documents
+            df = self.table.to_pandas()
+
+            if df.empty:
+                return []
+
+            # Group by source to get unique documents
+            documents = []
+            grouped = df.groupby('source')
+
+            for source, group in grouped:
+                doc_info = {
+                    'id': group.iloc[0]['id'].split('_chunk_')[0],  # Remove chunk suffix
+                    'source': source,
+                    'title': group.iloc[0].get('title', source),
+                    'chunks': len(group),
+                    'is_readwise': group.iloc[0]['is_readwise'],
+                    'created_at': group.iloc[0]['created_at'],
+                    'file_size': group.iloc[0].get('file_size', 0),
+                    'file_type': group.iloc[0].get('file_type', 'unknown')
+                }
+                documents.append(doc_info)
+
+            # Sort by creation date (newest first)
+            documents.sort(key=lambda x: x['created_at'], reverse=True)
+
+            # Apply pagination
+            start_idx = offset
+            end_idx = offset + limit
+
+            return documents[start_idx:end_idx]
+
+        except Exception as e:
+            logger.error(f"Error getting documents: {e}")
+            return []
+
+    async def clear(self):
+        """Clear all data from the vector store."""
+        try:
+            if self.table:
+                # Drop the table and recreate it
+                table_name = self.config.get('vector_store.table_name', 'documents')
+                self.db.drop_table(table_name)
+
+                # Recreate the table
+                await self._create_table()
+
+                logger.info("Vector store cleared successfully")
+        except Exception as e:
+            logger.error(f"Error clearing vector store: {e}")
+            raise
+
+    async def add_single_document(self, content: str, metadata: Dict[str, Any]):
+        """Add a single document to the vector store."""
+        try:
+            # Generate embedding
+            embeddings = await self._generate_embeddings([content])
+            embedding = embeddings[0]
+
+            # Create document record
+            doc_id = metadata.get('highlight_id', f"doc_{int(time.time() * 1000)}")
+
+            record = {
+                'id': doc_id,
+                'content': content,
+                'embedding': embedding,
+                'source': metadata.get('source', 'unknown'),
+                'title': metadata.get('book', metadata.get('title', 'Untitled')),
+                'is_readwise': metadata.get('source_type') == 'readwise',
+                'created_at': datetime.now().isoformat(),
+                'file_size': len(content),
+                'file_type': 'highlight' if metadata.get('source_type') == 'readwise' else 'document',
+                'metadata': json.dumps(metadata)
+            }
+
+            # Add to table
+            self.table.add([record])
+
+            logger.info(f"Added document: {doc_id}")
+
+        except Exception as e:
+            logger.error(f"Error adding document: {e}")
+            raise
+
     async def close(self):
         """Close the vector store connection."""
         if self.db:

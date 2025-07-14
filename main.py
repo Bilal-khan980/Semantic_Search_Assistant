@@ -85,7 +85,10 @@ class DocumentSearchBackend:
                 
                 # Process document
                 chunks = await self.document_processor.process_file(file_path)
-                
+                logger.info(f"Processed {file_path}: {len(chunks)} chunks, type: {type(chunks)}")
+                if chunks:
+                    logger.info(f"First chunk type: {type(chunks[0])}, has content: {hasattr(chunks[0], 'content') if chunks else 'N/A'}")
+
                 # Generate embeddings and store
                 document_id = await self.vector_store.add_document(file_path, chunks)
                 

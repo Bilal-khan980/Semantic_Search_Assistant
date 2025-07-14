@@ -26,10 +26,12 @@ class DocumentFolderHandler(FileSystemEventHandler):
         
     def on_created(self, event):
         if not event.is_directory:
+            logger.info(f"File created detected: {event.src_path}")
             self.folder_manager.queue_file_for_processing(event.src_path, 'created')
     
     def on_modified(self, event):
         if not event.is_directory:
+            logger.info(f"File modified detected: {event.src_path}")
             self.folder_manager.queue_file_for_processing(event.src_path, 'modified')
     
     def on_deleted(self, event):
@@ -478,7 +480,13 @@ class FolderManager:
                     # Update progress
                     self.set_indexing_status(file_path, 'indexing', progress=50.0)
 
-                    results = await self.document_processor.process_documents([file_path])
+                    # Check if document_processor has the method directly or is a backend object
+                    if hasattr(self.document_processor, 'process_documents'):
+                        results = await self.document_processor.process_documents([file_path])
+                    elif hasattr(self.document_processor, 'document_processor'):
+                        results = await self.document_processor.document_processor.process_documents([file_path])
+                    else:
+                        raise AttributeError("Document processor not found")
 
                     # Update progress
                     self.set_indexing_status(file_path, 'indexing', progress=75.0)

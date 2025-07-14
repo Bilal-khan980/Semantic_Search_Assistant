@@ -1,386 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Floating search window for Semantic Search Assistant"
+    />
     <title>Search Assistant</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            color: #1e293b;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.8);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: move;
-            -webkit-app-region: drag;
-        }
-        
-        .title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 0.25rem;
-            -webkit-app-region: no-drag;
-        }
-        
-        .control-btn {
-            width: 20px;
-            height: 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            transition: background-color 0.2s;
-        }
-        
-        .control-btn:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        
-        .close-btn:hover {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .search-container {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .search-box {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            background: rgba(255, 255, 255, 0.8);
-            transition: border-color 0.2s;
-        }
-        
-        .search-box:focus {
-            outline: none;
-            border-color: #3b82f6;
-            background: white;
-        }
-        
-        .results {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0.5rem;
-        }
-        
-        .result-item {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-        }
-        
-        .result-item:hover {
-            background: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
-        }
-        
-        .result-title {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-            font-size: 0.8rem;
-        }
-        
-        .result-content {
-            color: #64748b;
-            line-height: 1.4;
-            margin-bottom: 0.5rem;
-            font-size: 0.75rem;
-        }
-        
-        .result-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-        
-        .readwise-badge {
-            background: #3b82f6;
-            color: white;
-            padding: 0.125rem 0.375rem;
-            border-radius: 4px;
-            font-size: 0.625rem;
-        }
-        
-        .empty-state {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #64748b;
-            padding: 2rem;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 1rem;
-        }
-        
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(0, 0, 0, 0.1);
-            border-top: 2px solid #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 0.5rem;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .status-bar {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 0.5rem;
-            font-size: 0.7rem;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #ef4444;
-        }
-        
-        .status-dot.ready {
-            background: #10b981;
-        }
-        
-        /* Custom scrollbar */
-        .results::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .results::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        .results::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
-        }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: transparent;
+        overflow: hidden;
+      }
+      
+      #floating-root {
+        width: 100%;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      /* Custom scrollbar for floating window */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
     </style>
-</head>
-<body>
-    <div class="header">
-        <div class="title">
-            <span>⚡</span>
-            <span>Search Assistant</span>
-        </div>
-        <div class="controls">
-            <button class="control-btn" onclick="minimizeWindow()" title="Minimize">−</button>
-            <button class="control-btn close-btn" onclick="closeWindow()" title="Close">×</button>
-        </div>
-    </div>
-    
-    <div class="search-container">
-        <input type="text" class="search-box" placeholder="Search your documents..." 
-               id="searchInput" onkeyup="handleSearch(event)" autofocus>
-    </div>
-    
-    <div class="loading" id="searchLoading">
-        <div class="spinner"></div>
-        <div>Searching...</div>
-    </div>
-    
-    <div class="results" id="searchResults">
-        <div class="empty-state">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
-            <div style="font-weight: 500; margin-bottom: 0.25rem;">Start typing to search</div>
-            <div style="font-size: 0.75rem;">Search across all your documents</div>
-        </div>
-    </div>
-    
-    <div class="status-bar">
-        <div class="status-dot" id="statusDot"></div>
-        <span id="statusText">Connecting...</span>
-    </div>
-
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="floating-root"></div>
     <script>
-        let backendReady = false;
-        
-        // Check backend status
-        async function checkBackend() {
-            try {
-                const response = await fetch('http://127.0.0.1:8000/health');
-                const data = await response.json();
-                if (data.status === 'healthy') {
-                    backendReady = true;
-                    document.getElementById('statusDot').classList.add('ready');
-                    document.getElementById('statusText').textContent = 'Ready';
-                } else {
-                    throw new Error('Backend not ready');
-                }
-            } catch (error) {
-                backendReady = false;
-                document.getElementById('statusDot').classList.remove('ready');
-                document.getElementById('statusText').textContent = 'Disconnected';
-                setTimeout(checkBackend, 2000);
-            }
-        }
-        
-        // Handle search
-        async function handleSearch(event) {
-            const query = event.target.value.trim();
-            
-            if (!query) {
-                showEmptyState();
-                return;
-            }
-            
-            if (!backendReady) return;
-            
-            const loading = document.getElementById('searchLoading');
-            const results = document.getElementById('searchResults');
-            
-            loading.style.display = 'block';
-            results.innerHTML = '';
-            
-            try {
-                const response = await fetch('http://127.0.0.1:8000/search', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query, limit: 8, similarity_threshold: 0.3 })
-                });
-                
-                const data = await response.json();
-                displayResults(data.results || []);
-            } catch (error) {
-                results.innerHTML = '<div class="result-item">Error: ' + error.message + '</div>';
-            } finally {
-                loading.style.display = 'none';
-            }
-        }
-        
-        // Display search results
-        function displayResults(results) {
-            const container = document.getElementById('searchResults');
-            
-            if (results.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
-                        <div style="font-weight: 500; margin-bottom: 0.25rem;">No results found</div>
-                        <div style="font-size: 0.75rem;">Try different keywords</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = results.map(result => `
-                <div class="result-item" onclick="copyResult('${result.content.replace(/'/g, "\\'")}')">
-                    <div class="result-title">${result.title || result.source.split('/').pop()}</div>
-                    <div class="result-content">${result.content.substring(0, 120)}...</div>
-                    <div class="result-meta">
-                        <span>${(result.score * 100).toFixed(0)}%</span>
-                        ${result.is_readwise ? '<span class="readwise-badge">Readwise</span>' : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // Show empty state
-        function showEmptyState() {
-            document.getElementById('searchResults').innerHTML = `
-                <div class="empty-state">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
-                    <div style="font-weight: 500; margin-bottom: 0.25rem;">Start typing to search</div>
-                    <div style="font-size: 0.75rem;">Search across all your documents</div>
-                </div>
-            `;
-        }
-        
-        // Copy result to clipboard
-        function copyResult(content) {
-            navigator.clipboard.writeText(content).then(() => {
-                // Visual feedback
-                event.target.style.background = '#10b981';
-                event.target.style.color = 'white';
-                setTimeout(() => {
-                    event.target.style.background = '';
-                    event.target.style.color = '';
-                }, 200);
-            });
-        }
-        
-        // Window controls
-        function closeWindow() {
-            if (window.electronAPI) {
-                window.electronAPI.closeFloatingWindow();
-            } else {
-                window.close();
-            }
-        }
-        
-        function minimizeWindow() {
-            if (window.electronAPI) {
-                window.electronAPI.minimizeFloatingWindow();
-            }
-        }
-        
-        // Initialize
-        checkBackend();
-        
-        // Auto-search with debounce
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => handleSearch(e), 300);
-        });
-        
-        // Focus search input
-        document.getElementById('searchInput').focus();
+      // Load the floating window React app
+      const script = document.createElement('script');
+      script.src = './static/js/floating.js';
+      document.body.appendChild(script);
     </script>
-</body>
+  </body>
 </html>

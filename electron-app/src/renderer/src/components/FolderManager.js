@@ -265,15 +265,6 @@ const FolderManager = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
             Add Folder
           </button>
           {!showFiles && (
@@ -546,7 +537,6 @@ const FolderManager = () => {
         )}
       </div>
 
-      {/* File Selection Footer - only show when browsing files */}
       {showFiles && (
         <div className="mt-4 p-4 border-t bg-gray-50 flex items-center justify-between">
           <div className="text-sm text-gray-600">

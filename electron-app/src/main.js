@@ -415,8 +415,86 @@ class SemanticSearchApp {
   }
 
   async startBackend() {
-    // Don't start backend from Electron - assume it's already running
-    // Just check if it's available
+    // First check if backend is already running
+    try {
+      const axios = require("axios");
+      const response = await axios.get("http://127.0.0.1:8000/health", {
+        timeout: 3000,
+      });
+      if (response.data.status === "healthy") {
+        this.isBackendReady = true;
+        this.notifyBackendReady();
+        console.log("Backend is already running and healthy");
+        return;
+      }
+    } catch (error) {
+      // Backend not running, start it
+    }
+
+    // Start the backend process if not already started
+    if (!this.backendProcess) {
+      try {
+        console.log("Starting Python backend...");
+
+        // Determine the backend path
+        let backendPath;
+        if (app.isPackaged) {
+          // In packaged app, backend is in resources/backend
+          backendPath = path.join(process.resourcesPath, "backend");
+        } else {
+          // In development, backend is in parent directory
+          backendPath = path.join(__dirname, "..", "..", "..");
+        }
+
+        // Find Python executable
+        const pythonCmd = process.platform === "win32" ? "python" : "python3";
+        const startScript = path.join(backendPath, "start_backend.py");
+
+        console.log(`Starting backend from: ${backendPath}`);
+        console.log(`Using Python command: ${pythonCmd}`);
+        console.log(`Start script: ${startScript}`);
+
+        // Start the backend process
+        this.backendProcess = spawn(pythonCmd, [startScript], {
+          cwd: backendPath,
+          stdio: ["ignore", "pipe", "pipe"],
+          detached: false,
+        });
+
+        // Handle backend output
+        this.backendProcess.stdout.on("data", (data) => {
+          console.log(`Backend stdout: ${data}`);
+        });
+
+        this.backendProcess.stderr.on("data", (data) => {
+          console.error(`Backend stderr: ${data}`);
+        });
+
+        this.backendProcess.on("close", (code) => {
+          console.log(`Backend process exited with code ${code}`);
+          this.backendProcess = null;
+          this.isBackendReady = false;
+        });
+
+        this.backendProcess.on("error", (error) => {
+          console.error(`Failed to start backend: ${error}`);
+          this.backendProcess = null;
+          this.isBackendReady = false;
+        });
+
+        // Wait a bit for the backend to start, then check health
+        setTimeout(() => this.checkBackendHealth(), 3000);
+      } catch (error) {
+        console.error("Error starting backend:", error);
+        setTimeout(() => this.startBackend(), 5000);
+      }
+    } else {
+      // Process exists, just check health
+      this.checkBackendHealth();
+    }
+  }
+
+  async checkBackendHealth() {
     try {
       const axios = require("axios");
       const response = await axios.get("http://127.0.0.1:8000/health", {
@@ -425,13 +503,15 @@ class SemanticSearchApp {
       if (response.data.status === "healthy") {
         this.isBackendReady = true;
         this.notifyBackendReady();
-        console.log("Backend is already running and healthy");
+        console.log("Backend is healthy and ready");
+      } else {
+        throw new Error("Backend not healthy");
       }
     } catch (error) {
-      console.log("Backend not available yet, will retry...");
+      console.log("Backend health check failed, retrying...");
       this.isBackendReady = false;
-      // Retry every 2 seconds
-      setTimeout(() => this.startBackend(), 2000);
+      // Retry every 3 seconds
+      setTimeout(() => this.checkBackendHealth(), 3000);
     }
   }
 
