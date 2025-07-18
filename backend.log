@@ -1,363 +1,836 @@
-2025-07-14 23:05:39,715 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:07:26,496 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:08:26,769 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:08:26,776 - main - INFO - Initializing document search backend...
-2025-07-14 23:08:26,776 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:08:26,783 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:08:26,783 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:08:35,832 - database - INFO - Connected to existing table: documents
-2025-07-14 23:08:35,833 - database - INFO - Vector store initialized successfully
-2025-07-14 23:08:35,835 - document_processor - INFO - Document processor initialized
-2025-07-14 23:08:35,838 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:08:35,840 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:08:35,845 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:08:35,849 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:08:35,850 - main - INFO - Backend initialization complete
-2025-07-14 23:08:35,851 - api_service - INFO - API server started successfully
-2025-07-14 23:08:35,851 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:17:55,549 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:18:06,954 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:18:06,954 - main - INFO - Initializing document search backend...
-2025-07-14 23:18:06,954 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:18:06,955 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:18:06,955 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:18:13,221 - database - INFO - Connected to existing table: documents
-2025-07-14 23:18:13,221 - database - INFO - Vector store initialized successfully
-2025-07-14 23:18:13,221 - document_processor - INFO - Document processor initialized
-2025-07-14 23:18:13,222 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:18:13,222 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:18:13,226 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:18:13,226 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:18:13,226 - main - INFO - Backend initialization complete
-2025-07-14 23:18:13,226 - api_service - INFO - API server started successfully
-2025-07-14 23:18:13,227 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:18:13,236 - database - INFO - Vector store closed
-2025-07-14 23:18:13,236 - api_service - INFO - API server shutdown complete
-2025-07-14 23:18:13,237 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:18:22,792 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:18:32,877 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:18:32,877 - main - INFO - Initializing document search backend...
-2025-07-14 23:18:32,877 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:18:32,878 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:18:32,879 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:18:39,561 - database - INFO - Connected to existing table: documents
-2025-07-14 23:18:39,561 - database - INFO - Vector store initialized successfully
-2025-07-14 23:18:39,562 - document_processor - INFO - Document processor initialized
-2025-07-14 23:18:39,563 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:18:39,563 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:18:39,566 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:18:39,567 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:18:39,568 - main - INFO - Backend initialization complete
-2025-07-14 23:18:39,569 - api_service - INFO - API server started successfully
-2025-07-14 23:18:39,569 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:18:39,573 - database - INFO - Vector store closed
-2025-07-14 23:18:39,573 - api_service - INFO - API server shutdown complete
-2025-07-14 23:18:39,576 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:19:18,962 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:19:28,512 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:19:28,512 - main - INFO - Initializing document search backend...
-2025-07-14 23:19:28,513 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:19:28,513 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:19:28,514 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:19:34,087 - database - INFO - Connected to existing table: documents
-2025-07-14 23:19:34,087 - database - INFO - Vector store initialized successfully
-2025-07-14 23:19:34,088 - document_processor - INFO - Document processor initialized
-2025-07-14 23:19:34,089 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:19:34,090 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:19:34,093 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:19:34,093 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:19:34,094 - main - INFO - Backend initialization complete
-2025-07-14 23:19:34,095 - api_service - INFO - API server started successfully
-2025-07-14 23:19:34,096 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:19:34,102 - database - INFO - Vector store closed
-2025-07-14 23:19:34,103 - api_service - INFO - API server shutdown complete
-2025-07-14 23:19:34,105 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:23:18,518 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:23:36,231 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:23:36,231 - main - INFO - Initializing document search backend...
-2025-07-14 23:23:36,231 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:23:36,232 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:23:36,233 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:23:41,894 - database - INFO - Connected to existing table: documents
-2025-07-14 23:23:41,895 - database - INFO - Vector store initialized successfully
-2025-07-14 23:23:41,895 - document_processor - INFO - Document processor initialized
-2025-07-14 23:23:41,895 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:23:41,895 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:23:41,896 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:23:41,897 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:23:41,897 - main - INFO - Backend initialization complete
-2025-07-14 23:23:41,897 - api_service - INFO - API server started successfully
-2025-07-14 23:23:41,897 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:24:55,023 - database - INFO - Vector store closed
-2025-07-14 23:24:55,023 - api_service - INFO - API server shutdown complete
-2025-07-14 23:24:55,024 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-14 23:24:55,025 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:34:49,368 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:35:01,080 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:35:01,081 - main - INFO - Initializing document search backend...
-2025-07-14 23:35:01,081 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:35:01,083 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:35:01,084 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:35:05,993 - database - INFO - Connected to existing table: documents
-2025-07-14 23:35:05,993 - database - INFO - Vector store initialized successfully
-2025-07-14 23:35:05,993 - document_processor - INFO - Document processor initialized
-2025-07-14 23:35:05,994 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:35:05,994 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:35:05,996 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:35:05,996 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:35:05,996 - main - INFO - Backend initialization complete
-2025-07-14 23:35:05,996 - api_service - INFO - API server started successfully
-2025-07-14 23:35:05,997 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:37:24,852 - database - INFO - Vector store closed
-2025-07-14 23:37:24,853 - api_service - INFO - API server shutdown complete
-2025-07-14 23:37:24,854 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-14 23:37:24,854 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:37:41,497 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:37:53,684 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:37:53,684 - main - INFO - Initializing document search backend...
-2025-07-14 23:37:53,684 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:37:53,686 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:37:53,686 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:37:58,754 - database - INFO - Connected to existing table: documents
-2025-07-14 23:37:58,754 - database - INFO - Vector store initialized successfully
-2025-07-14 23:37:58,754 - document_processor - INFO - Document processor initialized
-2025-07-14 23:37:58,754 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:37:58,755 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:37:58,757 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:37:58,757 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:37:58,757 - main - INFO - Backend initialization complete
-2025-07-14 23:37:58,757 - api_service - INFO - API server started successfully
-2025-07-14 23:37:58,757 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:38:08,774 - main - INFO - Search for 'readwise' returned 2 results
-2025-07-14 23:38:18,805 - main - INFO - Search for 'importer' returned 2 results
-2025-07-14 23:38:33,363 - folder_manager - INFO - Removed file from store: E:\PROJECT\Semantic_Search_Assistant\test_docs\sample_readwise_export.md
-2025-07-14 23:38:42,191 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt (trigger: created)
-2025-07-14 23:38:42,192 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt (trigger: modified)
-2025-07-14 23:38:43,235 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt
-2025-07-14 23:38:43,236 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt
-2025-07-14 23:38:43,237 - document_processor - INFO - Processed hello - Copy.txt: 1 chunks created
-2025-07-14 23:38:43,238 - database - ERROR - Error adding document: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:43,238 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:43,239 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt
-2025-07-14 23:38:43,239 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt
-2025-07-14 23:38:43,240 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt
-2025-07-14 23:38:43,240 - document_processor - INFO - Processed hello - Copy.txt: 1 chunks created
-2025-07-14 23:38:43,241 - database - ERROR - Error adding document: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:43,241 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:43,241 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello - Copy.txt
-2025-07-14 23:38:48,855 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (trigger: modified)
-2025-07-14 23:38:49,378 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:49,379 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:49,380 - document_processor - INFO - Processed bilal.txt: 1 chunks created
-2025-07-14 23:38:49,380 - database - ERROR - Error adding document: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:49,380 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:49,380 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:49,435 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (trigger: modified)
-2025-07-14 23:38:50,650 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:50,651 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:50,652 - document_processor - INFO - Processed bilal.txt: 1 chunks created
-2025-07-14 23:38:50,653 - database - ERROR - Error adding document: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:50,653 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:50,653 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:55,461 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (trigger: modified)
-2025-07-14 23:38:55,596 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:55,597 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:38:55,598 - document_processor - INFO - Processed bilal.txt: 1 chunks created
-2025-07-14 23:38:55,598 - database - ERROR - Error adding document: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:55,598 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 'VectorStore' object has no attribute '_generate_embedding'
-2025-07-14 23:38:55,598 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:39:01,503 - main - INFO - Search for 'good' returned 2 results
-2025-07-14 23:39:04,569 - main - INFO - Search for 'morning' returned 2 results
-2025-07-14 23:41:58,160 - database - INFO - Vector store closed
-2025-07-14 23:41:58,161 - api_service - INFO - API server shutdown complete
-2025-07-14 23:41:58,161 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-14 23:41:58,162 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:42:15,495 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:42:33,953 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:42:33,953 - main - INFO - Initializing document search backend...
-2025-07-14 23:42:33,953 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:42:33,954 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:42:33,954 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:42:38,791 - database - INFO - Connected to existing table: documents
-2025-07-14 23:42:38,791 - database - INFO - Vector store initialized successfully
-2025-07-14 23:42:38,792 - document_processor - INFO - Document processor initialized
-2025-07-14 23:42:38,792 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:42:38,792 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:42:38,794 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:42:38,794 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:42:38,795 - main - INFO - Backend initialization complete
-2025-07-14 23:42:38,795 - api_service - INFO - API server started successfully
-2025-07-14 23:42:38,795 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:42:44,461 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:42:47,709 - main - INFO - Search for 'good' returned 2 results
-2025-07-14 23:43:08,438 - folder_manager - INFO - Removed file from store: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:43:16,848 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:43:24,724 - folder_manager - INFO - File created detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:43:24,726 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt (trigger: created)
-2025-07-14 23:43:25,692 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:43:25,693 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:43:25,694 - document_processor - INFO - Processed New Text Document.txt: 0 chunks created
-2025-07-14 23:43:25,756 - database - ERROR - Error adding document: 'list' object has no attribute 'get'
-2025-07-14 23:43:25,757 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt: 'list' object has no attribute 'get'
-2025-07-14 23:43:25,757 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:47:34,166 - database - INFO - Vector store closed
-2025-07-14 23:47:34,166 - api_service - INFO - API server shutdown complete
-2025-07-14 23:47:34,167 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-14 23:47:34,168 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:47:50,466 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:48:04,335 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:48:04,336 - main - INFO - Initializing document search backend...
-2025-07-14 23:48:04,336 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:48:04,337 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:48:04,337 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:48:09,248 - database - INFO - Connected to existing table: documents
-2025-07-14 23:48:09,249 - database - INFO - Vector store initialized successfully
-2025-07-14 23:48:09,249 - document_processor - INFO - Document processor initialized
-2025-07-14 23:48:09,249 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:48:09,249 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:48:09,251 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:48:09,251 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:48:09,251 - main - INFO - Backend initialization complete
-2025-07-14 23:48:09,251 - api_service - INFO - API server started successfully
-2025-07-14 23:48:09,252 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:48:20,333 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:48:24,832 - main - INFO - Search for 'goof' returned 2 results
-2025-07-14 23:48:28,607 - main - INFO - Search for 'good' returned 2 results
-2025-07-14 23:48:39,840 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt
-2025-07-14 23:48:39,840 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt (trigger: modified)
-2025-07-14 23:48:40,095 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt
-2025-07-14 23:48:40,096 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt
-2025-07-14 23:48:40,097 - document_processor - INFO - Processed He.txt: 1 chunks created
-2025-07-14 23:48:40,097 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt: 1 chunks, type: <class 'list'>
-2025-07-14 23:48:40,097 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
-2025-07-14 23:48:40,138 - database - ERROR - Error adding document: 'list' object has no attribute 'get'
-2025-07-14 23:48:40,139 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt: 'list' object has no attribute 'get'
-2025-07-14 23:48:40,139 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt
-2025-07-14 23:49:06,500 - main - INFO - Search for 'halooo' returned 2 results
-2025-07-14 23:49:08,542 - main - INFO - Search for 'haloo' returned 2 results
-2025-07-14 23:49:09,940 - main - INFO - Search for 'halo' returned 2 results
-2025-07-14 23:49:10,891 - main - INFO - Search for 'hal' returned 2 results
-2025-07-14 23:49:12,086 - main - INFO - Search for 'ha' returned 2 results
-2025-07-14 23:50:31,403 - database - INFO - Vector store closed
-2025-07-14 23:50:31,403 - api_service - INFO - API server shutdown complete
-2025-07-14 23:50:31,403 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-14 23:50:31,404 - folder_manager - INFO - Background processor stopped
-2025-07-14 23:50:42,758 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-14 23:50:56,270 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-14 23:50:56,271 - main - INFO - Initializing document search backend...
-2025-07-14 23:50:56,271 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:50:56,272 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-14 23:50:56,272 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-14 23:51:02,129 - database - INFO - Connected to existing table: documents
-2025-07-14 23:51:02,129 - database - INFO - Vector store initialized successfully
-2025-07-14 23:51:02,130 - document_processor - INFO - Document processor initialized
-2025-07-14 23:51:02,130 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:51:02,130 - folder_manager - INFO - Starting folder monitoring...
-2025-07-14 23:51:02,132 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-14 23:51:02,132 - folder_manager - INFO - Monitoring 1 folders
-2025-07-14 23:51:02,133 - main - INFO - Backend initialization complete
-2025-07-14 23:51:02,133 - api_service - INFO - API server started successfully
-2025-07-14 23:51:02,133 - folder_manager - INFO - Starting background document processor...
-2025-07-14 23:51:10,173 - main - INFO - Search for 'haloo' returned 2 results
-2025-07-14 23:51:12,686 - main - INFO - Search for 'halo' returned 2 results
-2025-07-14 23:51:13,954 - main - INFO - Search for 'hal' returned 2 results
-2025-07-14 23:51:34,176 - folder_manager - INFO - Removed file from store: E:\PROJECT\Semantic_Search_Assistant\test_docs\He.txt
-2025-07-14 23:51:46,664 - folder_manager - INFO - File created detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:51:46,666 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt (trigger: created)
-2025-07-14 23:51:47,682 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:51:47,683 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:51:47,683 - document_processor - INFO - Processed New Text Document.txt: 0 chunks created
-2025-07-14 23:51:47,684 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt: 0 chunks, type: <class 'list'>
-2025-07-14 23:51:47,726 - database - ERROR - Error adding document: 'list' object has no attribute 'get'
-2025-07-14 23:51:47,726 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt: 'list' object has no attribute 'get'
-2025-07-14 23:51:47,726 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:52:06,266 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:06,267 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (trigger: modified)
-2025-07-14 23:52:07,422 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:07,423 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:07,423 - document_processor - INFO - Processed bilal.txt: 1 chunks created
-2025-07-14 23:52:07,424 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 1 chunks, type: <class 'list'>
-2025-07-14 23:52:07,424 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
-2025-07-14 23:52:07,449 - database - ERROR - Error adding document: 'list' object has no attribute 'get'
-2025-07-14 23:52:07,450 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 'list' object has no attribute 'get'
-2025-07-14 23:52:07,450 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:09,098 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:09,100 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (trigger: modified)
-2025-07-14 23:52:09,915 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:09,917 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:09,918 - document_processor - INFO - Processed bilal.txt: 1 chunks created
-2025-07-14 23:52:09,918 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 1 chunks, type: <class 'list'>
-2025-07-14 23:52:09,918 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
-2025-07-14 23:52:09,948 - database - ERROR - Error adding document: 'list' object has no attribute 'get'
-2025-07-14 23:52:09,948 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 'list' object has no attribute 'get'
-2025-07-14 23:52:09,948 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
-2025-07-14 23:52:17,609 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,176 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,390 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,508 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,638 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,755 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,877 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:18,994 - main - INFO - Search for 'bilal' returned 2 results
-2025-07-14 23:52:47,985 - folder_manager - INFO - File created detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:52:47,990 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt (trigger: created)
-2025-07-14 23:52:48,117 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:52:48,123 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:52:48,124 - document_processor - INFO - Processed New Text Document.txt: 0 chunks created
-2025-07-14 23:52:48,125 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt: 0 chunks, type: <class 'list'>
-2025-07-14 23:52:48,171 - database - ERROR - Error adding document: 'list' object has no attribute 'get'
-2025-07-14 23:52:48,172 - main - ERROR - Error processing E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt: 'list' object has no attribute 'get'
-2025-07-14 23:52:48,172 - folder_manager - WARNING - Processing failed: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-14 23:53:33,501 - database - INFO - Vector store closed
-2025-07-14 23:53:33,501 - api_service - INFO - API server shutdown complete
-2025-07-14 23:53:33,502 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-14 23:53:33,503 - folder_manager - INFO - Background processor stopped
-2025-07-15 00:03:26,333 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-15 00:03:38,731 - folder_manager - INFO - Loaded 1 connected folders
-2025-07-15 00:03:38,731 - main - INFO - Initializing document search backend...
-2025-07-15 00:03:38,731 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-2025-07-15 00:03:38,732 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
-2025-07-15 00:03:38,733 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-2025-07-15 00:03:46,105 - database - INFO - Connected to existing table: documents
-2025-07-15 00:03:46,105 - database - INFO - Vector store initialized successfully
-2025-07-15 00:03:46,105 - document_processor - INFO - Document processor initialized
-2025-07-15 00:03:46,105 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-15 00:03:46,105 - folder_manager - INFO - Starting folder monitoring...
-2025-07-15 00:03:46,108 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
-2025-07-15 00:03:46,108 - folder_manager - INFO - Monitoring 1 folders
-2025-07-15 00:03:46,108 - main - INFO - Backend initialization complete
-2025-07-15 00:03:46,108 - api_service - INFO - API server started successfully
-2025-07-15 00:03:46,108 - folder_manager - INFO - Starting background document processor...
-2025-07-15 00:03:51,776 - main - INFO - Search for 'bilal' returned 20 results
-2025-07-15 00:04:13,587 - main - INFO - Search for 'Utility functions' returned 20 results
-2025-07-15 00:04:42,713 - folder_manager - INFO - Removed file from store: E:\PROJECT\Semantic_Search_Assistant\test_docs\d.txt
-2025-07-15 00:04:53,207 - folder_manager - INFO - File created detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-15 00:04:53,209 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt (trigger: created)
-2025-07-15 00:04:53,792 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-15 00:04:53,792 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-15 00:04:53,793 - document_processor - INFO - Processed New Text Document.txt: 0 chunks created
-2025-07-15 00:04:53,794 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt: 0 chunks, type: <class 'list'>
-2025-07-15 00:04:53,794 - database - INFO - add_document called with 0 chunks, type: <class 'list'>
-2025-07-15 00:04:53,794 - database - INFO - No chunks to add for E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt
-2025-07-15 00:04:53,794 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\New Text Document.txt (0 chunks)
-2025-07-15 00:05:06,936 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt
-2025-07-15 00:05:06,938 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt (trigger: modified)
-2025-07-15 00:05:07,304 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt
-2025-07-15 00:05:07,305 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt
-2025-07-15 00:05:07,307 - document_processor - INFO - Processed wasay.txt: 1 chunks created
-2025-07-15 00:05:07,307 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt: 1 chunks, type: <class 'list'>
-2025-07-15 00:05:07,308 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
-2025-07-15 00:05:07,308 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
-2025-07-15 00:05:07,308 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
-2025-07-15 00:05:07,347 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\wasay.txt', 'filename': 'wasay.txt', 'extension': '.txt', 'file_size': 15, 'modified_time': 1752519906.9360347, 'format': 'text', 'lines': 1, 'words': 4, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 15}
-2025-07-15 00:05:07,357 - database - INFO - Added 1 chunks for document: wasay.txt
-2025-07-15 00:05:07,357 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt (0 chunks)
-2025-07-15 00:05:14,679 - main - INFO - Search for 'wasay' returned 20 results
-2025-07-15 00:05:20,773 - database - INFO - Vector store closed
-2025-07-15 00:05:20,773 - api_service - INFO - API server shutdown complete
-2025-07-15 00:05:20,774 - __main__ - INFO - Received signal 2, shutting down...
-2025-07-15 00:05:20,775 - folder_manager - INFO - Background processor stopped
-2025-07-16 00:39:56,628 - __main__ - INFO - Starting Semantic Search Assistant backend...
-2025-07-16 00:40:41,280 - datasets - INFO - PyTorch version 2.4.0 available.
-2025-07-16 00:40:41,325 - datasets - INFO - JAX version 0.5.2 available.
-2025-07-16 00:40:43,402 - __main__ - ERROR - Failed to start backend: No module named 'watchdog'
+2025-07-18 21:01:56,970 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 21:02:08,577 - __main__ - ERROR - Failed to start backend: No module named 'document_monitor'
+2025-07-18 21:06:00,976 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 21:06:10,886 - __main__ - ERROR - Failed to start backend: No module named 'document_monitor'
+2025-07-18 21:43:53,437 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 21:54:02,014 - __main__ - ERROR - Failed to start backend: No module named 'document_monitor'
+2025-07-18 21:59:22,981 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 21:59:59,917 - __main__ - ERROR - Failed to start backend: No module named 'document_monitor'
+2025-07-18 22:01:49,698 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:02:05,265 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:02:05,374 - main - INFO - Initializing document search backend...
+2025-07-18 22:02:05,375 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:02:05,377 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:02:05,380 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:02:14,436 - database - INFO - Created new table: documents
+2025-07-18 22:02:14,437 - database - INFO - Vector store initialized successfully
+2025-07-18 22:02:14,437 - document_processor - INFO - Document processor initialized
+2025-07-18 22:02:14,722 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:02:14,722 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:02:14,729 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:02:14,730 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:02:14,731 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:02:14,737 - api_service - INFO - API server started successfully
+2025-07-18 22:02:14,755 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:03:33,979 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:05:13,345 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:05:13,346 - main - INFO - Initializing document search backend...
+2025-07-18 22:05:13,346 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:05:13,348 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:05:13,348 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:05:16,963 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:05:19,603 - database - INFO - Connected to existing table: documents
+2025-07-18 22:05:19,605 - database - INFO - Vector store initialized successfully
+2025-07-18 22:05:19,605 - document_processor - INFO - Document processor initialized
+2025-07-18 22:05:19,641 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:05:19,642 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:05:19,642 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:05:19,652 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:05:19,652 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:05:19,689 - api_service - INFO - API server started successfully
+2025-07-18 22:05:19,700 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:05:27,031 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:05:27,032 - main - INFO - Initializing document search backend...
+2025-07-18 22:05:27,033 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:05:27,034 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:05:27,034 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:05:32,676 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:32,677 - main - INFO - Search for 'h' returned 0 results
+2025-07-18 22:05:32,863 - database - INFO - Connected to existing table: documents
+2025-07-18 22:05:32,863 - database - INFO - Vector store initialized successfully
+2025-07-18 22:05:32,864 - document_processor - INFO - Document processor initialized
+2025-07-18 22:05:32,883 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:05:32,883 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:05:32,884 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:05:32,885 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:05:32,889 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:05:32,893 - api_service - INFO - API server started successfully
+2025-07-18 22:05:32,909 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:05:32,929 - database - INFO - Vector store closed
+2025-07-18 22:05:32,930 - api_service - INFO - API server shutdown complete
+2025-07-18 22:05:33,010 - folder_manager - INFO - Background processor stopped
+2025-07-18 22:05:33,047 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:33,048 - main - INFO - Search for 'hh' returned 0 results
+2025-07-18 22:05:33,740 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:33,740 - main - INFO - Search for 'hhv' returned 0 results
+2025-07-18 22:05:34,134 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:34,135 - main - INFO - Search for 'hhvv' returned 0 results
+2025-07-18 22:05:37,373 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:37,374 - main - INFO - Search for 'hhvvs' returned 0 results
+2025-07-18 22:05:37,969 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:37,970 - main - INFO - Search for 'hhvvss' returned 0 results
+2025-07-18 22:05:38,277 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:38,277 - main - INFO - Search for 'hhvvssd' returned 0 results
+2025-07-18 22:05:38,705 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:38,705 - main - INFO - Search for 'hhvvssdd' returned 0 results
+2025-07-18 22:05:46,875 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:46,876 - main - INFO - Search for 'b' returned 0 results
+2025-07-18 22:05:47,708 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:47,708 - main - INFO - Search for 'bi' returned 0 results
+2025-07-18 22:05:47,989 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:47,989 - main - INFO - Search for 'bil' returned 0 results
+2025-07-18 22:05:48,055 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:48,055 - main - INFO - Search for 'bila' returned 0 results
+2025-07-18 22:05:48,150 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:48,150 - main - INFO - Search for 'bilal' returned 0 results
+2025-07-18 22:05:56,997 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:56,998 - main - INFO - Search for 'd' returned 0 results
+2025-07-18 22:05:57,005 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:57,005 - main - INFO - Search for 'df' returned 0 results
+2025-07-18 22:05:57,041 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:57,041 - main - INFO - Search for 'dfs' returned 0 results
+2025-07-18 22:05:57,490 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:57,491 - main - INFO - Search for 'dfsf' returned 0 results
+2025-07-18 22:05:57,508 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:57,509 - main - INFO - Search for 'dfsfs' returned 0 results
+2025-07-18 22:05:58,043 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:58,044 - main - INFO - Search for 'dfsf' returned 0 results
+2025-07-18 22:05:58,203 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:58,204 - main - INFO - Search for 'dfs' returned 0 results
+2025-07-18 22:05:58,546 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:58,547 - main - INFO - Search for 'df' returned 0 results
+2025-07-18 22:05:58,668 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:58,669 - main - INFO - Search for 'd' returned 0 results
+2025-07-18 22:05:59,205 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:59,206 - main - INFO - Search for 'd' returned 0 results
+2025-07-18 22:05:59,322 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:59,323 - main - INFO - Search for 'df' returned 0 results
+2025-07-18 22:05:59,515 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:59,516 - main - INFO - Search for 'dff' returned 0 results
+2025-07-18 22:05:59,635 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:59,636 - main - INFO - Search for 'dffd' returned 0 results
+2025-07-18 22:05:59,772 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:59,772 - main - INFO - Search for 'dffdf' returned 0 results
+2025-07-18 22:05:59,917 - database - INFO - No documents in vector store yet
+2025-07-18 22:05:59,917 - main - INFO - Search for 'dffdfd' returned 0 results
+2025-07-18 22:06:00,007 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,010 - main - INFO - Search for 'dffdfdf' returned 0 results
+2025-07-18 22:06:00,288 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,289 - main - INFO - Search for 'dffdfd' returned 0 results
+2025-07-18 22:06:00,423 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,424 - main - INFO - Search for 'dffdf' returned 0 results
+2025-07-18 22:06:00,554 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,555 - main - INFO - Search for 'dffd' returned 0 results
+2025-07-18 22:06:00,672 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,672 - main - INFO - Search for 'dff' returned 0 results
+2025-07-18 22:06:00,804 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,804 - main - INFO - Search for 'df' returned 0 results
+2025-07-18 22:06:00,939 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:00,940 - main - INFO - Search for 'd' returned 0 results
+2025-07-18 22:06:01,509 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:01,509 - main - INFO - Search for 'f' returned 0 results
+2025-07-18 22:06:01,659 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:01,660 - main - INFO - Search for 'fd' returned 0 results
+2025-07-18 22:06:01,810 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:01,810 - main - INFO - Search for 'fdf' returned 0 results
+2025-07-18 22:06:47,022 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:47,023 - main - INFO - Search for 'fdfd' returned 0 results
+2025-07-18 22:06:47,255 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:47,255 - main - INFO - Search for 'fdfdf' returned 0 results
+2025-07-18 22:06:47,446 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:47,446 - main - INFO - Search for 'fdfdff' returned 0 results
+2025-07-18 22:06:47,655 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:47,656 - main - INFO - Search for 'fdfdffd' returned 0 results
+2025-07-18 22:06:47,938 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:47,938 - main - INFO - Search for 'fdfdffdf' returned 0 results
+2025-07-18 22:06:48,083 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:48,083 - main - INFO - Search for 'fdfdffdfd' returned 0 results
+2025-07-18 22:06:48,818 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:48,819 - main - INFO - Search for 'fdfdffdf' returned 0 results
+2025-07-18 22:06:48,991 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:48,992 - main - INFO - Search for 'fdfdffd' returned 0 results
+2025-07-18 22:06:49,091 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:49,091 - main - INFO - Search for 'fdfdff' returned 0 results
+2025-07-18 22:06:49,214 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:49,214 - main - INFO - Search for 'fdfdf' returned 0 results
+2025-07-18 22:06:49,347 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:49,347 - main - INFO - Search for 'fdfd' returned 0 results
+2025-07-18 22:06:49,468 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:49,469 - main - INFO - Search for 'fdf' returned 0 results
+2025-07-18 22:06:49,598 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:49,598 - main - INFO - Search for 'fd' returned 0 results
+2025-07-18 22:06:57,709 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:57,709 - main - INFO - Search for 'm' returned 0 results
+2025-07-18 22:06:57,867 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:57,868 - main - INFO - Search for 'me' returned 0 results
+2025-07-18 22:06:58,166 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:58,167 - main - INFO - Search for 'mee' returned 0 results
+2025-07-18 22:06:58,390 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:58,390 - main - INFO - Search for 'meet' returned 0 results
+2025-07-18 22:06:58,690 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:58,690 - main - INFO - Search for 'm' returned 0 results
+2025-07-18 22:06:59,249 - database - INFO - No documents in vector store yet
+2025-07-18 22:06:59,249 - main - INFO - Search for 'p' returned 0 results
+2025-07-18 22:07:00,038 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:00,038 - main - INFO - Search for 'pe' returned 0 results
+2025-07-18 22:07:00,362 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:00,363 - main - INFO - Search for 'a' returned 0 results
+2025-07-18 22:07:00,507 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:00,508 - main - INFO - Search for 'aa' returned 0 results
+2025-07-18 22:07:00,609 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:00,609 - main - INFO - Search for 'aaa' returned 0 results
+2025-07-18 22:07:00,910 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:00,910 - main - INFO - Search for 'a' returned 0 results
+2025-07-18 22:07:01,007 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:01,007 - main - INFO - Search for 'ai' returned 0 results
+2025-07-18 22:07:01,166 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:01,166 - main - INFO - Search for 'aik' returned 0 results
+2025-07-18 22:07:01,463 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:01,464 - main - INFO - Search for 'm' returned 0 results
+2025-07-18 22:07:01,551 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:01,551 - main - INFO - Search for 'mi' returned 0 results
+2025-07-18 22:07:01,696 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:01,696 - main - INFO - Search for 'min' returned 0 results
+2025-07-18 22:07:02,691 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:02,692 - main - INFO - Search for 'a' returned 0 results
+2025-07-18 22:07:02,912 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:02,912 - main - INFO - Search for 'ag' returned 0 results
+2025-07-18 22:07:03,085 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:03,086 - main - INFO - Search for 'agr' returned 0 results
+2025-07-18 22:07:03,322 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:03,322 - main - INFO - Search for 'f' returned 0 results
+2025-07-18 22:07:03,518 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:03,519 - main - INFO - Search for 'fr' returned 0 results
+2025-07-18 22:07:03,706 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:03,707 - main - INFO - Search for 'fre' returned 0 results
+2025-07-18 22:07:03,827 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:03,827 - main - INFO - Search for 'free' returned 0 results
+2025-07-18 22:07:04,384 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:04,385 - main - INFO - Search for 't' returned 0 results
+2025-07-18 22:07:04,690 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:04,690 - main - INFO - Search for 'to' returned 0 results
+2025-07-18 22:07:07,474 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:07,475 - main - INFO - Search for 'toa' returned 0 results
+2025-07-18 22:07:07,576 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:07,576 - main - INFO - Search for 'toai' returned 0 results
+2025-07-18 22:07:07,749 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:07,749 - main - INFO - Search for 'toaik' returned 0 results
+2025-07-18 22:07:08,136 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:08,136 - main - INFO - Search for 'h' returned 0 results
+2025-07-18 22:07:08,260 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:08,260 - main - INFO - Search for 'he' returned 0 results
+2025-07-18 22:07:08,356 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:08,356 - main - INFO - Search for 'hea' returned 0 results
+2025-07-18 22:07:08,500 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:08,500 - main - INFO - Search for 'heav' returned 0 results
+2025-07-18 22:07:08,612 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:08,613 - main - INFO - Search for 'heavy' returned 0 results
+2025-07-18 22:07:08,994 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:08,994 - main - INFO - Search for 'k' returned 0 results
+2025-07-18 22:07:09,096 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:09,096 - main - INFO - Search for 'ka' returned 0 results
+2025-07-18 22:07:09,434 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:09,435 - main - INFO - Search for 'kam' returned 0 results
+2025-07-18 22:07:10,115 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:10,117 - main - INFO - Search for 'h' returned 0 results
+2025-07-18 22:07:10,275 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:10,275 - main - INFO - Search for 'ho' returned 0 results
+2025-07-18 22:07:10,779 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:10,779 - main - INFO - Search for 'g' returned 0 results
+2025-07-18 22:07:10,847 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:10,847 - main - INFO - Search for 'gy' returned 0 results
+2025-07-18 22:07:10,960 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:10,960 - main - INFO - Search for 'gya' returned 0 results
+2025-07-18 22:07:11,646 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:11,646 - main - INFO - Search for 'h' returned 0 results
+2025-07-18 22:07:11,762 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:11,762 - main - INFO - Search for 'ha' returned 0 results
+2025-07-18 22:07:14,368 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:14,369 - main - INFO - Search for 'a' returned 0 results
+2025-07-18 22:07:15,095 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:15,095 - main - INFO - Search for 'ab' returned 0 results
+2025-07-18 22:07:15,398 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:15,399 - main - INFO - Search for 'w' returned 0 results
+2025-07-18 22:07:15,572 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:15,572 - main - INFO - Search for 'wa' returned 0 results
+2025-07-18 22:07:15,832 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:15,833 - main - INFO - Search for 'wap' returned 0 results
+2025-07-18 22:07:16,026 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:16,026 - main - INFO - Search for 'wapi' returned 0 results
+2025-07-18 22:07:16,143 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:16,144 - main - INFO - Search for 'wapis' returned 0 results
+2025-07-18 22:07:16,513 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:16,514 - main - INFO - Search for 'a' returned 0 results
+2025-07-18 22:07:16,662 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:16,663 - main - INFO - Search for 'aa' returned 0 results
+2025-07-18 22:07:17,636 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:17,636 - main - INFO - Search for 'd' returned 0 results
+2025-07-18 22:07:17,764 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:17,764 - main - INFO - Search for 'dh' returned 0 results
+2025-07-18 22:07:17,919 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:17,928 - main - INFO - Search for 'dha' returned 0 results
+2025-07-18 22:07:18,367 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:18,369 - main - INFO - Search for 'p' returned 0 results
+2025-07-18 22:07:18,584 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:18,585 - main - INFO - Search for 'pu' returned 0 results
+2025-07-18 22:07:18,710 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:18,710 - main - INFO - Search for 'pur' returned 0 results
+2025-07-18 22:07:18,827 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:18,827 - main - INFO - Search for 'pura' returned 0 results
+2025-07-18 22:07:18,964 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:18,964 - main - INFO - Search for 'puran' returned 0 results
+2025-07-18 22:07:19,061 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:19,063 - main - INFO - Search for 'purana' returned 0 results
+2025-07-18 22:07:19,335 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:19,335 - main - INFO - Search for 'w' returned 0 results
+2025-07-18 22:07:19,462 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:19,463 - main - INFO - Search for 'wa' returned 0 results
+2025-07-18 22:07:19,561 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:19,561 - main - INFO - Search for 'wal' returned 0 results
+2025-07-18 22:07:19,703 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:19,704 - main - INFO - Search for 'wale' returned 0 results
+2025-07-18 22:07:20,150 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:20,151 - main - INFO - Search for 'walea' returned 0 results
+2025-07-18 22:07:20,471 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:20,472 - main - INFO - Search for 'wale' returned 0 results
+2025-07-18 22:07:20,588 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:20,588 - main - INFO - Search for 'wal' returned 0 results
+2025-07-18 22:07:20,747 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:20,747 - main - INFO - Search for 'wala' returned 0 results
+2025-07-18 22:07:21,275 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:21,275 - main - INFO - Search for 'c' returned 0 results
+2025-07-18 22:07:21,407 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:21,407 - main - INFO - Search for 'ch' returned 0 results
+2025-07-18 22:07:21,469 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:21,470 - main - INFO - Search for 'cha' returned 0 results
+2025-07-18 22:07:21,588 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:21,589 - main - INFO - Search for 'chay' returned 0 results
+2025-07-18 22:07:21,674 - database - INFO - No documents in vector store yet
+2025-07-18 22:07:21,674 - main - INFO - Search for 'chaye' returned 0 results
+2025-07-18 22:09:33,123 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:09:44,466 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:09:44,467 - main - INFO - Initializing document search backend...
+2025-07-18 22:09:44,467 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:09:44,469 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:09:44,469 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:09:51,442 - database - INFO - Connected to existing table: documents
+2025-07-18 22:09:51,442 - database - INFO - Vector store initialized successfully
+2025-07-18 22:09:51,442 - document_processor - INFO - Document processor initialized
+2025-07-18 22:09:51,473 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:09:51,474 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:09:51,475 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:09:51,476 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:09:51,476 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:09:51,480 - api_service - INFO - API server started successfully
+2025-07-18 22:09:51,495 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:09:52,603 - main - INFO - Processing document 1/6: test_docs\bilal.txt
+2025-07-18 22:09:52,615 - document_processor - INFO - Processed bilal.txt: 1 chunks created
+2025-07-18 22:09:52,615 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
+2025-07-18 22:09:52,615 - main - INFO - Processed test_docs\bilal.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:52,617 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (trigger: modified)
+2025-07-18 22:09:52,617 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:52,618 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:52,618 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:52,836 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
+2025-07-18 22:09:52,843 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt
+2025-07-18 22:09:52,845 - document_processor - INFO - Processed bilal.txt: 1 chunks created
+2025-07-18 22:09:52,850 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:52,853 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:52,854 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:52,857 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:53,026 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\bilal.txt', 'filename': 'bilal.txt', 'extension': '.txt', 'file_size': 5, 'modified_time': 1752519129.0826256, 'format': 'text', 'lines': 1, 'words': 1, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 5}
+2025-07-18 22:09:53,060 - database - INFO - Added 1 chunks for document: bilal.txt
+2025-07-18 22:09:53,069 - main - INFO - Processing document 2/6: test_docs\hello.txt
+2025-07-18 22:09:53,074 - document_processor - INFO - Processed hello.txt: 1 chunks created
+2025-07-18 22:09:53,075 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello.txt
+2025-07-18 22:09:53,076 - main - INFO - Processed test_docs\hello.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,077 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello.txt (trigger: modified)
+2025-07-18 22:09:53,078 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:53,089 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,090 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:53,091 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\bilal.txt', 'filename': 'bilal.txt', 'extension': '.txt', 'file_size': 5, 'modified_time': 1752519129.0826256, 'format': 'text', 'lines': 1, 'words': 1, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 5}
+2025-07-18 22:09:53,131 - database - INFO - Added 1 chunks for document: bilal.txt
+2025-07-18 22:09:53,134 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\bilal.txt (0 chunks)
+2025-07-18 22:09:53,212 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\hello.txt', 'filename': 'hello.txt', 'extension': '.txt', 'file_size': 5, 'modified_time': 1751918168.9787822, 'format': 'text', 'lines': 1, 'words': 1, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 5}
+2025-07-18 22:09:53,236 - database - INFO - Added 1 chunks for document: hello.txt
+2025-07-18 22:09:53,239 - main - INFO - Processing document 3/6: test_docs\hi.txt
+2025-07-18 22:09:53,253 - document_processor - INFO - Processed hi.txt: 1 chunks created
+2025-07-18 22:09:53,254 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\hi.txt
+2025-07-18 22:09:53,254 - main - INFO - Processed test_docs\hi.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,255 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hi.txt (trigger: modified)
+2025-07-18 22:09:53,255 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:53,255 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,256 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:53,488 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\hi.txt', 'filename': 'hi.txt', 'extension': '.txt', 'file_size': 28, 'modified_time': 1751918300.4052818, 'format': 'text', 'lines': 1, 'words': 5, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 28}
+2025-07-18 22:09:53,498 - database - INFO - Added 1 chunks for document: hi.txt
+2025-07-18 22:09:53,503 - main - INFO - Processing document 4/6: test_docs\realtime_test.txt
+2025-07-18 22:09:53,518 - document_processor - INFO - Processed realtime_test.txt: 2 chunks created
+2025-07-18 22:09:53,519 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\realtime_test.txt
+2025-07-18 22:09:53,520 - main - INFO - Processed test_docs\realtime_test.txt: 2 chunks, type: <class 'list'>
+2025-07-18 22:09:53,520 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\realtime_test.txt (trigger: modified)
+2025-07-18 22:09:53,521 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:53,522 - database - INFO - add_document called with 2 chunks, type: <class 'list'>
+2025-07-18 22:09:53,522 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:53,624 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\realtime_test.txt', 'filename': 'realtime_test.txt', 'extension': '.txt', 'file_size': 868, 'modified_time': 1752853555.3566787, 'format': 'text', 'lines': 27, 'words': 119, 'chunk_index': 0, 'total_chunks': 2, 'chunk_size': 471}
+2025-07-18 22:09:53,624 - database - INFO - Processing chunk 1: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\realtime_test.txt', 'filename': 'realtime_test.txt', 'extension': '.txt', 'file_size': 868, 'modified_time': 1752853555.3566787, 'format': 'text', 'lines': 27, 'words': 119, 'chunk_index': 1, 'total_chunks': 2, 'chunk_size': 367}
+2025-07-18 22:09:53,633 - database - INFO - Added 2 chunks for document: realtime_test.txt
+2025-07-18 22:09:53,634 - main - INFO - Processing document 5/6: test_docs\test_indexing.txt
+2025-07-18 22:09:53,646 - document_processor - INFO - Processed test_indexing.txt: 1 chunks created
+2025-07-18 22:09:53,647 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\test_indexing.txt
+2025-07-18 22:09:53,648 - main - INFO - Processed test_docs\test_indexing.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,648 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\test_indexing.txt (trigger: modified)
+2025-07-18 22:09:53,649 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:53,649 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,649 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:53,698 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\test_indexing.txt', 'filename': 'test_indexing.txt', 'extension': '.txt', 'file_size': 420, 'modified_time': 1752519686.0287697, 'format': 'text', 'lines': 12, 'words': 65, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 419}
+2025-07-18 22:09:53,704 - database - INFO - Added 1 chunks for document: test_indexing.txt
+2025-07-18 22:09:53,705 - main - INFO - Processing document 6/6: test_docs\wasay.txt
+2025-07-18 22:09:53,715 - document_processor - INFO - Processed wasay.txt: 1 chunks created
+2025-07-18 22:09:53,716 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt
+2025-07-18 22:09:53,716 - main - INFO - Processed test_docs\wasay.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,716 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt (trigger: modified)
+2025-07-18 22:09:53,717 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:53,717 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:53,717 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:53,737 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'test_docs\\wasay.txt', 'filename': 'wasay.txt', 'extension': '.txt', 'file_size': 15, 'modified_time': 1752519906.9360347, 'format': 'text', 'lines': 1, 'words': 4, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 15}
+2025-07-18 22:09:53,747 - database - INFO - Added 1 chunks for document: wasay.txt
+2025-07-18 22:09:54,377 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello.txt
+2025-07-18 22:09:54,380 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello.txt
+2025-07-18 22:09:54,382 - document_processor - INFO - Processed hello.txt: 1 chunks created
+2025-07-18 22:09:54,383 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\hello.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,384 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:54,384 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,385 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:54,420 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\hello.txt', 'filename': 'hello.txt', 'extension': '.txt', 'file_size': 5, 'modified_time': 1751918168.9787822, 'format': 'text', 'lines': 1, 'words': 1, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 5}
+2025-07-18 22:09:54,444 - database - INFO - Added 1 chunks for document: hello.txt
+2025-07-18 22:09:54,448 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hello.txt (0 chunks)
+2025-07-18 22:09:54,449 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hi.txt
+2025-07-18 22:09:54,450 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hi.txt
+2025-07-18 22:09:54,451 - document_processor - INFO - Processed hi.txt: 1 chunks created
+2025-07-18 22:09:54,451 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\hi.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,451 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:54,451 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,452 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:54,482 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\hi.txt', 'filename': 'hi.txt', 'extension': '.txt', 'file_size': 28, 'modified_time': 1751918300.4052818, 'format': 'text', 'lines': 1, 'words': 5, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 28}
+2025-07-18 22:09:54,501 - database - INFO - Added 1 chunks for document: hi.txt
+2025-07-18 22:09:54,502 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hi.txt (0 chunks)
+2025-07-18 22:09:54,503 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\realtime_test.txt
+2025-07-18 22:09:54,504 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\realtime_test.txt
+2025-07-18 22:09:54,505 - document_processor - INFO - Processed realtime_test.txt: 2 chunks created
+2025-07-18 22:09:54,506 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\realtime_test.txt: 2 chunks, type: <class 'list'>
+2025-07-18 22:09:54,506 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:54,506 - database - INFO - add_document called with 2 chunks, type: <class 'list'>
+2025-07-18 22:09:54,506 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:54,623 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\realtime_test.txt', 'filename': 'realtime_test.txt', 'extension': '.txt', 'file_size': 868, 'modified_time': 1752853555.3566787, 'format': 'text', 'lines': 27, 'words': 119, 'chunk_index': 0, 'total_chunks': 2, 'chunk_size': 471}
+2025-07-18 22:09:54,624 - database - INFO - Processing chunk 1: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\realtime_test.txt', 'filename': 'realtime_test.txt', 'extension': '.txt', 'file_size': 868, 'modified_time': 1752853555.3566787, 'format': 'text', 'lines': 27, 'words': 119, 'chunk_index': 1, 'total_chunks': 2, 'chunk_size': 367}
+2025-07-18 22:09:54,636 - database - INFO - Added 2 chunks for document: realtime_test.txt
+2025-07-18 22:09:54,637 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\realtime_test.txt (0 chunks)
+2025-07-18 22:09:54,639 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\test_indexing.txt
+2025-07-18 22:09:54,639 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\test_indexing.txt
+2025-07-18 22:09:54,640 - document_processor - INFO - Processed test_indexing.txt: 1 chunks created
+2025-07-18 22:09:54,640 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\test_indexing.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,640 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:54,641 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,641 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:54,738 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\test_indexing.txt', 'filename': 'test_indexing.txt', 'extension': '.txt', 'file_size': 420, 'modified_time': 1752519686.0287697, 'format': 'text', 'lines': 12, 'words': 65, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 419}
+2025-07-18 22:09:54,753 - database - INFO - Added 1 chunks for document: test_indexing.txt
+2025-07-18 22:09:54,753 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\test_indexing.txt (0 chunks)
+2025-07-18 22:09:54,754 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt
+2025-07-18 22:09:54,754 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt
+2025-07-18 22:09:54,757 - document_processor - INFO - Processed wasay.txt: 1 chunks created
+2025-07-18 22:09:54,757 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,757 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:09:54,757 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:09:54,757 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:09:54,802 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\wasay.txt', 'filename': 'wasay.txt', 'extension': '.txt', 'file_size': 15, 'modified_time': 1752519906.9360347, 'format': 'text', 'lines': 1, 'words': 4, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 15}
+2025-07-18 22:09:54,828 - database - INFO - Added 1 chunks for document: wasay.txt
+2025-07-18 22:09:54,833 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\wasay.txt (0 chunks)
+2025-07-18 22:10:16,510 - main - INFO - Search for 'test' returned 4 results
+2025-07-18 22:17:09,085 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:17:18,949 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:17:18,957 - main - INFO - Initializing document search backend...
+2025-07-18 22:17:18,957 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:17:18,959 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:17:18,959 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:17:24,679 - database - INFO - Connected to existing table: documents
+2025-07-18 22:17:24,680 - database - INFO - Vector store initialized successfully
+2025-07-18 22:17:24,680 - document_processor - INFO - Document processor initialized
+2025-07-18 22:17:24,786 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:17:24,786 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:17:24,787 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:17:24,787 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:17:24,788 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:17:24,794 - api_service - INFO - API server started successfully
+2025-07-18 22:17:24,806 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:18:13,600 - main - INFO - Search for 'machine learning' returned 3 results
+2025-07-18 22:18:23,656 - main - INFO - Search for 'neural networks' returned 5 results
+2025-07-18 22:18:42,726 - main - INFO - Search for 'supervised learning' returned 5 results
+2025-07-18 22:22:49,845 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:22:58,561 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:22:58,569 - main - INFO - Initializing document search backend...
+2025-07-18 22:22:58,569 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:22:58,570 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:22:58,571 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:23:04,267 - database - INFO - Connected to existing table: documents
+2025-07-18 22:23:04,267 - database - INFO - Vector store initialized successfully
+2025-07-18 22:23:04,269 - document_processor - INFO - Document processor initialized
+2025-07-18 22:23:04,373 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:23:04,395 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:23:04,397 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:23:04,397 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:23:04,398 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:23:04,401 - api_service - INFO - API server started successfully
+2025-07-18 22:23:04,417 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:24:49,708 - main - INFO - Search for 'h' returned 6 results
+2025-07-18 22:24:49,848 - main - INFO - Search for 'h' returned 6 results
+2025-07-18 22:24:54,847 - main - INFO - Search for 'b' returned 6 results
+2025-07-18 22:24:54,975 - main - INFO - Search for 'bi' returned 6 results
+2025-07-18 22:24:55,014 - main - INFO - Search for 'bi' returned 6 results
+2025-07-18 22:24:55,081 - main - INFO - Search for 'bi' returned 6 results
+2025-07-18 22:24:55,238 - main - INFO - Search for 'bil' returned 6 results
+2025-07-18 22:24:55,330 - main - INFO - Search for 'bila' returned 6 results
+2025-07-18 22:24:55,340 - main - INFO - Search for 'bila' returned 6 results
+2025-07-18 22:24:55,380 - main - INFO - Search for 'bilal' returned 6 results
+2025-07-18 22:24:55,470 - main - INFO - Search for 'bilal' returned 6 results
+2025-07-18 22:24:55,493 - main - INFO - Search for 'bilal' returned 6 results
+2025-07-18 22:25:15,281 - main - INFO - Search for 'bilalv' returned 6 results
+2025-07-18 22:25:16,064 - main - INFO - Search for 'bilalvz' returned 6 results
+2025-07-18 22:25:34,826 - main - INFO - Search for 'bilal ' returned 6 results
+2025-07-18 22:25:38,583 - main - INFO - Search for 'w' returned 6 results
+2025-07-18 22:25:38,691 - main - INFO - Search for 'w' returned 6 results
+2025-07-18 22:25:38,722 - main - INFO - Search for 'wa' returned 6 results
+2025-07-18 22:25:38,833 - main - INFO - Search for 'was' returned 6 results
+2025-07-18 22:25:38,910 - main - INFO - Search for 'was' returned 6 results
+2025-07-18 22:25:38,951 - main - INFO - Search for 'wasa' returned 6 results
+2025-07-18 22:25:38,993 - main - INFO - Search for 'wasa' returned 6 results
+2025-07-18 22:25:39,030 - main - INFO - Search for 'wasay' returned 6 results
+2025-07-18 22:25:39,114 - main - INFO - Search for 'wasay' returned 6 results
+2025-07-18 22:25:39,132 - main - INFO - Search for 'wasay' returned 6 results
+2025-07-18 22:25:43,298 - main - INFO - Search for 'wasa' returned 6 results
+2025-07-18 22:25:43,388 - main - INFO - Search for 'wasa' returned 6 results
+2025-07-18 22:25:43,428 - main - INFO - Search for 'was' returned 6 results
+2025-07-18 22:25:43,513 - main - INFO - Search for 'was' returned 6 results
+2025-07-18 22:25:43,555 - main - INFO - Search for 'wa' returned 6 results
+2025-07-18 22:25:43,609 - main - INFO - Search for 'wa' returned 6 results
+2025-07-18 22:25:43,648 - main - INFO - Search for 'w' returned 6 results
+2025-07-18 22:25:43,729 - main - INFO - Search for 'w' returned 6 results
+2025-07-18 22:25:44,049 - main - INFO - Search for 'a' returned 6 results
+2025-07-18 22:25:44,193 - main - INFO - Search for 'a' returned 6 results
+2025-07-18 22:25:44,421 - main - INFO - Search for 'ar' returned 6 results
+2025-07-18 22:25:44,521 - main - INFO - Search for 'ar' returned 6 results
+2025-07-18 22:25:44,661 - main - INFO - Search for 'arc' returned 6 results
+2025-07-18 22:25:44,793 - main - INFO - Search for 'arc' returned 6 results
+2025-07-18 22:25:45,230 - main - INFO - Search for 'arch' returned 6 results
+2025-07-18 22:25:45,313 - main - INFO - Search for 'arch' returned 6 results
+2025-07-18 22:25:45,351 - main - INFO - Search for 'archi' returned 6 results
+2025-07-18 22:25:45,455 - main - INFO - Search for 'archi' returned 6 results
+2025-07-18 22:25:45,962 - main - INFO - Search for 'archit' returned 6 results
+2025-07-18 22:25:46,077 - main - INFO - Search for 'archit' returned 6 results
+2025-07-18 22:25:46,352 - main - INFO - Search for 'archite' returned 6 results
+2025-07-18 22:25:46,459 - main - INFO - Search for 'archite' returned 6 results
+2025-07-18 22:25:46,568 - main - INFO - Search for 'architec' returned 6 results
+2025-07-18 22:25:46,660 - main - INFO - Search for 'architec' returned 6 results
+2025-07-18 22:25:46,810 - main - INFO - Search for 'architect' returned 6 results
+2025-07-18 22:25:46,913 - main - INFO - Search for 'architect' returned 6 results
+2025-07-18 22:25:46,950 - main - INFO - Search for 'architectu' returned 6 results
+2025-07-18 22:25:47,033 - main - INFO - Search for 'architectur' returned 6 results
+2025-07-18 22:25:47,060 - main - INFO - Search for 'architectur' returned 6 results
+2025-07-18 22:25:47,115 - main - INFO - Search for 'architecture' returned 6 results
+2025-07-18 22:25:47,192 - main - INFO - Search for 'architecture' returned 6 results
+2025-07-18 22:25:47,246 - main - INFO - Search for 'architecture' returned 6 results
+2025-07-18 22:26:05,846 - main - INFO - Search for 'architectureb' returned 6 results
+2025-07-18 22:26:05,964 - main - INFO - Search for 'architecturebh' returned 6 results
+2025-07-18 22:26:05,973 - main - INFO - Search for 'bh' returned 6 results
+2025-07-18 22:26:06,070 - main - INFO - Search for 'bh' returned 6 results
+2025-07-18 22:26:06,080 - main - INFO - Search for 'architecturebha' returned 6 results
+2025-07-18 22:26:06,166 - main - INFO - Search for 'architecturebhai' returned 6 results
+2025-07-18 22:26:06,267 - main - INFO - Search for 'bhai' returned 6 results
+2025-07-18 22:26:06,278 - main - INFO - Search for 'bhai' returned 6 results
+2025-07-18 22:30:03,545 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:30:12,381 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:30:12,394 - main - INFO - Initializing document search backend...
+2025-07-18 22:30:12,395 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:30:12,397 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:30:12,397 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:30:19,232 - database - INFO - Connected to existing table: documents
+2025-07-18 22:30:19,232 - database - INFO - Vector store initialized successfully
+2025-07-18 22:30:19,233 - document_processor - INFO - Document processor initialized
+2025-07-18 22:30:19,376 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:30:19,377 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:30:19,377 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:30:19,380 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:30:19,380 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:30:19,385 - api_service - INFO - API server started successfully
+2025-07-18 22:30:19,421 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:30:19,424 - database - INFO - Vector store closed
+2025-07-18 22:30:19,424 - api_service - INFO - API server shutdown complete
+2025-07-18 22:30:19,524 - folder_manager - INFO - Background processor stopped
+2025-07-18 22:31:10,809 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:31:23,026 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:31:23,040 - main - INFO - Initializing document search backend...
+2025-07-18 22:31:23,040 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:31:23,059 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:31:23,064 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:31:29,671 - database - INFO - Connected to existing table: documents
+2025-07-18 22:31:29,671 - database - INFO - Vector store initialized successfully
+2025-07-18 22:31:29,671 - document_processor - INFO - Document processor initialized
+2025-07-18 22:31:29,803 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:31:29,803 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:31:29,805 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:31:29,806 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:31:29,806 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:31:29,810 - api_service - INFO - API server started successfully
+2025-07-18 22:31:29,826 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:31:29,833 - database - INFO - Vector store closed
+2025-07-18 22:31:29,833 - api_service - INFO - API server shutdown complete
+2025-07-18 22:31:29,902 - folder_manager - INFO - Background processor stopped
+2025-07-18 22:34:54,780 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:35:08,969 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:35:08,971 - main - INFO - Initializing document search backend...
+2025-07-18 22:35:08,971 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:35:08,972 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:35:08,975 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:35:24,149 - database - INFO - Connected to existing table: documents
+2025-07-18 22:35:24,150 - database - INFO - Vector store initialized successfully
+2025-07-18 22:35:24,150 - document_processor - INFO - Document processor initialized
+2025-07-18 22:35:24,179 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:35:24,179 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:35:24,180 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:35:24,181 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:35:24,181 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:35:24,184 - api_service - INFO - API server started successfully
+2025-07-18 22:35:24,197 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:35:24,199 - database - INFO - Vector store closed
+2025-07-18 22:35:24,199 - api_service - INFO - API server shutdown complete
+2025-07-18 22:35:24,215 - folder_manager - INFO - Background processor stopped
+2025-07-18 22:37:39,758 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:37:51,119 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:37:51,128 - main - INFO - Initializing document search backend...
+2025-07-18 22:37:51,128 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:37:51,129 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:37:51,130 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:37:56,952 - database - INFO - Connected to existing table: documents
+2025-07-18 22:37:56,953 - database - INFO - Vector store initialized successfully
+2025-07-18 22:37:56,954 - document_processor - INFO - Document processor initialized
+2025-07-18 22:37:57,033 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:37:57,033 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:37:57,035 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:37:57,035 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:37:57,036 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:37:57,039 - api_service - INFO - API server started successfully
+2025-07-18 22:37:57,069 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:38:16,909 - main - INFO - Search for 'a' returned 6 results
+2025-07-18 22:38:19,149 - main - INFO - Search for 'h' returned 6 results
+2025-07-18 22:38:19,419 - main - INFO - Search for 'he' returned 6 results
+2025-07-18 22:38:20,015 - main - INFO - Search for 'hel' returned 6 results
+2025-07-18 22:38:20,146 - main - INFO - Search for 'hell' returned 6 results
+2025-07-18 22:38:20,292 - main - INFO - Search for 'hello' returned 6 results
+2025-07-18 22:38:25,307 - main - INFO - Search for 'v' returned 6 results
+2025-07-18 22:38:27,052 - main - INFO - Search for 'vz' returned 6 results
+2025-07-18 22:38:48,657 - main - INFO - Search for 'vzv' returned 6 results
+2025-07-18 22:38:49,368 - main - INFO - Search for 'vzvz' returned 6 results
+2025-07-18 22:39:10,820 - main - INFO - Search for 'vzvza' returned 6 results
+2025-07-18 22:39:11,065 - main - INFO - Search for 'vzvz' returned 6 results
+2025-07-18 22:39:11,584 - main - INFO - Search for 'vzv' returned 6 results
+2025-07-18 22:39:11,724 - main - INFO - Search for 'vz' returned 6 results
+2025-07-18 22:39:11,882 - main - INFO - Search for 'v' returned 6 results
+2025-07-18 22:39:13,216 - main - INFO - Search for 'h' returned 6 results
+2025-07-18 22:39:13,422 - main - INFO - Search for 'he' returned 6 results
+2025-07-18 22:39:13,670 - main - INFO - Search for 'hel' returned 6 results
+2025-07-18 22:39:13,799 - main - INFO - Search for 'hell' returned 6 results
+2025-07-18 22:39:13,957 - main - INFO - Search for 'hello' returned 6 results
+2025-07-18 22:39:15,090 - main - INFO - Search for 'hell' returned 6 results
+2025-07-18 22:39:15,202 - main - INFO - Search for 'hel' returned 6 results
+2025-07-18 22:39:15,297 - main - INFO - Search for 'he' returned 6 results
+2025-07-18 22:39:15,430 - main - INFO - Search for 'h' returned 6 results
+2025-07-18 22:39:15,909 - main - INFO - Search for 'b' returned 6 results
+2025-07-18 22:39:16,061 - main - INFO - Search for 'bi' returned 6 results
+2025-07-18 22:39:16,280 - main - INFO - Search for 'bil' returned 6 results
+2025-07-18 22:39:16,339 - main - INFO - Search for 'bila' returned 6 results
+2025-07-18 22:39:16,415 - main - INFO - Search for 'bilal' returned 6 results
+2025-07-18 22:39:29,233 - main - INFO - Search for 'v' returned 6 results
+2025-07-18 22:39:57,759 - main - INFO - Search for 'vh' returned 6 results
+2025-07-18 22:39:57,799 - main - INFO - Search for 'vha' returned 6 results
+2025-07-18 22:39:57,971 - main - INFO - Search for 'vhak' returned 6 results
+2025-07-18 22:39:58,159 - main - INFO - Search for 'vhakz' returned 6 results
+2025-07-18 22:39:58,229 - main - INFO - Search for 'vhakza' returned 6 results
+2025-07-18 22:39:58,509 - main - INFO - Search for 'vhakz' returned 6 results
+2025-07-18 22:39:58,635 - main - INFO - Search for 'vhak' returned 6 results
+2025-07-18 22:39:58,727 - main - INFO - Search for 'vha' returned 6 results
+2025-07-18 22:39:59,256 - main - INFO - Search for 'vhaa' returned 6 results
+2025-07-18 22:40:00,137 - main - INFO - Search for 'vha' returned 6 results
+2025-07-18 22:40:00,391 - main - INFO - Search for 'vham' returned 6 results
+2025-07-18 22:40:00,606 - main - INFO - Search for 'vhamz' returned 6 results
+2025-07-18 22:40:00,726 - main - INFO - Search for 'vhamza' returned 6 results
+2025-07-18 22:40:01,693 - main - INFO - Search for 'vhamzat' returned 6 results
+2025-07-18 22:40:01,811 - main - INFO - Search for 'vhamzatx' returned 6 results
+2025-07-18 22:40:01,917 - main - INFO - Search for 'vhamzatxt' returned 6 results
+2025-07-18 22:40:02,386 - folder_manager - INFO - File created detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:02,387 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt (trigger: created)
+2025-07-18 22:40:02,636 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:02,701 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:02,706 - document_processor - INFO - Processed hamza.txt: 0 chunks created
+2025-07-18 22:40:02,707 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt: 0 chunks, type: <class 'list'>
+2025-07-18 22:40:02,708 - database - INFO - add_document called with 0 chunks, type: <class 'list'>
+2025-07-18 22:40:02,708 - database - INFO - No chunks to add for E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:02,709 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt (0 chunks)
+2025-07-18 22:40:03,823 - main - INFO - Search for 'vhamzatxth' returned 6 results
+2025-07-18 22:40:03,893 - main - INFO - Search for 'vhamzatxtha' returned 6 results
+2025-07-18 22:40:04,034 - main - INFO - Search for 'vhamzatxtham' returned 6 results
+2025-07-18 22:40:04,161 - main - INFO - Search for 'vhamzatxthamz' returned 6 results
+2025-07-18 22:40:04,271 - main - INFO - Search for 'vhamzatxthamza' returned 6 results
+2025-07-18 22:40:04,775 - main - INFO - Search for 'vhamzatxthamzaa' returned 6 results
+2025-07-18 22:40:04,789 - main - INFO - Search for 'vhamzatxthamzaas' returned 6 results
+2025-07-18 22:40:04,807 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:04,807 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt (trigger: modified)
+2025-07-18 22:40:04,817 - folder_manager - INFO - File modified detected: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:04,818 - folder_manager - INFO - Queued file for processing: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt (trigger: modified)
+2025-07-18 22:40:05,170 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:05,177 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:05,186 - document_processor - INFO - Processed hamza.txt: 1 chunks created
+2025-07-18 22:40:05,190 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:40:05,193 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:40:05,204 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:40:05,208 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:40:05,244 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\hamza.txt', 'filename': 'hamza.txt', 'extension': '.txt', 'file_size': 5, 'modified_time': 1752860404.8057306, 'format': 'text', 'lines': 1, 'words': 1, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 5}
+2025-07-18 22:40:05,255 - database - INFO - Added 1 chunks for document: hamza.txt
+2025-07-18 22:40:05,256 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt (0 chunks)
+2025-07-18 22:40:05,256 - folder_manager - INFO - Processing file: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:05,256 - main - INFO - Processing document 1/1: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt
+2025-07-18 22:40:05,257 - document_processor - INFO - Processed hamza.txt: 1 chunks created
+2025-07-18 22:40:05,257 - main - INFO - Processed E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt: 1 chunks, type: <class 'list'>
+2025-07-18 22:40:05,259 - main - INFO - First chunk type: <class 'document_processor.DocumentChunk'>, has content: True
+2025-07-18 22:40:05,260 - database - INFO - add_document called with 1 chunks, type: <class 'list'>
+2025-07-18 22:40:05,260 - database - INFO - First chunk type: <class 'document_processor.DocumentChunk'>
+2025-07-18 22:40:05,273 - database - INFO - Processing chunk 0: metadata type = <class 'dict'>, metadata = {'source': 'E:\\PROJECT\\Semantic_Search_Assistant\\test_docs\\hamza.txt', 'filename': 'hamza.txt', 'extension': '.txt', 'file_size': 5, 'modified_time': 1752860404.8057306, 'format': 'text', 'lines': 1, 'words': 1, 'chunk_index': 0, 'total_chunks': 1, 'chunk_size': 5}
+2025-07-18 22:40:05,286 - database - INFO - Added 1 chunks for document: hamza.txt
+2025-07-18 22:40:05,286 - folder_manager - INFO - Successfully processed: E:\PROJECT\Semantic_Search_Assistant\test_docs\hamza.txt (0 chunks)
+2025-07-18 22:40:15,160 - main - INFO - Search for 'vhamzatxthamzaash' returned 7 results
+2025-07-18 22:40:15,262 - main - INFO - Search for 'h' returned 7 results
+2025-07-18 22:40:15,528 - main - INFO - Search for 'vhamzatxthamzaas' returned 7 results
+2025-07-18 22:40:15,693 - main - INFO - Search for 'vhamzatxthamzaa' returned 7 results
+2025-07-18 22:40:16,627 - main - INFO - Search for 'vhamzatxthamza' returned 7 results
+2025-07-18 22:40:16,737 - main - INFO - Search for 'vhamzatxthamz' returned 7 results
+2025-07-18 22:40:17,120 - main - INFO - Search for 'vhamzatxtham' returned 7 results
+2025-07-18 22:40:18,508 - main - INFO - Search for 'h' returned 7 results
+2025-07-18 22:40:18,556 - main - INFO - Search for 'ha' returned 7 results
+2025-07-18 22:40:18,611 - main - INFO - Search for 'ha' returned 7 results
+2025-07-18 22:40:18,721 - main - INFO - Search for 'ha' returned 7 results
+2025-07-18 22:40:18,731 - main - INFO - Search for 'ham' returned 7 results
+2025-07-18 22:40:18,851 - main - INFO - Search for 'ham' returned 7 results
+2025-07-18 22:40:19,046 - main - INFO - Search for 'hamz' returned 7 results
+2025-07-18 22:40:19,138 - main - INFO - Search for 'hamza' returned 7 results
+2025-07-18 22:40:19,224 - main - INFO - Search for 'hamza' returned 7 results
+2025-07-18 22:40:19,327 - main - INFO - Search for 'hamza' returned 7 results
+2025-07-18 22:40:38,712 - main - INFO - Search for 'hamzaS' returned 7 results
+2025-07-18 22:48:33,044 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-07-18 22:48:47,656 - folder_manager - INFO - Loaded 2 connected folders
+2025-07-18 22:48:47,681 - main - INFO - Initializing document search backend...
+2025-07-18 22:48:47,681 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:48:47,683 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-07-18 22:48:47,684 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-07-18 22:48:53,469 - database - INFO - Connected to existing table: documents
+2025-07-18 22:48:53,469 - database - INFO - Vector store initialized successfully
+2025-07-18 22:48:53,470 - document_processor - INFO - Document processor initialized
+2025-07-18 22:48:53,571 - main - INFO - Added test_docs folder to monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:48:53,571 - folder_manager - INFO - Starting folder monitoring...
+2025-07-18 22:48:53,572 - folder_manager - WARNING - Folder does not exist, skipping monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-07-18 22:48:53,573 - folder_manager - INFO - Started monitoring folder: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-07-18 22:48:53,573 - folder_manager - INFO - Monitoring 2 folders
+2025-07-18 22:48:53,581 - api_service - INFO - API server started successfully
+2025-07-18 22:48:53,590 - folder_manager - INFO - Starting background document processor...
+2025-07-18 22:49:08,917 - main - INFO - Search for 'a' returned 7 results
+2025-07-18 22:49:12,999 - main - INFO - Search for 'b' returned 7 results
+2025-07-18 22:49:13,137 - main - INFO - Search for 'bi' returned 7 results
+2025-07-18 22:49:13,390 - main - INFO - Search for 'bil' returned 7 results
+2025-07-18 22:49:13,491 - main - INFO - Search for 'bila' returned 7 results
+2025-07-18 22:49:13,572 - main - INFO - Search for 'bilal' returned 7 results
+2025-07-18 22:49:20,993 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:49:24,176 - main - INFO - Search for 'a' returned 7 results
+2025-07-18 22:49:24,371 - main - INFO - Search for 'ar' returned 7 results
+2025-07-18 22:49:24,826 - main - INFO - Search for 'arc' returned 7 results
+2025-07-18 22:49:25,062 - main - INFO - Search for 'arch' returned 7 results
+2025-07-18 22:49:25,213 - main - INFO - Search for 'archi' returned 7 results
+2025-07-18 22:49:25,515 - main - INFO - Search for 'archit' returned 7 results
+2025-07-18 22:49:25,691 - main - INFO - Search for 'archite' returned 7 results
+2025-07-18 22:49:26,019 - main - INFO - Search for 'architec' returned 7 results
+2025-07-18 22:49:26,791 - main - INFO - Search for 'architect' returned 7 results
+2025-07-18 22:49:26,964 - main - INFO - Search for 'architectu' returned 7 results
+2025-07-18 22:49:27,070 - main - INFO - Search for 'architectur' returned 7 results
+2025-07-18 22:49:27,169 - main - INFO - Search for 'architecture' returned 7 results
+2025-07-18 22:49:28,102 - main - INFO - Search for 'architectur' returned 7 results
+2025-07-18 22:49:28,615 - main - INFO - Search for 'architectu' returned 7 results
+2025-07-18 22:49:28,668 - main - INFO - Search for 'architect' returned 7 results
+2025-07-18 22:49:28,704 - main - INFO - Search for 'architec' returned 7 results
+2025-07-18 22:49:28,753 - main - INFO - Search for 'archite' returned 7 results
+2025-07-18 22:49:28,794 - main - INFO - Search for 'archit' returned 7 results
+2025-07-18 22:49:28,860 - main - INFO - Search for 'archi' returned 7 results
+2025-07-18 22:49:29,000 - main - INFO - Search for 'arch' returned 7 results
+2025-07-18 22:49:29,067 - main - INFO - Search for 'arc' returned 7 results
+2025-07-18 22:49:29,099 - main - INFO - Search for 'ar' returned 7 results
+2025-07-18 22:49:29,114 - main - INFO - Search for 'a' returned 7 results
+2025-07-18 22:49:30,140 - main - INFO - Search for 'h' returned 7 results
+2025-07-18 22:49:30,271 - main - INFO - Search for 'ha' returned 7 results
+2025-07-18 22:49:30,392 - main - INFO - Search for 'ham' returned 7 results
+2025-07-18 22:49:30,589 - main - INFO - Search for 'hamz' returned 7 results
+2025-07-18 22:49:30,660 - main - INFO - Search for 'hamza' returned 7 results
+2025-07-18 22:49:37,349 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:49:37,929 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:49:41,452 - main - INFO - Search for 'b' returned 7 results
+2025-07-18 22:49:41,635 - main - INFO - Search for 'bi' returned 7 results
+2025-07-18 22:49:41,868 - main - INFO - Search for 'bil' returned 7 results
+2025-07-18 22:49:41,980 - main - INFO - Search for 'bila' returned 7 results
+2025-07-18 22:49:42,040 - main - INFO - Search for 'bilal' returned 7 results
+2025-07-18 22:49:46,281 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:49:47,376 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:49:49,153 - main - INFO - Search for 'w' returned 7 results
+2025-07-18 22:49:49,289 - main - INFO - Search for 'wa' returned 7 results
+2025-07-18 22:49:49,410 - main - INFO - Search for 'was' returned 7 results
+2025-07-18 22:49:49,515 - main - INFO - Search for 'wasa' returned 7 results
+2025-07-18 22:49:49,654 - main - INFO - Search for 'wasay' returned 7 results
+2025-07-18 22:49:54,331 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:49:54,934 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:50:03,500 - main - INFO - Search for 'w' returned 7 results
+2025-07-18 22:50:03,670 - main - INFO - Search for 'wa' returned 7 results
+2025-07-18 22:50:03,848 - main - INFO - Search for 'was' returned 7 results
+2025-07-18 22:50:04,012 - main - INFO - Search for 'wasa' returned 7 results
+2025-07-18 22:50:04,753 - main - INFO - Search for 'wasay' returned 7 results
+2025-07-18 22:50:08,897 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:50:14,036 - main - INFO - Search for 'vt' returned 7 results
+2025-07-18 22:50:14,608 - main - INFO - Search for 'v' returned 7 results
+2025-07-18 22:50:16,291 - main - INFO - Search for 't' returned 7 results
+2025-07-18 22:50:16,448 - main - INFO - Search for 'th' returned 7 results
+2025-07-18 22:50:16,548 - main - INFO - Search for 'the' returned 7 results
+2025-07-18 22:50:17,157 - main - INFO - Search for 'f' returned 7 results
+2025-07-18 22:50:17,285 - main - INFO - Search for 'fi' returned 7 results
+2025-07-18 22:50:17,717 - main - INFO - Search for 'fil' returned 7 results
+2025-07-18 22:50:17,830 - main - INFO - Search for 'file' returned 7 results
+2025-07-18 22:50:24,268 - main - INFO - Search for 'f' returned 7 results
+2025-07-18 22:50:25,230 - main - INFO - Search for 'f' returned 7 results
+2025-07-18 22:50:25,474 - main - INFO - Search for 'fi' returned 7 results
+2025-07-18 22:50:25,661 - main - INFO - Search for 'fil' returned 7 results
+2025-07-18 22:50:25,747 - main - INFO - Search for 'file' returned 7 results
+2025-07-18 22:50:29,700 - main - INFO - Search for 'f' returned 7 results
+2025-07-18 22:50:29,799 - main - INFO - Search for 'fi' returned 7 results
+2025-07-18 22:50:29,999 - main - INFO - Search for 'fil' returned 7 results
+2025-07-18 22:50:30,091 - main - INFO - Search for 'file' returned 7 results
+2025-07-18 22:50:32,502 - main - INFO - Search for 's' returned 7 results
+2025-07-18 22:50:32,593 - main - INFO - Search for 'sh' returned 7 results
+2025-07-18 22:50:32,800 - main - INFO - Search for 'sho' returned 7 results
+2025-07-18 22:50:32,954 - main - INFO - Search for 'shou' returned 7 results
+2025-07-18 22:50:33,159 - main - INFO - Search for 'shoul' returned 7 results
+2025-07-18 22:50:33,288 - main - INFO - Search for 'should' returned 7 results
+2025-07-18 22:50:34,820 - main - INFO - Search for 'shoul' returned 7 results
+2025-07-18 22:50:35,004 - main - INFO - Search for 'shou' returned 7 results
+2025-07-18 22:50:35,169 - main - INFO - Search for 'sho' returned 7 results
+2025-07-18 22:50:35,331 - main - INFO - Search for 'sh' returned 7 results
+2025-07-18 22:50:35,505 - main - INFO - Search for 's' returned 7 results
+2025-07-18 22:50:37,851 - main - INFO - Search for 'd' returned 7 results
+2025-07-18 22:50:37,947 - main - INFO - Search for 'de' returned 7 results
+2025-07-18 22:50:38,166 - main - INFO - Search for 'det' returned 7 results
+2025-07-18 22:50:38,254 - main - INFO - Search for 'dete' returned 7 results
+2025-07-18 22:50:38,547 - main - INFO - Search for 'detec' returned 7 results
+2025-07-18 22:50:39,039 - main - INFO - Search for 'detect' returned 7 results
+2025-07-18 22:50:39,281 - main - INFO - Search for 'detecte' returned 7 results
+2025-07-18 22:50:39,512 - main - INFO - Search for 'detected' returned 7 results
+2025-07-18 22:50:46,728 - main - INFO - Search for 'v' returned 7 results

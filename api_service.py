@@ -1071,32 +1071,49 @@ async def get_user_annotations(file_path: str):
         logger.error(f"Error getting annotations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Document Monitoring Endpoints
+# Auto-Indexer Endpoints
+@app.get("/indexer/status")
+async def get_indexer_status():
+    """Get auto-indexer status."""
+    try:
+        if not backend or not hasattr(backend, 'auto_indexer'):
+            raise HTTPException(status_code=503, detail="Auto-indexer not available")
+
+        status = backend.auto_indexer.get_status()
+        return {
+            "status": "success",
+            "indexer": status
+        }
+    except Exception as e:
+        logger.error(f"Error getting indexer status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/indexer/scan")
+async def trigger_scan():
+    """Trigger manual scan and indexing."""
+    try:
+        if not backend or not hasattr(backend, 'auto_indexer'):
+            raise HTTPException(status_code=503, detail="Auto-indexer not available")
+
+        indexed_count = await backend.auto_indexer.initial_indexing()
+        return {
+            "status": "success",
+            "message": f"Scan completed: {indexed_count} files indexed"
+        }
+    except Exception as e:
+        logger.error(f"Error triggering scan: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Document Monitoring Endpoints (Disabled - using local monitoring)
 @app.post("/monitoring/start")
 async def start_document_monitoring():
     """Start document monitoring."""
-    try:
-        if not backend or not hasattr(backend, 'document_monitor'):
-            raise HTTPException(status_code=503, detail="Document monitor not available")
-
-        await backend.document_monitor.start_monitoring()
-        return {"message": "Document monitoring started"}
-    except Exception as e:
-        logger.error(f"Error starting monitoring: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    return {"message": "Document monitoring handled by client application"}
 
 @app.post("/monitoring/stop")
 async def stop_document_monitoring():
     """Stop document monitoring."""
-    try:
-        if not backend or not hasattr(backend, 'document_monitor'):
-            raise HTTPException(status_code=503, detail="Document monitor not available")
-
-        await backend.document_monitor.stop_monitoring()
-        return {"message": "Document monitoring stopped"}
-    except Exception as e:
-        logger.error(f"Error stopping monitoring: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    return {"message": "Document monitoring handled by client application"}
 
 if __name__ == "__main__":
     import uvicorn

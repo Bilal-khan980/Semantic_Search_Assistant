@@ -19,7 +19,8 @@ from folder_manager import FolderManager
 from config import Config
 from citation_manager import CitationManager
 from background_processor import BackgroundProcessor
-from document_monitor import DocumentMonitor
+from auto_indexer import AutoIndexer
+# from document_monitor import DocumentMonitor  # Removed - using client-side monitoring
 
 # Setup logging
 logging.basicConfig(
@@ -42,7 +43,8 @@ class DocumentSearchBackend:
         # New enhanced components
         self.citation_manager = CitationManager(self.config.to_dict())
         self.background_processor = BackgroundProcessor(self.config.to_dict())
-        self.document_monitor = DocumentMonitor(self.search_engine, self.config.to_dict())
+        self.auto_indexer = AutoIndexer(self.document_processor, self.search_engine, self.config.to_dict())
+        # self.document_monitor = DocumentMonitor(self.search_engine, self.config.to_dict())  # Using client-side monitoring
         
     async def initialize(self):
         """Initialize all components."""
@@ -54,9 +56,18 @@ class DocumentSearchBackend:
         await self.background_processor.start()
         logger.info("✅ Background processor started")
 
-        # Setup document monitoring callbacks
-        self.document_monitor.add_context_callback(self._handle_context_event)
-        logger.info("✅ Document monitor configured")
+        # Start automatic file indexing and monitoring
+        logger.info("🔍 Starting automatic file indexing...")
+        indexed_count = await self.auto_indexer.initial_indexing()
+        logger.info(f"✅ Auto-indexer: {indexed_count} files indexed")
+
+        # Start file monitoring
+        self.auto_indexer.start_monitoring()
+        logger.info("✅ File monitoring started")
+
+        # Setup document monitoring callbacks (disabled - using client-side monitoring)
+        # self.document_monitor.add_context_callback(self._handle_context_event)
+        logger.info("✅ Document monitor configured (client-side)")
 
         # Add test_docs folder to monitoring
         test_docs_path = Path("test_docs")
@@ -89,10 +100,15 @@ class DocumentSearchBackend:
                 await self.background_processor.stop()
                 logger.info("✅ Background processor stopped")
 
-            # Stop document monitoring
-            if hasattr(self, 'document_monitor'):
-                await self.document_monitor.stop_monitoring()
-                logger.info("✅ Document monitoring stopped")
+            # Stop auto-indexer and file monitoring
+            if hasattr(self, 'auto_indexer'):
+                self.auto_indexer.stop_monitoring()
+                logger.info("✅ Auto-indexer stopped")
+
+            # Stop document monitoring (disabled - using client-side monitoring)
+            # if hasattr(self, 'document_monitor'):
+            #     await self.document_monitor.stop_monitoring()
+            logger.info("✅ Document monitoring stopped (client-side)")
 
             # Cleanup old tasks
             if hasattr(self, 'background_processor'):
@@ -131,8 +147,10 @@ class DocumentSearchBackend:
                     'search_engine': hasattr(self, 'search_engine') and self.search_engine is not None,
                     'citation_manager': hasattr(self, 'citation_manager') and self.citation_manager is not None,
                     'background_processor': hasattr(self, 'background_processor') and self.background_processor is not None,
-                    'document_monitor': hasattr(self, 'document_monitor') and self.document_monitor is not None,
+                    'auto_indexer': hasattr(self, 'auto_indexer') and self.auto_indexer is not None,
+                    'document_monitor': False,  # Using client-side monitoring
                 },
+                'auto_indexer': self.auto_indexer.get_status() if hasattr(self, 'auto_indexer') else {},
                 'statistics': {}
             }
 
