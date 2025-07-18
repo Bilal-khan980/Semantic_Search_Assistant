@@ -306,20 +306,58 @@ class SemanticSearchApp {
   }
 
   setupGlobalShortcuts() {
-    // Global shortcut to toggle main window (now floating)
+    console.log("🔧 Setting up global shortcuts...");
+
+    // Global shortcut to toggle floating window (main feature)
     globalShortcut.register("CommandOrControl+Shift+Space", () => {
-      this.toggleMainWindow();
+      console.log("🔥 Global shortcut: Toggle floating window");
+      this.toggleFloatingWindow();
     });
 
-    // Global shortcut to focus search
+    // Global shortcut to focus search in floating window
     globalShortcut.register("CommandOrControl+Alt+F", () => {
+      console.log("🔍 Global shortcut: Focus search");
       this.focusSearch();
     });
 
     // Global shortcut to toggle always on top
     globalShortcut.register("CommandOrControl+Shift+T", () => {
+      console.log("📌 Global shortcut: Toggle always on top");
       this.toggleAlwaysOnTop();
     });
+
+    // Global shortcut to quick search with clipboard content
+    globalShortcut.register("CommandOrControl+Shift+S", () => {
+      console.log("📋 Global shortcut: Quick search with clipboard");
+      this.quickSearchClipboard();
+    });
+
+    // Global shortcut to show/hide canvas
+    globalShortcut.register("CommandOrControl+Shift+C", () => {
+      console.log("🎨 Global shortcut: Toggle canvas");
+      this.toggleCanvas();
+    });
+
+    // Global shortcut to capture current selection and add to canvas
+    globalShortcut.register("CommandOrControl+Shift+A", () => {
+      console.log("➕ Global shortcut: Add selection to canvas");
+      this.addSelectionToCanvas();
+    });
+
+    // Global shortcut to show context suggestions
+    globalShortcut.register("CommandOrControl+Shift+X", () => {
+      console.log("💡 Global shortcut: Show context suggestions");
+      this.showContextSuggestions();
+    });
+
+    console.log("✅ Global shortcuts registered:");
+    console.log("  • Ctrl+Shift+Space: Toggle floating window");
+    console.log("  • Ctrl+Alt+F: Focus search");
+    console.log("  • Ctrl+Shift+T: Toggle always on top");
+    console.log("  • Ctrl+Shift+S: Quick search with clipboard");
+    console.log("  • Ctrl+Shift+C: Toggle canvas");
+    console.log("  • Ctrl+Shift+A: Add selection to canvas");
+    console.log("  • Ctrl+Shift+X: Show context suggestions");
   }
 
   setupIPC() {
@@ -562,6 +600,46 @@ class SemanticSearchApp {
       }
       this.mainWindow.focus();
       this.mainWindow.webContents.send("focus-search");
+    }
+  }
+
+  quickSearchClipboard() {
+    if (this.mainWindow) {
+      if (!this.mainWindow.isVisible()) {
+        this.mainWindow.show();
+      }
+      this.mainWindow.focus();
+      this.mainWindow.webContents.send("quick-search-clipboard");
+    }
+  }
+
+  toggleCanvas() {
+    if (this.mainWindow) {
+      if (!this.mainWindow.isVisible()) {
+        this.mainWindow.show();
+      }
+      this.mainWindow.focus();
+      this.mainWindow.webContents.send("toggle-canvas");
+    }
+  }
+
+  addSelectionToCanvas() {
+    if (this.mainWindow) {
+      if (!this.mainWindow.isVisible()) {
+        this.mainWindow.show();
+      }
+      this.mainWindow.focus();
+      this.mainWindow.webContents.send("add-selection-to-canvas");
+    }
+  }
+
+  showContextSuggestions() {
+    if (this.mainWindow) {
+      if (!this.mainWindow.isVisible()) {
+        this.mainWindow.show();
+      }
+      this.mainWindow.focus();
+      this.mainWindow.webContents.send("show-context-suggestions");
     }
   }
 

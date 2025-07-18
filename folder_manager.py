@@ -368,15 +368,20 @@ class FolderManager:
     async def start_folder_monitoring(self, folder_path: str):
         """Start monitoring a specific folder."""
         try:
+            # Check if folder exists
+            if not Path(folder_path).exists():
+                logger.warning(f"Folder does not exist, skipping monitoring: {folder_path}")
+                return
+
             if folder_path not in self.folder_observers:
                 event_handler = DocumentFolderHandler(self)
                 observer = Observer()
                 observer.schedule(event_handler, folder_path, recursive=True)
                 observer.start()
-                
+
                 self.folder_observers[folder_path] = observer
                 logger.info(f"Started monitoring folder: {folder_path}")
-                
+
         except Exception as e:
             logger.error(f"Failed to start monitoring folder {folder_path}: {e}")
     

@@ -9,6 +9,9 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 import hashlib
 import mimetypes
+import json
+import uuid
+from datetime import datetime
 # Document processing libraries
 import PyPDF2
 import fitz  # PyMuPDF for advanced PDF processing
@@ -335,6 +338,124 @@ class DocumentProcessor:
         except:
             return "unknown"
 
+    async def add_user_annotation(self, file_path: str, page_num: int, annotation_data: Dict[str, Any]) -> bool:
+        """Add user annotation/highlight with metadata to a document."""
+        try:
+            # Load user annotations from storage
+            annotations_file = Path(file_path).with_suffix('.annotations.json')
+            user_annotations = []
+
+            if annotations_file.exists():
+                with open(annotations_file, 'r', encoding='utf-8') as f:
+                    user_annotations = json.load(f)
+
+            # Create new annotation
+            new_annotation = {
+                'id': str(uuid.uuid4()),
+                'page': page_num,
+                'type': annotation_data.get('type', 'highlight'),
+                'content': annotation_data.get('content', ''),
+                'highlighted_text': annotation_data.get('highlighted_text', ''),
+                'position': annotation_data.get('position', {}),
+                'color': annotation_data.get('color', 'yellow'),
+                'color_category': annotation_data.get('color_category', 'yellow'),
+                'user_note': annotation_data.get('user_note', ''),
+                'tags': annotation_data.get('tags', []),
+                'importance': annotation_data.get('importance', 'medium'),  # low, medium, high
+                'created_at': datetime.now().isoformat(),
+                'modified_at': datetime.now().isoformat(),
+                'author': annotation_data.get('author', 'user'),
+                'metadata': annotation_data.get('metadata', {})
+            }
+
+            user_annotations.append(new_annotation)
+
+            # Save annotations
+            with open(annotations_file, 'w', encoding='utf-8') as f:
+                json.dump(user_annotations, f, indent=2, ensure_ascii=False)
+
+            logger.info(f"Added user annotation to {file_path}, page {page_num}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error adding user annotation: {e}")
+            return False
+
+    async def get_user_annotations(self, file_path: str) -> List[Dict[str, Any]]:
+        """Get all user annotations for a document."""
+        try:
+            annotations_file = Path(file_path).with_suffix('.annotations.json')
+
+            if not annotations_file.exists():
+                return []
+
+            with open(annotations_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+
+        except Exception as e:
+            logger.error(f"Error loading user annotations: {e}")
+            return []
+
+    async def update_user_annotation(self, file_path: str, annotation_id: str, updates: Dict[str, Any]) -> bool:
+        """Update an existing user annotation."""
+        try:
+            annotations_file = Path(file_path).with_suffix('.annotations.json')
+
+            if not annotations_file.exists():
+                return False
+
+            with open(annotations_file, 'r', encoding='utf-8') as f:
+                user_annotations = json.load(f)
+
+            # Find and update annotation
+            for annotation in user_annotations:
+                if annotation['id'] == annotation_id:
+                    annotation.update(updates)
+                    annotation['modified_at'] = datetime.now().isoformat()
+                    break
+            else:
+                return False
+
+            # Save updated annotations
+            with open(annotations_file, 'w', encoding='utf-8') as f:
+                json.dump(user_annotations, f, indent=2, ensure_ascii=False)
+
+            logger.info(f"Updated user annotation {annotation_id} in {file_path}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error updating user annotation: {e}")
+            return False
+
+    async def delete_user_annotation(self, file_path: str, annotation_id: str) -> bool:
+        """Delete a user annotation."""
+        try:
+            annotations_file = Path(file_path).with_suffix('.annotations.json')
+
+            if not annotations_file.exists():
+                return False
+
+            with open(annotations_file, 'r', encoding='utf-8') as f:
+                user_annotations = json.load(f)
+
+            # Filter out the annotation to delete
+            original_count = len(user_annotations)
+            user_annotations = [a for a in user_annotations if a['id'] != annotation_id]
+
+            if len(user_annotations) == original_count:
+                return False  # Annotation not found
+
+            # Save updated annotations
+            with open(annotations_file, 'w', encoding='utf-8') as f:
+                json.dump(user_annotations, f, indent=2, ensure_ascii=False)
+
+            logger.info(f"Deleted user annotation {annotation_id} from {file_path}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error deleting user annotation: {e}")
+            return False
+
     async def _process_pdf_fallback(self, file_path: Path) -> tuple[str, Dict[str, Any]]:
         """Fallback PDF processing using PyPDF2 when PyMuPDF fails."""
         content = ""
@@ -468,4 +589,27 @@ class DocumentProcessor:
             })
             chunk = DocumentChunk(chunk_text, chunk_metadata)
             chunks.append(chunk)
+        return chunks
+
+    async def process_text(self, text: str, source: str = "text_input") -> List[DocumentChunk]:
+        """Process raw text and return chunks."""
+        if not self.text_splitter:
+            await self.initialize()
+
+        # Split text into chunks
+        text_chunks = self.text_splitter.split_text(text)
+
+        chunks = []
+        for i, chunk_text in enumerate(text_chunks):
+            chunk_metadata = {
+                'source': source,
+                'chunk_index': i,
+                'total_chunks': len(text_chunks),
+                'content_type': 'text',
+                'processed_at': datetime.now().isoformat()
+            }
+
+            chunk = DocumentChunk(chunk_text, chunk_metadata)
+            chunks.append(chunk)
+
         return chunks

@@ -77,20 +77,22 @@ class SearchEngine:
             # Apply various ranking factors
             readwise_boost = self._calculate_readwise_boost(result)
             highlight_boost = self._calculate_highlight_boost(result)
+            user_annotation_boost = self._calculate_user_annotation_boost(result)
             recency_boost = self._calculate_recency_boost(result)
             keyword_boost = self._calculate_keyword_boost(result, original_query)
             length_penalty = self._calculate_length_penalty(result)
             source_boost = self._calculate_source_boost(result)
-            
+
             # Combine all factors using configurable weights
             final_score = (
                 base_score * weights.get('base_similarity', 1.0) +
-                readwise_boost * weights.get('readwise_boost', 0.0) +
-                highlight_boost * weights.get('highlight_boost', 0.0) +
-                recency_boost * weights.get('recency_boost', 0.0) +
-                keyword_boost * weights.get('keyword_boost', 0.0) +
-                length_penalty * weights.get('length_penalty', 0.0) +
-                source_boost * weights.get('source_boost', 0.0)
+                readwise_boost * weights.get('readwise_boost', 0.2) +
+                highlight_boost * weights.get('highlight_boost', 0.15) +
+                user_annotation_boost * weights.get('user_annotation_boost', 0.3) +
+                recency_boost * weights.get('recency_boost', 0.1) +
+                keyword_boost * weights.get('keyword_boost', 0.1) +
+                length_penalty * weights.get('length_penalty', -0.05) +
+                source_boost * weights.get('source_boost', 0.05)
             )
             
             result['final_score'] = final_score
@@ -98,6 +100,7 @@ class SearchEngine:
                 'base_similarity': base_score,
                 'readwise_boost': readwise_boost,
                 'highlight_boost': highlight_boost,
+                'user_annotation_boost': user_annotation_boost,
                 'recency_boost': recency_boost,
                 'keyword_boost': keyword_boost,
                 'length_penalty': length_penalty,
@@ -181,6 +184,80 @@ class SearchEngine:
         # Maximum highlight boost cap
         max_highlight_boost = highlight_config.get('max_highlight_boost', 1.0)
         return min(boost, max_highlight_boost)
+
+    def _calculate_user_annotation_boost(self, result: Dict[str, Any]) -> float:
+        """Calculate boost for user-created annotations and highlights."""
+        metadata = result.get('metadata', {})
+        boost = 0.0
+
+        # Get user annotation configuration
+        user_config = self.config.get('search.user_annotation_boosts', {})
+
+        # Check for user annotations
+        user_annotations = metadata.get('user_annotations', [])
+        if user_annotations:
+            base_user_boost = user_config.get('base_user_annotation_boost', 0.4)
+            boost += base_user_boost
+
+            for annotation in user_annotations:
+                # Boost based on importance level
+                importance = annotation.get('importance', 'medium')
+                importance_boosts = user_config.get('importance_boosts', {
+                    'low': 0.1,
+                    'medium': 0.2,
+                    'high': 0.4
+                })
+                boost += importance_boosts.get(importance, 0.2)
+
+                # Boost for annotations with user notes
+                if annotation.get('user_note', '').strip():
+                    boost += user_config.get('user_note_boost', 0.3)
+
+                # Boost for tagged annotations
+                tags = annotation.get('tags', [])
+                if tags:
+                    tag_boost = user_config.get('tag_boost', 0.1)
+                    boost += tag_boost * min(len(tags), 3)  # Cap at 3 tags
+
+                # Boost based on annotation color/category
+                color_category = annotation.get('color_category', 'default')
+                color_boosts = user_config.get('user_color_boosts', {
+                    'red': 0.4,      # High importance
+                    'orange': 0.3,   # Medium-high importance
+                    'yellow': 0.2,   # Standard highlight
+                    'green': 0.25,   # Positive/good
+                    'blue': 0.2,     # Information
+                    'pink': 0.15     # Low priority
+                })
+                boost += color_boosts.get(color_category, 0.1)
+
+        # Boost for content that matches user-highlighted text
+        if result.get('content', '').strip():
+            for annotation in user_annotations:
+                highlighted_text = annotation.get('highlighted_text', '').strip()
+                if highlighted_text and highlighted_text in result.get('content', ''):
+                    boost += user_config.get('user_highlighted_content_boost', 0.5)
+                    break  # Only apply once per result
+
+        # Check if this content was recently modified by user
+        for annotation in user_annotations:
+            modified_at = annotation.get('modified_at')
+            if modified_at:
+                try:
+                    modified_date = datetime.fromisoformat(modified_at.replace('Z', '+00:00'))
+                    days_since_modified = (datetime.now() - modified_date).days
+
+                    # Boost recently modified annotations
+                    if days_since_modified <= 7:
+                        boost += user_config.get('recent_modification_boost', 0.2)
+                    elif days_since_modified <= 30:
+                        boost += user_config.get('recent_modification_boost', 0.2) * 0.5
+                except:
+                    pass
+
+        # Maximum user annotation boost cap
+        max_user_boost = user_config.get('max_user_annotation_boost', 1.5)
+        return min(boost, max_user_boost)
 
     def _calculate_recency_boost(self, result: Dict[str, Any]) -> float:
         """Calculate boost based on content recency."""

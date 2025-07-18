@@ -1,0 +1,14 @@
+2025-07-16 02:16:24,566 - INFO - ============================================================
+2025-07-16 02:16:52,488 - INFO - PyTorch version 2.4.0 available.
+2025-07-16 02:16:52,498 - INFO - JAX version 0.5.2 available.
+2025-07-16 02:17:29,182 - INFO - ============================================================
+2025-07-16 02:17:58,696 - INFO - PyTorch version 2.4.0 available.
+2025-07-16 02:17:58,705 - INFO - JAX version 0.5.2 available.
+2025-07-16 02:33:13,111 - INFO - 🚀 Starting Semantic Search Assistant
+2025-07-16 02:33:13,111 - INFO - ============================================================
+2025-07-16 02:33:13,111 - INFO - 🔍 Checking dependencies...
+2025-07-16 02:33:39,416 - INFO - PyTorch version 2.4.0 available.
+2025-07-16 02:33:39,424 - INFO - JAX version 0.5.2 available.
+2025-07-16 02:33:40,962 - ERROR - ❌ Unexpected error: invalid attr name 'connections'
+2025-07-16 02:33:40,963 - INFO - 🛑 Shutting down...
+2025-07-16 02:33:40,963 - INFO - ✅ Shutdown complete

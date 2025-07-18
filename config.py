@@ -191,3 +191,7 @@ class Config:
     @property
     def supported_extensions(self) -> list:
         return self.get('processing.supported_extensions')
+
+    def to_dict(self) -> dict:
+        """Convert config to dictionary format."""
+        return self.config.copy()

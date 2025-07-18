@@ -17,6 +17,9 @@ from readwise_importer import ReadwiseImporter
 from search_engine import SearchEngine
 from folder_manager import FolderManager
 from config import Config
+from citation_manager import CitationManager
+from background_processor import BackgroundProcessor
+from document_monitor import DocumentMonitor
 
 # Setup logging
 logging.basicConfig(
@@ -35,12 +38,25 @@ class DocumentSearchBackend:
         self.readwise_importer = ReadwiseImporter(self.config)
         self.search_engine = SearchEngine(self.vector_store, self.config)
         self.folder_manager = FolderManager(self.config, self)
+
+        # New enhanced components
+        self.citation_manager = CitationManager(self.config.to_dict())
+        self.background_processor = BackgroundProcessor(self.config.to_dict())
+        self.document_monitor = DocumentMonitor(self.search_engine, self.config.to_dict())
         
     async def initialize(self):
         """Initialize all components."""
         logger.info("Initializing document search backend...")
         await self.vector_store.initialize()
         await self.document_processor.initialize()
+
+        # Initialize new components
+        await self.background_processor.start()
+        logger.info("✅ Background processor started")
+
+        # Setup document monitoring callbacks
+        self.document_monitor.add_context_callback(self._handle_context_event)
+        logger.info("✅ Document monitor configured")
 
         # Add test_docs folder to monitoring
         test_docs_path = Path("test_docs")
@@ -55,14 +71,107 @@ class DocumentSearchBackend:
         # Start folder monitoring
         await self.folder_manager.start_monitoring()
 
-        logger.info("Backend initialization complete")
+        logger.info("✅ Document search backend initialized successfully")
+        return True
 
     async def cleanup(self):
         """Cleanup resources and stop monitoring."""
-        logger.info("Cleaning up backend...")
-        if hasattr(self, 'folder_manager'):
-            await self.folder_manager.stop_monitoring()
-        logger.info("Backend cleanup complete")
+        logger.info("🧹 Cleaning up backend...")
+
+        try:
+            # Stop folder monitoring
+            if hasattr(self, 'folder_manager'):
+                await self.folder_manager.stop_monitoring()
+                logger.info("✅ Folder monitoring stopped")
+
+            # Stop background processor
+            if hasattr(self, 'background_processor'):
+                await self.background_processor.stop()
+                logger.info("✅ Background processor stopped")
+
+            # Stop document monitoring
+            if hasattr(self, 'document_monitor'):
+                await self.document_monitor.stop_monitoring()
+                logger.info("✅ Document monitoring stopped")
+
+            # Cleanup old tasks
+            if hasattr(self, 'background_processor'):
+                await self.background_processor.cleanup_old_tasks()
+                logger.info("✅ Old tasks cleaned up")
+
+            logger.info("✅ Backend cleanup complete")
+
+        except Exception as e:
+            logger.error(f"Error during cleanup: {e}")
+
+    async def _handle_context_event(self, context_event: Dict[str, Any]):
+        """Handle context events from document monitoring."""
+        try:
+            event_type = context_event.get('type')
+            suggestions = context_event.get('suggestions', [])
+
+            logger.info(f"📋 Context event: {event_type} with {len(suggestions)} suggestions")
+
+            # Here you could add logic to:
+            # - Store context events for analytics
+            # - Trigger additional processing
+            # - Send notifications to connected clients
+
+        except Exception as e:
+            logger.error(f"Error handling context event: {e}")
+
+    async def get_system_status(self) -> Dict[str, Any]:
+        """Get comprehensive system status."""
+        try:
+            status = {
+                'backend_initialized': True,
+                'components': {
+                    'vector_store': hasattr(self, 'vector_store') and self.vector_store is not None,
+                    'document_processor': hasattr(self, 'document_processor') and self.document_processor is not None,
+                    'search_engine': hasattr(self, 'search_engine') and self.search_engine is not None,
+                    'citation_manager': hasattr(self, 'citation_manager') and self.citation_manager is not None,
+                    'background_processor': hasattr(self, 'background_processor') and self.background_processor is not None,
+                    'document_monitor': hasattr(self, 'document_monitor') and self.document_monitor is not None,
+                },
+                'statistics': {}
+            }
+
+            # Add component-specific statistics
+            if hasattr(self, 'background_processor'):
+                status['statistics']['background_processing'] = self.background_processor.get_statistics()
+
+            if hasattr(self, 'citation_manager'):
+                status['statistics']['citations'] = self.citation_manager.get_statistics()
+
+            # Add search statistics
+            search_stats = await self.get_search_statistics()
+            status['statistics']['search'] = search_stats
+
+            return status
+
+        except Exception as e:
+            logger.error(f"Error getting system status: {e}")
+            return {'error': str(e)}
+
+    async def get_search_statistics(self) -> Dict[str, Any]:
+        """Get search engine statistics."""
+        try:
+            # Get vector store statistics
+            stats = await self.vector_store.get_stats()
+
+            # Add search-specific statistics
+            search_stats = {
+                'total_documents': stats.get('total_documents', 0),
+                'total_chunks': stats.get('total_chunks', 0),
+                'vector_dimensions': stats.get('vector_dimensions', 0),
+                'index_size': stats.get('index_size', 0)
+            }
+
+            return search_stats
+
+        except Exception as e:
+            logger.error(f"Error getting search statistics: {e}")
+            return {'error': str(e)}
 
     async def process_documents(self, file_paths: List[str], progress_callback=None):
         """Process multiple documents and add them to the vector store."""

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search Assistant - Complete Interface</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item {
+            background: white;
+            border: 1px solid #e8ecef;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: grab;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .result-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .result-item:active {
+            cursor: grabbing;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .result-source {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9rem;
+            max-width: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .result-similarity {
+            font-size: 0.8rem;
+            color: #6c757d;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid #dee2e6;
+        }
+
+        .result-content {
+            color: #2c3e50;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #f1f3f4;
+        }
+
+        .result-btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+            color: #495057;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .result-btn:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .result-btn.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .result-btn.primary:hover {
+            background: #5a6fd8;
+        }
+
+        .drag-indicator {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: #dee2e6;
+            font-size: 1.2rem;
+            cursor: grab;
+        }
+
+        .result-item:hover .drag-indicator {
+            color: #667eea;
+        }
+
+        .canvas-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+            position: relative;
+        }
+
+        .canvas-item {
+            position: absolute;
+            background: #fff;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: move;
+            max-width: 300px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .canvas-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .canvas-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .status-bar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .floating-window {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .floating-window.visible {
+            display: block;
+        }
+
+        .floating-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .floating-content {
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background: #e9ecef;
+        }
+
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .shortcuts-help {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .shortcut-key {
+            background: #e9ecef;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .floating-window {
+                width: calc(100vw - 40px);
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Main App Component
+        function App() {
+            const [activeTab, setActiveTab] = useState('search');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [searchResults, setSearchResults] = useState([]);
+            const [isSearching, setIsSearching] = useState(false);
+            const [status, setStatus] = useState('Ready');
+            const [canvasItems, setCanvasItems] = useState([]);
+            const [floatingVisible, setFloatingVisible] = useState(false);
+            const [suggestions, setSuggestions] = useState([]);
+
+            // Check backend status on load
+            useEffect(() => {
+                checkBackendStatus();
+                setupKeyboardShortcuts();
+            }, []);
+
+            const checkBackendStatus = async () => {
+                try {
+                    const response = await fetch('/health');
+                    const data = await response.json();
+                    setStatus('Backend connected and ready');
+                } catch (error) {
+                    setStatus('Backend not available');
+                }
+            };
+
+            const setupKeyboardShortcuts = () => {
+                const handleKeyPress = (e) => {
+                    if (e.ctrlKey && e.shiftKey && e.code === 'Space') {
+                        e.preventDefault();
+                        setFloatingVisible(!floatingVisible);
+                    }
+                    if (e.ctrlKey && e.altKey && e.code === 'KeyF') {
+                        e.preventDefault();
+                        document.getElementById('searchInput')?.focus();
+                    }
+                };
+
+                document.addEventListener('keydown', handleKeyPress);
+                return () => document.removeEventListener('keydown', handleKeyPress);
+            };
+
+            const performSearch = async () => {
+                if (!searchQuery.trim()) return;
+
+                setIsSearching(true);
+                setStatus('Searching...');
+
+                try {
+                    const response = await fetch('/search', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            query: searchQuery,
+                            limit: 20,
+                            similarity_threshold: 0.3
+                        })
+                    });
+
+                    const data = await response.json();
+                    setSearchResults(data.results || []);
+                    setStatus(`Found ${data.results?.length || 0} results`);
+                } catch (error) {
+                    setStatus('Search failed: ' + error.message);
+                    setSearchResults([]);
+                } finally {
+                    setIsSearching(false);
+                }
+            };
+
+            const copyWithCitation = (result) => {
+                const content = result.content;
+                const source = result.source || 'Unknown Source';
+                const citationText = `${content}\n\n[Source: ${source}]`;
+
+                navigator.clipboard.writeText(citationText).then(() => {
+                    showNotification('Text with citation copied to clipboard!');
+                });
+            };
+
+            const copyTextOnly = (result) => {
+                navigator.clipboard.writeText(result.content).then(() => {
+                    showNotification('Text copied to clipboard!');
+                });
+            };
+
+            const openSource = (result) => {
+                if (result.source && result.source !== 'Unknown Source') {
+                    // Try to open the source file/URL
+                    showNotification('Opening source...');
+                } else {
+                    showNotification('Source not available');
+                }
+            };
+
+            const showNotification = (message) => {
+                // Simple notification - you could enhance this with a toast library
+                alert(message);
+            };
+
+            const addToCanvas = (item) => {
+                const newItem = {
+                    id: Date.now(),
+                    content: item.content,
+                    source: item.source,
+                    x: Math.random() * 300,
+                    y: Math.random() * 200
+                };
+                setCanvasItems([...canvasItems, newItem]);
+                setActiveTab('canvas');
+            };
+
+            return (
+                <div className="app">
+                    <Header 
+                        activeTab={activeTab} 
+                        setActiveTab={setActiveTab}
+                        floatingVisible={floatingVisible}
+                        setFloatingVisible={setFloatingVisible}
+                    />
+                    
+                    <main className="main-content">
+                        {activeTab === 'search' && (
+                            <SearchTab
+                                searchQuery={searchQuery}
+                                setSearchQuery={setSearchQuery}
+                                searchResults={searchResults}
+                                isSearching={isSearching}
+                                performSearch={performSearch}
+                                addToCanvas={addToCanvas}
+                            />
+                        )}
+                        
+                        {activeTab === 'canvas' && (
+                            <CanvasTab
+                                canvasItems={canvasItems}
+                                setCanvasItems={setCanvasItems}
+                            />
+                        )}
+                        
+                        {activeTab === 'upload' && <UploadTab />}
+                        {activeTab === 'settings' && <SettingsTab />}
+                    </main>
+
+                    <FloatingWindow
+                        visible={floatingVisible}
+                        suggestions={suggestions}
+                        addToCanvas={addToCanvas}
+                    />
+
+                    <div className="status-bar">{status}</div>
+                </div>
+            );
+        }
+
+        // Header Component
+        function Header({ activeTab, setActiveTab, floatingVisible, setFloatingVisible }) {
+            return (
+                <header className="header">
+                    <div className="header-content">
+                        <div className="logo">🔍 Semantic Search Assistant</div>
+                        <nav className="nav-tabs">
+                            <button 
+                                className={`tab ${activeTab === 'search' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('search')}
+                            >
+                                Search
+                            </button>
+                            <button 
+                                className={`tab ${activeTab === 'canvas' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('canvas')}
+                            >
+                                Canvas
+                            </button>
+                            <button 
+                                className={`tab ${activeTab === 'upload' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('upload')}
+                            >
+                                Upload
+                            </button>
+                            <button 
+                                className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('settings')}
+                            >
+                                Settings
+                            </button>
+                            <button 
+                                className="btn btn-secondary"
+                                onClick={() => setFloatingVisible(!floatingVisible)}
+                            >
+                                {floatingVisible ? 'Hide' : 'Show'} Floating Window
+                            </button>
+                        </nav>
+                    </div>
+                </header>
+            );
+        }
+
+        // Search Tab Component
+        function SearchTab({ searchQuery, setSearchQuery, searchResults, isSearching, performSearch, addToCanvas }) {
+            return (
+                <>
+                    <div className="search-section">
+                        <input
+                            id="searchInput"
+                            type="text"
+                            className="search-box"
+                            placeholder="Enter your search query... (Ctrl+Alt+F to focus)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && performSearch()}
+                        />
+                        <div className="search-controls">
+                            <button 
+                                className="btn btn-primary" 
+                                onClick={performSearch}
+                                disabled={isSearching}
+                            >
+                                {isSearching ? 'Searching...' : 'Search'}
+                            </button>
+                            <button className="btn btn-secondary">
+                                Advanced Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="results-section">
+                        <h3>Search Results</h3>
+                        {searchResults.length > 0 ? (
+                            searchResults.map((result, index) => (
+                                <div key={index} className="result-item" draggable="true">
+                                    <div className="drag-indicator">⋮⋮</div>
+                                    <div className="result-header">
+                                        <div className="result-source">{result.source || 'Unknown Source'}</div>
+                                        <div className="result-similarity">
+                                            {(result.similarity * 100).toFixed(1)}% match
+                                        </div>
+                                    </div>
+                                    <div className="result-content">{result.content}</div>
+                                    <div className="result-actions">
+                                        <button
+                                            className="result-btn primary"
+                                            onClick={() => copyWithCitation(result)}
+                                        >
+                                            📋 Copy with Citation
+                                        </button>
+                                        <button
+                                            className="result-btn"
+                                            onClick={() => copyTextOnly(result)}
+                                        >
+                                            Copy Text
+                                        </button>
+                                        <button
+                                            className="result-btn"
+                                            onClick={() => openSource(result)}
+                                        >
+                                            Open Source
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: '2rem', color: '#6c757d' }}>
+                                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
+                                <h3>No results yet</h3>
+                                <p>Try searching for something to see related content!</p>
+                            </div>
+                        )}
+                    </div>
+                </>
+            );
+        }
+
+        // Canvas Tab Component  
+        function CanvasTab({ canvasItems, setCanvasItems }) {
+            const canvasRef = useRef(null);
+
+            return (
+                <div className="canvas-section" ref={canvasRef}>
+                    <h3>Canvas - Organize Your Notes</h3>
+                    <p>Drag and arrange your saved content. Click items to see related suggestions.</p>
+                    
+                    {canvasItems.map(item => (
+                        <div
+                            key={item.id}
+                            className="canvas-item"
+                            style={{ left: item.x, top: item.y + 60 }}
+                        >
+                            <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                {item.source}
+                            </div>
+                            <div>{item.content.substring(0, 100)}...</div>
+                        </div>
+                    ))}
+                    
+                    {canvasItems.length === 0 && (
+                        <div style={{ textAlign: 'center', marginTop: '2rem', color: '#6c757d' }}>
+                            No items on canvas yet. Add some from your search results!
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Upload Tab Component
+        function UploadTab() {
+            const [uploadProgress, setUploadProgress] = useState(0);
+
+            return (
+                <div className="search-section">
+                    <h3>Upload Documents</h3>
+                    <div className="upload-area">
+                        <div>📁 Drag and drop files here or click to browse</div>
+                        <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#6c757d' }}>
+                            Supported: PDF, DOCX, MD, TXT
+                        </div>
+                    </div>
+                    
+                    {uploadProgress > 0 && (
+                        <div className="progress-bar">
+                            <div className="progress-fill" style={{ width: `${uploadProgress}%` }}></div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Settings Tab Component
+        function SettingsTab() {
+            return (
+                <div className="search-section">
+                    <h3>Settings & Shortcuts</h3>
+                    
+                    <div className="shortcuts-help">
+                        <h4>Keyboard Shortcuts</h4>
+                        <div className="shortcut-item">
+                            <span>Toggle Floating Window</span>
+                            <span className="shortcut-key">Ctrl+Shift+Space</span>
+                        </div>
+                        <div className="shortcut-item">
+                            <span>Focus Search</span>
+                            <span className="shortcut-key">Ctrl+Alt+F</span>
+                        </div>
+                        <div className="shortcut-item">
+                            <span>Quick Search with Clipboard</span>
+                            <span className="shortcut-key">Ctrl+Shift+S</span>
+                        </div>
+                        <div className="shortcut-item">
+                            <span>Switch to Canvas</span>
+                            <span className="shortcut-key">Ctrl+Shift+C</span>
+                        </div>
+                        <div className="shortcut-item">
+                            <span>Add Selection to Canvas</span>
+                            <span className="shortcut-key">Ctrl+Shift+A</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Floating Window Component
+        function FloatingWindow({ visible, suggestions, addToCanvas }) {
+            return (
+                <div className={`floating-window ${visible ? 'visible' : ''}`}>
+                    <div className="floating-header">
+                        <span>Context Suggestions</span>
+                        <span>💡</span>
+                    </div>
+                    <div className="floating-content">
+                        {suggestions.length > 0 ? (
+                            suggestions.map((suggestion, index) => (
+                                <div key={index} className="suggestion-item">
+                                    {suggestion.content}
+                                </div>
+                            ))
+                        ) : (
+                            <div style={{ textAlign: 'center', color: '#6c757d' }}>
+                                Start typing in any application to see contextual suggestions
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

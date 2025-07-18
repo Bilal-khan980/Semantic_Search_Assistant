@@ -5,7 +5,8 @@ Provides endpoints for document processing, search, and Readwise integration.
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse, FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import asyncio
@@ -41,6 +42,9 @@ app.add_middleware(
 
 # Global backend instance
 backend: Optional[DocumentSearchBackend] = None
+
+# Mount static files for web interface
+app.mount("/static", StaticFiles(directory="web"), name="static")
 
 # Pydantic models for request/response
 class SearchRequest(BaseModel):
@@ -120,9 +124,36 @@ async def shutdown_event():
         await backend.cleanup()
         logger.info("API server shutdown complete")
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    """Health check endpoint."""
+    """Serve the main web interface."""
+    try:
+        # Try to serve the comprehensive React app first
+        with open("web/app.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        try:
+            # Fallback to basic interface
+            with open("web/index.html", "r", encoding="utf-8") as f:
+                return HTMLResponse(content=f.read())
+        except FileNotFoundError:
+            return HTMLResponse(content="""
+            <!DOCTYPE html>
+            <html>
+            <head><title>Semantic Search Assistant</title></head>
+            <body>
+                <h1>🔍 Semantic Search Assistant</h1>
+                <p>✅ Backend is running successfully!</p>
+                <p>📚 API Documentation: <a href="/docs">/docs</a></p>
+                <p>🔧 System Status: <a href="/system/status">/system/status</a></p>
+                <p>❤️ Health Check: <a href="/health">/health</a></p>
+            </body>
+            </html>
+            """)
+
+@app.get("/api")
+async def api_status():
+    """API status endpoint."""
     return {"message": "Local Document Search API", "status": "running"}
 
 @app.get("/health")
@@ -146,6 +177,19 @@ async def health_check():
         }
     except Exception as e:
         return {"status": "unhealthy", "error": str(e)}
+
+@app.get("/system/status")
+async def get_system_status():
+    """Get comprehensive system status including new components."""
+    try:
+        if not backend:
+            return {"status": "error", "message": "Backend not initialized"}
+
+        status = await backend.get_system_status()
+        return status
+    except Exception as e:
+        logger.error(f"Error getting system status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/search", response_model=SearchResponse)
 async def search_documents(request: SearchRequest):
@@ -847,6 +891,212 @@ async def get_processing_status(task_id: str):
         raise HTTPException(status_code=404, detail="Task not found")
 
     return processing_tasks[task_id].dict()
+
+# ============================================================================
+# NEW ENHANCED API ENDPOINTS
+# ============================================================================
+
+# Citation Management Endpoints
+class CitationRequest(BaseModel):
+    content: str
+    source_id: str
+    page: Optional[str] = ""
+    location: Optional[str] = ""
+    highlight_color: Optional[str] = ""
+    user_note: Optional[str] = ""
+    tags: Optional[List[str]] = []
+    importance: Optional[str] = "medium"
+
+class SourceRequest(BaseModel):
+    title: str
+    author: Optional[str] = ""
+    authors: Optional[List[str]] = []
+    publication_date: Optional[str] = ""
+    publisher: Optional[str] = ""
+    url: Optional[str] = ""
+    doi: Optional[str] = ""
+    isbn: Optional[str] = ""
+    file_path: Optional[str] = ""
+    tags: Optional[List[str]] = []
+    notes: Optional[str] = ""
+
+@app.post("/citations/sources")
+async def register_source(source: SourceRequest):
+    """Register a new source for citations."""
+    try:
+        if not backend or not hasattr(backend, 'citation_manager'):
+            raise HTTPException(status_code=503, detail="Citation manager not available")
+
+        source_id = backend.citation_manager.register_source(source.dict())
+        return {"source_id": source_id, "message": "Source registered successfully"}
+    except Exception as e:
+        logger.error(f"Error registering source: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/citations")
+async def create_citation(citation: CitationRequest):
+    """Create a new citation."""
+    try:
+        if not backend or not hasattr(backend, 'citation_manager'):
+            raise HTTPException(status_code=503, detail="Citation manager not available")
+
+        citation_obj = backend.citation_manager.create_citation(**citation.dict())
+        return {"citation": citation_obj, "message": "Citation created successfully"}
+    except Exception as e:
+        logger.error(f"Error creating citation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/citations/{citation_id}/format")
+async def format_citation(citation_id: str, style: Optional[str] = "apa"):
+    """Format a citation in the specified style."""
+    try:
+        if not backend or not hasattr(backend, 'citation_manager'):
+            raise HTTPException(status_code=503, detail="Citation manager not available")
+
+        formatted = backend.citation_manager.format_citation(citation_id, style)
+        return {"formatted_citation": formatted}
+    except Exception as e:
+        logger.error(f"Error formatting citation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/citations/statistics")
+async def get_citation_statistics():
+    """Get citation database statistics."""
+    try:
+        if not backend or not hasattr(backend, 'citation_manager'):
+            raise HTTPException(status_code=503, detail="Citation manager not available")
+
+        stats = backend.citation_manager.get_statistics()
+        return stats
+    except Exception as e:
+        logger.error(f"Error getting citation statistics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Background Processing Endpoints
+@app.get("/tasks")
+async def get_tasks():
+    """Get all background tasks."""
+    try:
+        if not backend or not hasattr(backend, 'background_processor'):
+            raise HTTPException(status_code=503, detail="Background processor not available")
+
+        summary = backend.background_processor.get_task_summary()
+        return summary
+    except Exception as e:
+        logger.error(f"Error getting tasks: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/tasks/{task_id}")
+async def get_task(task_id: str):
+    """Get a specific task by ID."""
+    try:
+        if not backend or not hasattr(backend, 'background_processor'):
+            raise HTTPException(status_code=503, detail="Background processor not available")
+
+        task = backend.background_processor.get_task(task_id)
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+
+        return {"task": task.__dict__}
+    except Exception as e:
+        logger.error(f"Error getting task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/tasks/{task_id}")
+async def cancel_task(task_id: str):
+    """Cancel a background task."""
+    try:
+        if not backend or not hasattr(backend, 'background_processor'):
+            raise HTTPException(status_code=503, detail="Background processor not available")
+
+        success = await backend.background_processor.cancel_task(task_id)
+        if success:
+            return {"message": "Task cancelled successfully"}
+        else:
+            raise HTTPException(status_code=400, detail="Task could not be cancelled")
+    except Exception as e:
+        logger.error(f"Error cancelling task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/tasks/statistics")
+async def get_processing_statistics():
+    """Get background processing statistics."""
+    try:
+        if not backend or not hasattr(backend, 'background_processor'):
+            raise HTTPException(status_code=503, detail="Background processor not available")
+
+        stats = backend.background_processor.get_statistics()
+        return stats
+    except Exception as e:
+        logger.error(f"Error getting processing statistics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# User Annotation Endpoints
+class UserAnnotationRequest(BaseModel):
+    file_path: str
+    page_num: int
+    annotation_data: Dict[str, Any]
+
+@app.post("/annotations")
+async def add_user_annotation(annotation: UserAnnotationRequest):
+    """Add a user annotation to a document."""
+    try:
+        if not backend or not hasattr(backend, 'document_processor'):
+            raise HTTPException(status_code=503, detail="Document processor not available")
+
+        success = await backend.document_processor.add_user_annotation(
+            annotation.file_path,
+            annotation.page_num,
+            annotation.annotation_data
+        )
+
+        if success:
+            return {"message": "Annotation added successfully"}
+        else:
+            raise HTTPException(status_code=400, detail="Failed to add annotation")
+    except Exception as e:
+        logger.error(f"Error adding annotation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/annotations/{file_path:path}")
+async def get_user_annotations(file_path: str):
+    """Get all user annotations for a document."""
+    try:
+        if not backend or not hasattr(backend, 'document_processor'):
+            raise HTTPException(status_code=503, detail="Document processor not available")
+
+        annotations = await backend.document_processor.get_user_annotations(file_path)
+        return {"annotations": annotations}
+    except Exception as e:
+        logger.error(f"Error getting annotations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Document Monitoring Endpoints
+@app.post("/monitoring/start")
+async def start_document_monitoring():
+    """Start document monitoring."""
+    try:
+        if not backend or not hasattr(backend, 'document_monitor'):
+            raise HTTPException(status_code=503, detail="Document monitor not available")
+
+        await backend.document_monitor.start_monitoring()
+        return {"message": "Document monitoring started"}
+    except Exception as e:
+        logger.error(f"Error starting monitoring: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/monitoring/stop")
+async def stop_document_monitoring():
+    """Stop document monitoring."""
+    try:
+        if not backend or not hasattr(backend, 'document_monitor'):
+            raise HTTPException(status_code=503, detail="Document monitor not available")
+
+        await backend.document_monitor.stop_monitoring()
+        return {"message": "Document monitoring stopped"}
+    except Exception as e:
+        logger.error(f"Error stopping monitoring: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

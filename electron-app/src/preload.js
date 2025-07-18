@@ -30,6 +30,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onImportReadwise: (callback) => ipcRenderer.on("import-readwise", callback),
   onOpenSettings: (callback) => ipcRenderer.on("open-settings", callback),
 
+  // Global shortcut event listeners
+  onQuickSearchClipboard: (callback) => ipcRenderer.on("quick-search-clipboard", callback),
+  onToggleCanvas: (callback) => ipcRenderer.on("toggle-canvas", callback),
+  onAddSelectionToCanvas: (callback) => ipcRenderer.on("add-selection-to-canvas", callback),
+  onShowContextSuggestions: (callback) => ipcRenderer.on("show-context-suggestions", callback),
+
   // Remove listeners
   removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),
 
