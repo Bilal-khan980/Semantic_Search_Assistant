@@ -171,16 +171,34 @@ class AutoIndexer:
     async def initial_indexing(self):
         """Perform initial indexing of all watch folders."""
         logger.info("🚀 Starting initial indexing...")
+
+        # First, cleanup deleted files
+        await self.cleanup_deleted_files()
+
+        # Check if any files exist in watch folders
+        total_files_found = 0
         total_indexed = 0
-        
+
         for folder in self.watch_folders:
             if Path(folder).exists():
+                # Count existing files
+                for root, dirs, files in os.walk(folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        if Path(file_path).suffix.lower() in self.supported_extensions:
+                            total_files_found += 1
+
                 count = await self.scan_and_index_folder(folder)
                 total_indexed += count
                 logger.info(f"📁 {folder}: {count} files indexed")
             else:
                 logger.info(f"📁 {folder}: folder not found, skipping")
-                
+
+        # If no files found anywhere, clear all data
+        if total_files_found == 0 and len(self.indexed_files) > 0:
+            logger.info("🗑️ No files found in any watch folder, clearing all data...")
+            await self.clear_all_data()
+
         logger.info(f"✅ Initial indexing complete: {total_indexed} files indexed")
         return total_indexed
         
@@ -222,28 +240,146 @@ class AutoIndexer:
         try:
             # Small delay to ensure file is fully written
             await asyncio.sleep(1)
-            
+
             if self.should_index_file(file_path):
                 logger.info(f"🔄 File changed, re-indexing: {file_path}")
                 await self.index_file(file_path)
-                
+
         except Exception as e:
             logger.error(f"❌ Error handling file change {file_path}: {e}")
+
+    async def handle_file_deletion(self, file_path: str):
+        """Handle file deletion event."""
+        try:
+            if file_path in self.indexed_files:
+                logger.info(f"🗑️ Removing deleted file from index: {file_path}")
+
+                # Remove from vector database
+                await self._remove_file_from_database(file_path)
+
+                # Remove from index tracking
+                del self.indexed_files[file_path]
+                self.save_index_state()
+
+                logger.info(f"✅ Successfully removed: {file_path}")
+            else:
+                logger.debug(f"🔍 File not in index, skipping: {file_path}")
+
+        except Exception as e:
+            logger.error(f"❌ Error handling file deletion {file_path}: {e}")
             
     async def cleanup_deleted_files(self):
-        """Remove deleted files from index."""
+        """Remove deleted files from index and vector database."""
         deleted_files = []
-        
+
         for file_path in list(self.indexed_files.keys()):
             if not Path(file_path).exists():
                 deleted_files.append(file_path)
-                
+
         if deleted_files:
-            logger.info(f"🗑️ Cleaning up {len(deleted_files)} deleted files from index")
+            logger.info(f"🗑️ Cleaning up {len(deleted_files)} deleted files from index and database")
+
             for file_path in deleted_files:
+                # Remove from vector database
+                await self._remove_file_from_database(file_path)
+
+                # Remove from index tracking
                 del self.indexed_files[file_path]
-                
+                logger.info(f"🗑️ Removed: {file_path}")
+
             self.save_index_state()
+            logger.info(f"✅ Cleanup complete: {len(deleted_files)} files removed")
+
+    async def _remove_file_from_database(self, file_path: str):
+        """Remove all chunks of a file from the vector database."""
+        try:
+            # Get the vector store
+            vector_store = self.document_processor.vector_store
+
+            if hasattr(vector_store, 'delete_document'):
+                # Use the vector store's delete method
+                await vector_store.delete_document(file_path)
+                logger.debug(f"🗑️ Removed chunks from database: {file_path}")
+            elif hasattr(vector_store, 'table') and vector_store.table is not None:
+                # For LanceDB, delete by source filter
+                try:
+                    # Normalize file path for comparison
+                    normalized_path = file_path.replace('\\', '/')
+
+                    # Try different path formats to ensure we catch all variations
+                    delete_conditions = [
+                        f"source = '{file_path}'",
+                        f"source = '{normalized_path}'",
+                        f"source LIKE '%{Path(file_path).name}%'"
+                    ]
+
+                    deleted_count = 0
+                    for condition in delete_conditions:
+                        try:
+                            # Check if any rows match before deleting
+                            df = vector_store.table.search().where(condition).limit(1).to_pandas()
+                            if not df.empty:
+                                vector_store.table.delete(condition)
+                                deleted_count += len(df)
+                                logger.debug(f"🗑️ Deleted {len(df)} chunks with condition: {condition}")
+                                break
+                        except Exception as e:
+                            logger.debug(f"Delete condition failed: {condition} - {e}")
+                            continue
+
+                    if deleted_count > 0:
+                        logger.info(f"🗑️ Removed {deleted_count} chunks from LanceDB: {file_path}")
+                    else:
+                        logger.warning(f"⚠️ No chunks found to delete for: {file_path}")
+
+                except Exception as e:
+                    logger.warning(f"⚠️ Could not delete from LanceDB for {file_path}: {e}")
+            else:
+                logger.warning(f"⚠️ Vector store doesn't support deletion for {file_path}")
+
+        except Exception as e:
+            logger.error(f"❌ Error removing {file_path} from database: {e}")
+
+    async def clear_all_data(self):
+        """Clear all indexed data and vector database."""
+        try:
+            logger.info("🗑️ Clearing all indexed data...")
+
+            # Clear vector database
+            vector_store = self.document_processor.vector_store
+            if hasattr(vector_store, 'clear'):
+                await vector_store.clear()
+                logger.info("🗑️ Cleared vector database using clear() method")
+            elif hasattr(vector_store, 'table') and vector_store.table is not None:
+                # For LanceDB, delete all rows
+                try:
+                    # Check current count
+                    current_count = vector_store.table.count_rows()
+                    logger.info(f"🗑️ Current database has {current_count} rows")
+
+                    if current_count > 0:
+                        # Delete all rows - use a condition that matches all rows
+                        vector_store.table.delete("id IS NOT NULL")
+
+                        # Verify deletion
+                        new_count = vector_store.table.count_rows()
+                        logger.info(f"🗑️ Cleared LanceDB table: {current_count} → {new_count} rows")
+                    else:
+                        logger.info("🗑️ LanceDB table already empty")
+
+                except Exception as e:
+                    logger.warning(f"⚠️ Could not clear LanceDB: {e}")
+            else:
+                logger.warning("⚠️ Vector store doesn't support clearing")
+
+            # Clear index tracking
+            self.indexed_files.clear()
+            self.save_index_state()
+
+            logger.info("✅ All data cleared successfully")
+
+        except Exception as e:
+            logger.error(f"❌ Error clearing all data: {e}")
             
     async def periodic_check(self):
         """Periodic check for new/changed files."""
@@ -273,28 +409,34 @@ class AutoIndexer:
 
 class FileChangeHandler(FileSystemEventHandler):
     """Handle file system events."""
-    
+
     def __init__(self, auto_indexer):
         self.auto_indexer = auto_indexer
-        
+
     def on_created(self, event):
         """Handle file creation."""
         if not event.is_directory:
+            logger.info(f"📄 File created: {event.src_path}")
             asyncio.create_task(self.auto_indexer.handle_file_change(event.src_path))
-            
+
     def on_modified(self, event):
         """Handle file modification."""
         if not event.is_directory:
+            logger.info(f"📝 File modified: {event.src_path}")
             asyncio.create_task(self.auto_indexer.handle_file_change(event.src_path))
-            
+
+    def on_deleted(self, event):
+        """Handle file deletion."""
+        if not event.is_directory:
+            logger.info(f"🗑️ File deleted: {event.src_path}")
+            asyncio.create_task(self.auto_indexer.handle_file_deletion(event.src_path))
+
     def on_moved(self, event):
         """Handle file move/rename."""
         if not event.is_directory:
-            # Remove old path from index
-            if event.src_path in self.auto_indexer.indexed_files:
-                del self.auto_indexer.indexed_files[event.src_path]
-                
-            # Index new path
+            logger.info(f"📦 File moved: {event.src_path} → {event.dest_path}")
+            # Handle as deletion of old path and creation of new path
+            asyncio.create_task(self.auto_indexer.handle_file_deletion(event.src_path))
             asyncio.create_task(self.auto_indexer.handle_file_change(event.dest_path))
 
 async def main():

@@ -321,6 +321,47 @@ class VectorStore:
         except Exception as e:
             logger.error(f"Error deleting document {document_id}: {e}")
 
+    async def delete_by_source(self, source_path: str):
+        """Delete all chunks for a specific source file."""
+        try:
+            if not self.table:
+                logger.warning("No table available for deletion")
+                return
+
+            # Normalize path for comparison
+            normalized_path = source_path.replace('\\', '/')
+
+            # Check current count before deletion
+            initial_count = self.table.count_rows()
+
+            # Try different path formats to ensure we catch all variations
+            delete_conditions = [
+                f"source = '{source_path}'",
+                f"source = '{normalized_path}'",
+                f"source LIKE '%{Path(source_path).name}%'"
+            ]
+
+            deleted_count = 0
+            for condition in delete_conditions:
+                try:
+                    # Check if any rows match this condition
+                    df = self.table.search().where(condition).limit(10).to_pandas()
+                    if not df.empty:
+                        self.table.delete(condition)
+                        deleted_count += len(df)
+                        logger.info(f"🗑️ Deleted {len(df)} chunks with condition: {condition}")
+                        break
+                except Exception as e:
+                    logger.debug(f"Delete condition failed: {condition} - {e}")
+                    continue
+
+            # Verify deletion
+            final_count = self.table.count_rows()
+            logger.info(f"🗑️ Deleted chunks for {source_path}: {initial_count} → {final_count} rows")
+
+        except Exception as e:
+            logger.error(f"Error deleting by source {source_path}: {e}")
+
     async def get_documents(self, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
         """Get list of documents with metadata."""
         try:
