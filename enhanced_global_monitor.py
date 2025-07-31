@@ -35,9 +35,17 @@ try:
     import win32gui
     import win32con
     import win32api
+    import win32clipboard
     WIN32_AVAILABLE = True
 except ImportError:
     WIN32_AVAILABLE = False
+
+# Try to import tkinter DND
+try:
+    import tkinter.dnd as tkdnd
+    DND_AVAILABLE = True
+except ImportError:
+    DND_AVAILABLE = False
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -310,9 +318,22 @@ class EnhancedGlobalApp:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.results_text.configure(yscrollcommand=scrollbar.set)
 
-        # Bind double-click to copy chunk
-        self.results_text.bind('<Double-1>', self.copy_chunk_at_cursor)
+        # Remove double-click functionality - only drag-and-drop now
         self.results_text.bind('<Button-3>', self.show_context_menu)  # Right-click menu
+
+        # Bind drag-and-drop events
+        self.results_text.bind('<Button-1>', self.on_click_start)
+        self.results_text.bind('<B1-Motion>', self.on_drag_motion)
+        self.results_text.bind('<ButtonRelease-1>', self.on_drag_end)
+        self.results_text.bind('<Motion>', self.on_mouse_motion)
+
+        # Drag state variables
+        self.drag_start_pos = None
+        self.is_dragging = False
+        self.drag_data = None
+        self.drag_window = None
+        self.target_window = None
+        self.mouse_tracking_active = False
         
         # Initial message
         self.results_text.insert(tk.END, "🔍 Start global monitoring and type in Word or Notepad!\n\n")
@@ -320,6 +341,10 @@ class EnhancedGlobalApp:
         self.results_text.insert(tk.END, "• Microsoft Word, WordPad, Notepad\n")
         self.results_text.insert(tk.END, "• VS Code, Sublime Text, Atom\n")
         self.results_text.insert(tk.END, "• Any text editor or input field\n\n")
+        self.results_text.insert(tk.END, "🖱️ How to use search results:\n")
+        self.results_text.insert(tk.END, "• 🖱️ Drag & Drop: Click and drag any highlighted chunk to external apps\n")
+        self.results_text.insert(tk.END, "• ✋ Hover: Move mouse over chunks to see hand cursor\n")
+        self.results_text.insert(tk.END, "• 📝 Drop anywhere: Word, Notepad, VS Code, etc.\n\n")
         self.results_text.insert(tk.END, "🔧 Troubleshooting:\n")
         self.results_text.insert(tk.END, "• Run as Administrator for best results\n")
         self.results_text.insert(tk.END, "• Try the manual test box if global monitoring fails\n")
@@ -482,9 +507,9 @@ class EnhancedGlobalApp:
             self.results_text.insert(tk.END, "\n│\n", "card_border")
             self.results_text.insert(tk.END, "└" + "─" * 50 + "\n\n", "card_footer")
 
-            # Tag the chunk for easy copying
+            # Tag the chunk for easy copying and dragging
             self.results_text.tag_add(f"chunk_{i}", chunk_start, chunk_end)
-            self.results_text.tag_config(f"chunk_{i}", background="#f8fafc", relief="flat",
+            self.results_text.tag_config(f"chunk_{i}", background="#f0f8ff", relief="raised",
                                        borderwidth=1, lmargin1=20, lmargin2=20)
 
         # Configure elegant text styles
@@ -500,13 +525,16 @@ class EnhancedGlobalApp:
 
         self.results_text.see(1.0)
 
-    def copy_chunk_at_cursor(self, event):
-        """Copy the chunk at cursor position."""
+
+
+    def on_mouse_motion(self, event):
+        """Handle mouse motion to change cursor when over chunks."""
         try:
             # Get cursor position
-            cursor_pos = self.results_text.index(tk.CURRENT)
+            cursor_pos = self.results_text.index(f"@{event.x},{event.y}")
 
-            # Find which chunk was clicked
+            # Check if cursor is over a chunk
+            over_chunk = False
             for i, result in enumerate(self.search_results, 1):
                 chunk_tag = f"chunk_{i}"
                 try:
@@ -514,71 +542,395 @@ class EnhancedGlobalApp:
                     if ranges:
                         start, end = ranges[0], ranges[1]
                         if self.results_text.compare(start, "<=", cursor_pos) and self.results_text.compare(cursor_pos, "<=", end):
-                            # Copy this chunk
-                            content = result.get('content', '').strip()
-                            if CLIPBOARD_AVAILABLE:
-                                pyperclip.copy(content)
-                            else:
-                                self.root.clipboard_clear()
-                                self.root.clipboard_append(content)
-
-                            # Show confirmation
-                            source = result.get('source', 'Unknown').split('/')[-1]
-                            similarity = result.get('similarity', 0) * 100
-                            messagebox.showinfo("Copied!",
-                                              f"📋 Chunk {i} copied to clipboard!\n\n"
-                                              f"📄 Source: {source}\n"
-                                              f"🎯 Match: {similarity:.1f}%\n"
-                                              f"📝 Length: {len(content)} characters")
-                            return
+                            over_chunk = True
+                            break
                 except:
                     continue
 
-            # If no chunk found, copy selected text
-            try:
-                selected_text = self.results_text.selection_get()
-                if selected_text:
-                    if CLIPBOARD_AVAILABLE:
-                        pyperclip.copy(selected_text)
-                    else:
-                        self.root.clipboard_clear()
-                        self.root.clipboard_append(selected_text)
-                    messagebox.showinfo("Copied!", "Selected text copied to clipboard!")
-            except:
-                messagebox.showinfo("Copy", "Double-click on a highlighted chunk to copy it!")
+            # Change cursor based on whether we're over a chunk
+            if over_chunk:
+                self.results_text.config(cursor="hand2")  # Hand cursor for draggable chunks
+            else:
+                self.results_text.config(cursor="")  # Default cursor
 
         except Exception as e:
-            logger.error(f"Copy error: {e}")
+            logger.error(f"Mouse motion error: {e}")
+
+    def on_click_start(self, event):
+        """Handle mouse click start for potential drag operation."""
+        try:
+            # Get cursor position
+            cursor_pos = self.results_text.index(f"@{event.x},{event.y}")
+
+            # Check if click is on a chunk
+            for i, result in enumerate(self.search_results, 1):
+                chunk_tag = f"chunk_{i}"
+                try:
+                    ranges = self.results_text.tag_ranges(chunk_tag)
+                    if ranges:
+                        start, end = ranges[0], ranges[1]
+                        if self.results_text.compare(start, "<=", cursor_pos) and self.results_text.compare(cursor_pos, "<=", end):
+                            # Store drag start position and data
+                            self.drag_start_pos = (event.x, event.y)
+                            self.drag_data = {
+                                'content': result.get('content', '').strip(),
+                                'source': result.get('source', 'Unknown'),
+                                'similarity': result.get('similarity', 0),
+                                'chunk_index': i
+                            }
+
+                            # Prevent text selection during drag by clearing selection
+                            self.results_text.tag_remove("sel", "1.0", "end")
+                            return "break"  # Prevent default text selection
+                except:
+                    continue
+
+            # Not on a chunk, clear drag data
+            self.drag_start_pos = None
+            self.drag_data = None
+
+        except Exception as e:
+            logger.error(f"Click start error: {e}")
+
+    def on_drag_motion(self, event):
+        """Handle drag motion."""
+        try:
+            if self.drag_start_pos and self.drag_data:
+                # Calculate distance moved
+                dx = event.x - self.drag_start_pos[0]
+                dy = event.y - self.drag_start_pos[1]
+                distance = (dx*dx + dy*dy) ** 0.5
+
+                # Start dragging if moved enough distance
+                if distance > 10 and not self.is_dragging:
+                    self.is_dragging = True
+                    self.mouse_tracking_active = True
+                    self.start_drag_operation()
+
+        except Exception as e:
+            logger.error(f"Drag motion error: {e}")
+
+
+
+    def on_drag_end(self, event):
+        """Handle drag end - this is where the actual drop happens."""
+        try:
+            if self.is_dragging:
+                # Stop mouse tracking
+                self.mouse_tracking_active = False
+
+                # Perform the actual drop
+                self.perform_drop()
+
+            # Reset drag state
+            self.cleanup_drag_state()
+
+        except Exception as e:
+            logger.error(f"Drag end error: {e}")
+            self.cleanup_drag_state()
+
+    def cleanup_drag_state(self):
+        """Clean up all drag-related state."""
+        try:
+            # Remove drag window
+            if hasattr(self, 'drag_window') and self.drag_window:
+                self.drag_window.destroy()
+                self.drag_window = None
+
+            # Reset cursor
+            self.results_text.config(cursor="")
+
+            # Reset state variables
+            self.drag_start_pos = None
+            self.is_dragging = False
+            self.drag_data = None
+            self.target_window = None
+            self.mouse_tracking_active = False
+
+            if hasattr(self, 'last_external_hwnd'):
+                delattr(self, 'last_external_hwnd')
+
+        except Exception as e:
+            logger.error(f"Cleanup drag state error: {e}")
+
+    def perform_drop(self):
+        """Perform the actual drop operation."""
+        try:
+            if not self.drag_data:
+                return
+
+            # Get current cursor position to find target window
+            if WIN32_AVAILABLE:
+                x, y = win32gui.GetCursorPos()
+                target_hwnd = win32gui.WindowFromPoint((x, y))
+
+                if target_hwnd and target_hwnd != 0:
+                    # Check if it's a different application
+                    our_hwnd = self.root.winfo_id()
+                    if target_hwnd != our_hwnd:
+                        # This is an external application - perform drop
+                        self.drop_to_external_window(target_hwnd)
+                        return
+
+            # Fallback - just copy to clipboard and show instruction
+            self.copy_to_clipboard_and_notify()
+
+        except Exception as e:
+            logger.error(f"Perform drop error: {e}")
+            self.copy_to_clipboard_and_notify()
+
+    def drop_to_external_window(self, target_hwnd):
+        """Drop content to external window."""
+        try:
+            # Copy content to clipboard
+            content = self.drag_data['content']
+            if CLIPBOARD_AVAILABLE:
+                pyperclip.copy(content)
+            else:
+                self.root.clipboard_clear()
+                self.root.clipboard_append(content)
+
+            # Activate target window
+            win32gui.SetForegroundWindow(target_hwnd)
+            win32gui.BringWindowToTop(target_hwnd)
+
+            # Small delay then paste
+            self.root.after(200, self.auto_paste)
+
+            logger.info(f"Dropped content to external window: {target_hwnd}")
+
+        except Exception as e:
+            logger.error(f"Drop to external window error: {e}")
+            self.copy_to_clipboard_and_notify()
+
+    def auto_paste(self):
+        """Automatically paste the content."""
+        try:
+            if WIN32_AVAILABLE:
+                import win32api
+                import win32con
+
+                # Simulate Ctrl+V
+                win32api.keybd_event(win32con.VK_CONTROL, 0, 0, 0)
+                win32api.keybd_event(ord('V'), 0, 0, 0)
+                win32api.keybd_event(ord('V'), 0, win32con.KEYEVENTF_KEYUP, 0)
+                win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+                # Show success notification
+                self.show_drop_success()
+
+            else:
+                self.copy_to_clipboard_and_notify()
+
+        except Exception as e:
+            logger.error(f"Auto paste error: {e}")
+            self.copy_to_clipboard_and_notify()
+
+    def copy_to_clipboard_and_notify(self):
+        """Fallback: copy to clipboard and show notification."""
+        try:
+            content = self.drag_data['content']
+            if CLIPBOARD_AVAILABLE:
+                pyperclip.copy(content)
+            else:
+                self.root.clipboard_clear()
+                self.root.clipboard_append(content)
+
+            # Show instruction
+            self.show_manual_paste_instruction()
+
+        except Exception as e:
+            logger.error(f"Copy to clipboard error: {e}")
+
+    def show_drop_success(self):
+        """Show success notification after drop."""
+        try:
+            notification = tk.Toplevel(self.root)
+            notification.wm_overrideredirect(True)
+            notification.attributes('-topmost', True)
+            notification.configure(bg='#4CAF50', relief='solid', borderwidth=2)
+
+            msg = tk.Label(notification,
+                         text="✅ Content dropped successfully!",
+                         bg='#4CAF50', fg='white', font=('Arial', 11, 'bold'))
+            msg.pack(padx=15, pady=8)
+
+            # Position at top-right
+            screen_width = self.root.winfo_screenwidth()
+            notification.geometry(f"+{screen_width-250}+50")
+
+            # Auto-close after 2 seconds
+            self.root.after(2000, lambda: notification.destroy() if notification.winfo_exists() else None)
+
+        except Exception as e:
+            logger.error(f"Show drop success error: {e}")
+
+    def show_manual_paste_instruction(self):
+        """Show manual paste instruction."""
+        try:
+            content_preview = self.drag_data['content'][:50] + "..." if len(self.drag_data['content']) > 50 else self.drag_data['content']
+
+            notification = tk.Toplevel(self.root)
+            notification.wm_overrideredirect(True)
+            notification.attributes('-topmost', True)
+            notification.configure(bg='#2196F3', relief='solid', borderwidth=2)
+
+            msg = tk.Label(notification,
+                         text=f"📋 Content copied!\nSwitch to your app and press Ctrl+V\n\n{content_preview}",
+                         bg='#2196F3', fg='white', font=('Arial', 10, 'bold'),
+                         justify=tk.CENTER)
+            msg.pack(padx=15, pady=10)
+
+            # Position at center
+            x = self.root.winfo_screenwidth() // 2 - 200
+            y = self.root.winfo_screenheight() // 2 - 100
+            notification.geometry(f"+{x}+{y}")
+
+            # Auto-close after 4 seconds
+            self.root.after(4000, lambda: notification.destroy() if notification.winfo_exists() else None)
+
+        except Exception as e:
+            logger.error(f"Show manual paste instruction error: {e}")
+
+    def start_drag_operation(self):
+        """Start the drag operation with visual feedback."""
+        try:
+            if not self.drag_data:
+                return
+
+            # Create drag window that follows cursor
+            self.drag_window = tk.Toplevel(self.root)
+            self.drag_window.wm_overrideredirect(True)
+            self.drag_window.attributes('-topmost', True)
+            self.drag_window.attributes('-alpha', 0.9)
+            self.drag_window.configure(bg='#4CAF50', relief='solid', borderwidth=2)
+
+            # Show preview of content being dragged
+            content = self.drag_data['content']
+            content_preview = content[:50] + "..." if len(content) > 50 else content
+            label = tk.Label(self.drag_window, text=f"📄 {content_preview}",
+                           bg='#4CAF50', fg='white', font=('Arial', 9, 'bold'))
+            label.pack(padx=8, pady=4)
+
+            # Position the drag window near the cursor
+            x, y = self.root.winfo_pointerxy()
+            self.drag_window.geometry(f"+{x+15}+{y+15}")
+
+            # Change cursor to indicate dragging
+            self.results_text.config(cursor="fleur")
+
+            # Start global mouse tracking
+            self.start_global_mouse_tracking()
+
+            logger.info(f"Started dragging chunk {self.drag_data['chunk_index']}")
+
+        except Exception as e:
+            logger.error(f"Start drag operation error: {e}")
+
+    def start_global_mouse_tracking(self):
+        """Track mouse globally to update drag window position."""
+        try:
+            if self.mouse_tracking_active and self.is_dragging and hasattr(self, 'drag_window') and self.drag_window:
+                # Update drag window position
+                x, y = self.root.winfo_pointerxy()
+                self.drag_window.geometry(f"+{x+15}+{y+15}")
+
+                # Check for external applications and activate them
+                self.check_and_activate_external_app()
+
+                # Schedule next update
+                self.root.after(30, self.start_global_mouse_tracking)  # Update every 30ms for smooth tracking
+
+        except Exception as e:
+            logger.error(f"Global mouse tracking error: {e}")
+
+    def check_and_activate_external_app(self):
+        """Check if hovering over external app and activate it."""
+        try:
+            if WIN32_AVAILABLE:
+                # Get cursor position
+                x, y = win32gui.GetCursorPos()
+                target_hwnd = win32gui.WindowFromPoint((x, y))
+
+                if target_hwnd and target_hwnd != 0:
+                    our_hwnd = self.root.winfo_id()
+                    if target_hwnd != our_hwnd:
+                        # This is an external window
+                        try:
+                            class_name = win32gui.GetClassName(target_hwnd)
+                            window_title = win32gui.GetWindowText(target_hwnd)
+
+                            # Check if it's a text editor
+                            text_apps = ['WordPadClass', 'OpusApp', 'Notepad', 'Chrome_WidgetWin_1',
+                                       'HwndWrapper', 'ApplicationFrameWindow', 'Window']
+
+                            if any(app in class_name for app in text_apps) or any(keyword in window_title.lower() for keyword in ['word', 'notepad', 'code', 'editor', 'text']):
+                                # Activate this window immediately
+                                win32gui.SetForegroundWindow(target_hwnd)
+
+                                # Update drag window to show target
+                                self.update_drag_window_for_target(window_title)
+
+                        except Exception as e:
+                            logger.debug(f"Window check error: {e}")
+
+        except Exception as e:
+            logger.error(f"Check external app error: {e}")
+
+    def update_drag_window_for_target(self, target_title):
+        """Update drag window to show target application."""
+        try:
+            if hasattr(self, 'drag_window') and self.drag_window:
+                # Clear existing content
+                for widget in self.drag_window.winfo_children():
+                    widget.destroy()
+
+                # Show target info
+                content_preview = self.drag_data['content'][:30] + "..." if len(self.drag_data['content']) > 30 else self.drag_data['content']
+                target_name = target_title[:25] + "..." if len(target_title) > 25 else target_title
+
+                label = tk.Label(self.drag_window,
+                               text=f"📄 Drop into: {target_name}\n{content_preview}",
+                               bg='#FF9800', fg='white', font=('Arial', 9, 'bold'),
+                               justify=tk.CENTER)
+                label.pack(padx=8, pady=4)
+
+                # Change color to indicate target
+                self.drag_window.configure(bg='#FF9800')
+
+        except Exception as e:
+            logger.error(f"Update drag window for target error: {e}")
+
+
 
     def show_context_menu(self, event):
         """Show right-click context menu."""
         try:
             context_menu = tk.Menu(self.root, tearoff=0)
-            context_menu.add_command(label="📋 Copy Selected Text",
-                                   command=lambda: self.copy_selected_text())
             context_menu.add_command(label="🔍 Search in Web Interface",
                                    command=lambda: webbrowser.open(f"http://127.0.0.1:8000/static/app.html"))
             context_menu.add_separator()
             context_menu.add_command(label="📄 View All Results",
                                    command=lambda: self.show_all_results())
+            context_menu.add_separator()
+            context_menu.add_command(label="💡 Drag & Drop Help",
+                                   command=lambda: self.show_drag_help())
 
             context_menu.tk_popup(event.x_root, event.y_root)
         except Exception as e:
             logger.error(f"Context menu error: {e}")
 
-    def copy_selected_text(self):
-        """Copy currently selected text."""
-        try:
-            selected_text = self.results_text.selection_get()
-            if selected_text:
-                if CLIPBOARD_AVAILABLE:
-                    pyperclip.copy(selected_text)
-                else:
-                    self.root.clipboard_clear()
-                    self.root.clipboard_append(selected_text)
-                messagebox.showinfo("Copied!", "Selected text copied to clipboard!")
-        except:
-            messagebox.showwarning("No Selection", "Please select some text first!")
+    def show_drag_help(self):
+        """Show drag and drop help."""
+        messagebox.showinfo("Drag & Drop Help",
+                          "🖱️ How to use Drag & Drop:\n\n"
+                          "1. Hover over any highlighted chunk\n"
+                          "2. Click and drag the chunk\n"
+                          "3. Drag to any external application\n"
+                          "4. Release to drop the content\n"
+                          "5. Content will be pasted at cursor position\n\n"
+                          "✅ Works with: Word, Notepad, VS Code, etc.\n"
+                          "💡 No more double-clicking needed!")
 
     def show_all_results(self):
         """Show all results in a new window."""
