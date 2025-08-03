@@ -31,6 +31,14 @@ try:
 except ImportError:
     CLIPBOARD_AVAILABLE = False
 
+# Import highlight capture system
+try:
+    from highlight_capture import HighlightCapture
+    HIGHLIGHT_CAPTURE_AVAILABLE = True
+except ImportError:
+    HIGHLIGHT_CAPTURE_AVAILABLE = False
+    print("Highlight capture not available - highlight_capture.py not found")
+
 try:
     import win32gui
     import win32con
@@ -348,8 +356,26 @@ class EnhancedGlobalApp:
         self.results_text.insert(tk.END, "🔧 Troubleshooting:\n")
         self.results_text.insert(tk.END, "• Run as Administrator for best results\n")
         self.results_text.insert(tk.END, "• Try the manual test box if global monitoring fails\n")
-        self.results_text.insert(tk.END, "• Make sure to add documents via web interface first\n")
-        
+        self.results_text.insert(tk.END, "• Make sure to add documents via web interface first\n\n")
+
+        # Initialize highlight capture system
+        self.highlight_capture = None
+        if HIGHLIGHT_CAPTURE_AVAILABLE:
+            try:
+                self.highlight_capture = HighlightCapture()
+                if self.highlight_capture.start_global_listener():
+                    self.results_text.insert(tk.END, "✨ HIGHLIGHT CAPTURE ACTIVE!\n")
+                    self.results_text.insert(tk.END, "📝 Select text in ANY app and press Ctrl+Alt+H to capture highlights\n\n")
+                    logger.info("✅ Global highlight capture active (Ctrl+Alt+H)")
+                else:
+                    self.results_text.insert(tk.END, "⚠️ Highlight capture failed to start\n\n")
+                    logger.warning("❌ Failed to start highlight capture")
+            except Exception as e:
+                logger.error(f"Highlight capture initialization error: {e}")
+                self.results_text.insert(tk.END, f"⚠️ Highlight capture error: {e}\n\n")
+        else:
+            self.results_text.insert(tk.END, "⚠️ Highlight capture not available (missing dependencies)\n\n")
+
     def check_backend(self):
         """Check backend status."""
         if self.search_api.check_backend():
@@ -572,9 +598,21 @@ class EnhancedGlobalApp:
                         if self.results_text.compare(start, "<=", cursor_pos) and self.results_text.compare(cursor_pos, "<=", end):
                             # Store drag start position and data
                             self.drag_start_pos = (event.x, event.y)
+                            # Create citation
+                            source_name = result.get('source', 'Unknown')
+                            page_num = result.get('page', '')
+                            citation = self.create_citation(source_name, page_num)
+
+                            # Prepare content with citation
+                            content = result.get('content', '').strip()
+                            content_with_citation = f"{content}\n\n{citation}"
+
                             self.drag_data = {
-                                'content': result.get('content', '').strip(),
-                                'source': result.get('source', 'Unknown'),
+                                'content': content,  # Original content without citation
+                                'content_with_citation': content_with_citation,  # Content with citation for drag-drop
+                                'source': source_name,
+                                'page': page_num,
+                                'citation': citation,
                                 'similarity': result.get('similarity', 0),
                                 'chunk_index': i
                             }
@@ -591,6 +629,27 @@ class EnhancedGlobalApp:
 
         except Exception as e:
             logger.error(f"Click start error: {e}")
+
+    def create_citation(self, source_name, page_num=None):
+        """Create a citation for the content."""
+        try:
+            # Clean up source name
+            if source_name and source_name != 'Unknown':
+                # Remove file extensions
+                clean_source = source_name.replace('.pdf', '').replace('.docx', '').replace('.txt', '')
+
+                # Add page number if available
+                if page_num and str(page_num).strip():
+                    citation = f"(Source: {clean_source}, p. {page_num})"
+                else:
+                    citation = f"(Source: {clean_source})"
+            else:
+                citation = "(Source: Document)"
+
+            return citation
+        except Exception as e:
+            logger.error(f"Create citation error: {e}")
+            return "(Source: Document)"
 
     def on_drag_motion(self, event):
         """Handle drag motion."""
@@ -682,13 +741,13 @@ class EnhancedGlobalApp:
     def drop_to_external_window(self, target_hwnd):
         """Drop content to external window."""
         try:
-            # Copy content to clipboard
-            content = self.drag_data['content']
+            # Copy content with citation to clipboard
+            content_with_citation = self.drag_data.get('content_with_citation', self.drag_data['content'])
             if CLIPBOARD_AVAILABLE:
-                pyperclip.copy(content)
+                pyperclip.copy(content_with_citation)
             else:
                 self.root.clipboard_clear()
-                self.root.clipboard_append(content)
+                self.root.clipboard_append(content_with_citation)
 
             # Activate target window
             win32gui.SetForegroundWindow(target_hwnd)
@@ -729,12 +788,12 @@ class EnhancedGlobalApp:
     def copy_to_clipboard_and_notify(self):
         """Fallback: copy to clipboard and show notification."""
         try:
-            content = self.drag_data['content']
+            content_with_citation = self.drag_data.get('content_with_citation', self.drag_data['content'])
             if CLIPBOARD_AVAILABLE:
-                pyperclip.copy(content)
+                pyperclip.copy(content_with_citation)
             else:
                 self.root.clipboard_clear()
-                self.root.clipboard_append(content)
+                self.root.clipboard_append(content_with_citation)
 
             # Show instruction
             self.show_manual_paste_instruction()

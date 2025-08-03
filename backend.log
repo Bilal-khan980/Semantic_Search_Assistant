@@ -1760,3 +1760,865 @@
 2025-07-30 17:58:46,807 - main - INFO - Search for 'listrighta' returned 4 results
 2025-07-30 17:58:47,080 - main - INFO - Search for 'listrightac' returned 4 results
 2025-07-30 17:58:49,799 - main - INFO - Search for 'listrightacv' returned 4 results
+2025-08-03 01:55:08,908 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 01:55:49,178 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 01:55:49,222 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 01:55:51,263 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 01:55:51,427 - main - INFO - Initializing document search backend...
+2025-08-03 01:55:51,427 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 01:55:51,432 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 01:55:51,433 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 01:55:56,545 - database - INFO - Connected to existing table: documents
+2025-08-03 01:55:56,545 - database - INFO - Vector store initialized successfully
+2025-08-03 01:55:56,548 - document_processor - INFO - Document processor initialized
+2025-08-03 01:55:56,684 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 01:55:56,685 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 01:55:56,685 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 01:55:56,695 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 01:55:56,696 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 01:55:56,701 - api_service - INFO - API server started successfully
+2025-08-03 01:55:56,745 - folder_manager - INFO - Starting background document processor...
+2025-08-03 01:57:00,915 - main - INFO - Search for 'H' returned 4 results
+2025-08-03 01:57:31,081 - main - INFO - Search for 'HH' returned 4 results
+2025-08-03 01:57:31,900 - main - INFO - Search for 'HHH' returned 4 results
+2025-08-03 01:57:32,740 - main - INFO - Search for 'HHHH' returned 4 results
+2025-08-03 01:57:33,316 - main - INFO - Search for 'HHHHH' returned 4 results
+2025-08-03 01:57:33,567 - main - INFO - Search for 'HHHHHH' returned 4 results
+2025-08-03 01:57:34,260 - main - INFO - Search for 'HHHHHHH' returned 4 results
+2025-08-03 01:57:34,779 - main - INFO - Search for 'HHHHHHHH' returned 4 results
+2025-08-03 01:57:36,881 - main - INFO - Search for 'HHHHHHHHH' returned 4 results
+2025-08-03 01:57:37,713 - main - INFO - Search for 'HHHHHHHHHH' returned 4 results
+2025-08-03 01:57:38,964 - main - INFO - Search for 'HHHHHHHHHHH' returned 4 results
+2025-08-03 01:57:39,657 - main - INFO - Search for 'HHHHHHHHHHHH' returned 4 results
+2025-08-03 01:58:02,983 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:03,801 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:58:03,920 - main - INFO - Search for 'am' returned 4 results
+2025-08-03 01:58:04,273 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:04,343 - main - INFO - Search for 'in' returned 4 results
+2025-08-03 01:58:05,238 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:58:05,350 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 01:58:05,477 - main - INFO - Search for 'the' returned 4 results
+2025-08-03 01:58:06,753 - main - INFO - Search for 'r' returned 4 results
+2025-08-03 01:58:06,893 - main - INFO - Search for 'ro' returned 4 results
+2025-08-03 01:58:07,019 - main - INFO - Search for 'roo' returned 4 results
+2025-08-03 01:58:07,210 - main - INFO - Search for 'room' returned 4 results
+2025-08-03 01:58:12,402 - main - INFO - Search for 'H' returned 4 results
+2025-08-03 01:58:24,305 - main - INFO - Search for 'Hw' returned 4 results
+2025-08-03 01:58:24,546 - main - INFO - Search for 'Hwh' returned 4 results
+2025-08-03 01:58:24,660 - main - INFO - Search for 'Hwhe' returned 4 results
+2025-08-03 01:58:24,774 - main - INFO - Search for 'Hwhen' returned 4 results
+2025-08-03 01:58:25,132 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:26,476 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 01:58:26,625 - main - INFO - Search for 'pr' returned 4 results
+2025-08-03 01:58:26,738 - main - INFO - Search for 'pre' returned 4 results
+2025-08-03 01:58:27,042 - main - INFO - Search for 'pres' returned 4 results
+2025-08-03 01:58:27,232 - main - INFO - Search for 'press' returned 4 results
+2025-08-03 01:58:27,757 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 01:58:28,159 - main - INFO - Search for 'ct' returned 4 results
+2025-08-03 01:58:28,364 - main - INFO - Search for 'ctr' returned 4 results
+2025-08-03 01:58:28,474 - main - INFO - Search for 'ctrl' returned 4 results
+2025-08-03 01:58:28,904 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:58:29,044 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 01:58:29,130 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 01:58:29,268 - main - INFO - Search for 'shof' returned 4 results
+2025-08-03 01:58:29,494 - main - INFO - Search for 'shoft' returned 4 results
+2025-08-03 01:58:29,759 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 01:58:30,532 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:30,884 - main - INFO - Search for 'it' returned 4 results
+2025-08-03 01:58:32,102 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:58:32,250 - main - INFO - Search for 'sa' returned 4 results
+2025-08-03 01:58:32,390 - main - INFO - Search for 'say' returned 4 results
+2025-08-03 01:58:33,066 - main - INFO - Search for 'n' returned 4 results
+2025-08-03 01:58:33,139 - main - INFO - Search for 'no' returned 4 results
+2025-08-03 01:58:33,480 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:58:33,538 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 01:58:33,790 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 01:58:33,856 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 01:58:34,356 - main - INFO - Search for 'd' returned 4 results
+2025-08-03 01:58:34,442 - main - INFO - Search for 'de' returned 4 results
+2025-08-03 01:58:34,611 - main - INFO - Search for 'del' returned 4 results
+2025-08-03 01:58:34,824 - main - INFO - Search for 'delc' returned 4 results
+2025-08-03 01:58:34,843 - main - INFO - Search for 'delce' returned 4 results
+2025-08-03 01:58:35,142 - main - INFO - Search for 'delcet' returned 4 results
+2025-08-03 01:58:35,280 - main - INFO - Search for 'delcete' returned 4 results
+2025-08-03 01:58:35,386 - main - INFO - Search for 'delceted' returned 4 results
+2025-08-03 01:58:35,733 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:58:35,818 - main - INFO - Search for 'or' returned 4 results
+2025-08-03 01:58:36,057 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:58:36,163 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 01:58:36,367 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 01:58:36,433 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 01:58:36,850 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:58:36,937 - main - INFO - Search for 'to' returned 4 results
+2025-08-03 01:58:37,152 - main - INFO - Search for 'too' returned 4 results
+2025-08-03 01:58:37,438 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:58:37,591 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 01:58:37,653 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 01:58:37,790 - main - INFO - Search for 'shor' returned 4 results
+2025-08-03 01:58:37,992 - main - INFO - Search for 'short' returned 4 results
+2025-08-03 01:58:38,287 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:58:38,393 - main - INFO - Search for 'al' returned 4 results
+2025-08-03 01:58:38,544 - main - INFO - Search for 'alt' returned 4 results
+2025-08-03 01:58:38,658 - main - INFO - Search for 'alth' returned 4 results
+2025-08-03 01:58:38,715 - main - INFO - Search for 'altho' returned 4 results
+2025-08-03 01:58:38,873 - main - INFO - Search for 'althou' returned 4 results
+2025-08-03 01:58:38,958 - main - INFO - Search for 'althoug' returned 4 results
+2025-08-03 01:58:39,107 - main - INFO - Search for 'although' returned 4 results
+2025-08-03 01:58:39,448 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:39,757 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 01:58:39,902 - main - INFO - Search for 'ha' returned 4 results
+2025-08-03 01:58:40,387 - main - INFO - Search for 'had' returned 4 results
+2025-08-03 01:58:40,781 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:58:40,961 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 01:58:41,041 - main - INFO - Search for 'sel' returned 4 results
+2025-08-03 01:58:41,314 - main - INFO - Search for 'selc' returned 4 results
+2025-08-03 01:58:41,621 - main - INFO - Search for 'selct' returned 4 results
+2025-08-03 01:58:41,753 - main - INFO - Search for 'selcte' returned 4 results
+2025-08-03 01:58:41,893 - main - INFO - Search for 'selcted' returned 4 results
+2025-08-03 01:58:42,267 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:58:42,335 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 01:58:42,467 - main - INFO - Search for 'the' returned 4 results
+2025-08-03 01:58:42,913 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:58:43,079 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 01:58:43,327 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 01:58:43,438 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 01:58:44,426 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:58:44,577 - main - INFO - Search for 'al' returned 4 results
+2025-08-03 01:58:44,709 - main - INFO - Search for 'als' returned 4 results
+2025-08-03 01:58:44,826 - main - INFO - Search for 'also' returned 4 results
+2025-08-03 01:58:48,061 - main - INFO - Search for 'e' returned 4 results
+2025-08-03 01:58:48,184 - main - INFO - Search for 'ev' returned 4 results
+2025-08-03 01:58:48,337 - main - INFO - Search for 'eve' returned 4 results
+2025-08-03 01:58:48,474 - main - INFO - Search for 'ever' returned 4 results
+2025-08-03 01:58:48,545 - main - INFO - Search for 'every' returned 4 results
+2025-08-03 01:58:48,928 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:58:49,071 - main - INFO - Search for 'ap' returned 4 results
+2025-08-03 01:58:49,227 - main - INFO - Search for 'app' returned 4 results
+2025-08-03 01:58:49,505 - main - INFO - Search for 'appl' returned 4 results
+2025-08-03 01:58:49,573 - main - INFO - Search for 'applo' returned 4 results
+2025-08-03 01:58:49,841 - main - INFO - Search for 'apploc' returned 4 results
+2025-08-03 01:58:49,903 - main - INFO - Search for 'apploca' returned 4 results
+2025-08-03 01:58:50,158 - main - INFO - Search for 'applocat' returned 4 results
+2025-08-03 01:58:50,285 - main - INFO - Search for 'applocati' returned 4 results
+2025-08-03 01:58:50,402 - main - INFO - Search for 'applocatio' returned 4 results
+2025-08-03 01:58:50,486 - main - INFO - Search for 'applocation' returned 4 results
+2025-08-03 01:58:50,812 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 01:58:50,911 - main - INFO - Search for 'ha' returned 4 results
+2025-08-03 01:58:51,027 - main - INFO - Search for 'has' returned 4 results
+2025-08-03 01:58:51,364 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:51,446 - main - INFO - Search for 'it' returned 4 results
+2025-08-03 01:58:51,684 - main - INFO - Search for 'its' returned 4 results
+2025-08-03 01:58:51,920 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:58:51,988 - main - INFO - Search for 'ow' returned 4 results
+2025-08-03 01:58:52,119 - main - INFO - Search for 'own' returned 4 results
+2025-08-03 01:58:52,683 - main - INFO - Search for 'f' returned 4 results
+2025-08-03 01:58:52,825 - main - INFO - Search for 'fu' returned 4 results
+2025-08-03 01:58:52,894 - main - INFO - Search for 'fun' returned 4 results
+2025-08-03 01:58:53,062 - main - INFO - Search for 'func' returned 4 results
+2025-08-03 01:58:53,124 - main - INFO - Search for 'funct' returned 4 results
+2025-08-03 01:58:53,249 - main - INFO - Search for 'functi' returned 4 results
+2025-08-03 01:58:53,370 - main - INFO - Search for 'functio' returned 4 results
+2025-08-03 01:58:53,449 - main - INFO - Search for 'function' returned 4 results
+2025-08-03 01:58:53,609 - main - INFO - Search for 'functiona' returned 4 results
+2025-08-03 01:58:53,623 - main - INFO - Search for 'functional' returned 4 results
+2025-08-03 01:58:53,750 - main - INFO - Search for 'functionali' returned 4 results
+2025-08-03 01:58:53,934 - main - INFO - Search for 'functionalit' returned 4 results
+2025-08-03 01:58:54,067 - main - INFO - Search for 'functionality' returned 4 results
+2025-08-03 01:58:54,488 - main - INFO - Search for 'l' returned 4 results
+2025-08-03 01:58:54,574 - main - INFO - Search for 'li' returned 4 results
+2025-08-03 01:58:54,741 - main - INFO - Search for 'lik' returned 4 results
+2025-08-03 01:58:54,825 - main - INFO - Search for 'like' returned 4 results
+2025-08-03 01:58:55,725 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 01:58:55,865 - main - INFO - Search for 'wh' returned 4 results
+2025-08-03 01:58:55,990 - main - INFO - Search for 'whe' returned 4 results
+2025-08-03 01:58:56,054 - main - INFO - Search for 'when' returned 4 results
+2025-08-03 01:58:56,318 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:56,676 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:58:56,753 - main - INFO - Search for 'op' returned 4 results
+2025-08-03 01:58:56,857 - main - INFO - Search for 'ope' returned 4 results
+2025-08-03 01:58:56,981 - main - INFO - Search for 'open' returned 4 results
+2025-08-03 01:58:57,446 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 01:58:57,625 - main - INFO - Search for 'pd' returned 4 results
+2025-08-03 01:58:57,816 - main - INFO - Search for 'pdf' returned 4 results
+2025-08-03 01:58:58,283 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:58:58,364 - main - INFO - Search for 'in' returned 4 results
+2025-08-03 01:58:58,747 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:58:58,918 - main - INFO - Search for 'ad' returned 4 results
+2025-08-03 01:58:59,075 - main - INFO - Search for 'ado' returned 4 results
+2025-08-03 01:58:59,260 - main - INFO - Search for 'adob' returned 4 results
+2025-08-03 01:58:59,467 - main - INFO - Search for 'adobe' returned 4 results
+2025-08-03 01:59:09,055 - main - INFO - Search for 'r' returned 4 results
+2025-08-03 01:59:09,158 - main - INFO - Search for 're' returned 4 results
+2025-08-03 01:59:09,441 - main - INFO - Search for 'rea' returned 4 results
+2025-08-03 01:59:09,593 - main - INFO - Search for 'read' returned 4 results
+2025-08-03 01:59:09,761 - main - INFO - Search for 'reade' returned 4 results
+2025-08-03 01:59:09,915 - main - INFO - Search for 'reader' returned 4 results
+2025-08-03 01:59:10,390 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:59:10,508 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 01:59:10,573 - main - INFO - Search for 'the' returned 4 results
+2025-08-03 01:59:10,723 - main - INFO - Search for 'then' returned 4 results
+2025-08-03 01:59:12,247 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 01:59:12,387 - main - INFO - Search for 'wi' returned 4 results
+2025-08-03 01:59:12,513 - main - INFO - Search for 'wit' returned 4 results
+2025-08-03 01:59:12,624 - main - INFO - Search for 'with' returned 4 results
+2025-08-03 01:59:13,697 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 01:59:14,255 - main - INFO - Search for 'ct' returned 4 results
+2025-08-03 01:59:14,432 - main - INFO - Search for 'ctr' returned 4 results
+2025-08-03 01:59:14,597 - main - INFO - Search for 'ctrl' returned 4 results
+2025-08-03 01:59:14,975 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:15,110 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 01:59:15,168 - main - INFO - Search for 'shi' returned 4 results
+2025-08-03 01:59:15,295 - main - INFO - Search for 'shif' returned 4 results
+2025-08-03 01:59:15,540 - main - INFO - Search for 'shift' returned 4 results
+2025-08-03 01:59:15,829 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 01:59:16,811 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:59:16,985 - main - INFO - Search for 'it' returned 4 results
+2025-08-03 01:59:17,264 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:18,296 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:18,518 - main - INFO - Search for 'st' returned 4 results
+2025-08-03 01:59:18,665 - main - INFO - Search for 'sta' returned 4 results
+2025-08-03 01:59:18,760 - main - INFO - Search for 'star' returned 4 results
+2025-08-03 01:59:18,917 - main - INFO - Search for 'start' returned 4 results
+2025-08-03 01:59:19,261 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:19,364 - main - INFO - Search for 'au' returned 4 results
+2025-08-03 01:59:19,461 - main - INFO - Search for 'aut' returned 4 results
+2025-08-03 01:59:19,617 - main - INFO - Search for 'auto' returned 4 results
+2025-08-03 01:59:19,913 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:20,117 - main - INFO - Search for 'sc' returned 4 results
+2025-08-03 01:59:20,219 - main - INFO - Search for 'scr' returned 4 results
+2025-08-03 01:59:20,353 - main - INFO - Search for 'scro' returned 4 results
+2025-08-03 01:59:20,550 - main - INFO - Search for 'scrol' returned 4 results
+2025-08-03 01:59:20,670 - main - INFO - Search for 'scroll' returned 4 results
+2025-08-03 01:59:20,893 - main - INFO - Search for 'scrolli' returned 4 results
+2025-08-03 01:59:20,998 - main - INFO - Search for 'scrollin' returned 4 results
+2025-08-03 01:59:21,090 - main - INFO - Search for 'scrolling' returned 4 results
+2025-08-03 01:59:21,825 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:21,945 - main - INFO - Search for 'an' returned 4 results
+2025-08-03 01:59:22,038 - main - INFO - Search for 'and' returned 4 results
+2025-08-03 01:59:22,308 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 01:59:22,348 - main - INFO - Search for 'wh' returned 4 results
+2025-08-03 01:59:22,577 - main - INFO - Search for 'whe' returned 4 results
+2025-08-03 01:59:22,886 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:59:23,345 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 01:59:23,464 - main - INFO - Search for 'pr' returned 4 results
+2025-08-03 01:59:23,554 - main - INFO - Search for 'pre' returned 4 results
+2025-08-03 01:59:23,771 - main - INFO - Search for 'pres' returned 4 results
+2025-08-03 01:59:23,941 - main - INFO - Search for 'press' returned 4 results
+2025-08-03 01:59:24,204 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:24,367 - main - INFO - Search for 'ag' returned 4 results
+2025-08-03 01:59:24,509 - main - INFO - Search for 'aga' returned 4 results
+2025-08-03 01:59:24,548 - main - INFO - Search for 'agai' returned 4 results
+2025-08-03 01:59:24,633 - main - INFO - Search for 'again' returned 4 results
+2025-08-03 01:59:24,958 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:59:25,042 - main - INFO - Search for 'it' returned 4 results
+2025-08-03 01:59:25,415 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:25,655 - main - INFO - Search for 'st' returned 4 results
+2025-08-03 01:59:25,754 - main - INFO - Search for 'sto' returned 4 results
+2025-08-03 01:59:25,850 - main - INFO - Search for 'stop' returned 4 results
+2025-08-03 01:59:26,288 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:26,493 - main - INFO - Search for 'sc' returned 4 results
+2025-08-03 01:59:26,622 - main - INFO - Search for 'scr' returned 4 results
+2025-08-03 01:59:26,725 - main - INFO - Search for 'scro' returned 4 results
+2025-08-03 01:59:26,894 - main - INFO - Search for 'scrol' returned 4 results
+2025-08-03 01:59:27,024 - main - INFO - Search for 'scroll' returned 4 results
+2025-08-03 01:59:27,248 - main - INFO - Search for 'scrolli' returned 4 results
+2025-08-03 01:59:27,324 - main - INFO - Search for 'scrollin' returned 4 results
+2025-08-03 01:59:27,434 - main - INFO - Search for 'scrolling' returned 4 results
+2025-08-03 01:59:27,665 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:27,835 - main - INFO - Search for 'au' returned 4 results
+2025-08-03 01:59:27,924 - main - INFO - Search for 'aut' returned 4 results
+2025-08-03 01:59:28,201 - main - INFO - Search for 'auto' returned 4 results
+2025-08-03 01:59:28,488 - main - INFO - Search for 'autom' returned 4 results
+2025-08-03 01:59:28,610 - main - INFO - Search for 'automa' returned 4 results
+2025-08-03 01:59:28,755 - main - INFO - Search for 'automat' returned 4 results
+2025-08-03 01:59:28,815 - main - INFO - Search for 'automati' returned 4 results
+2025-08-03 01:59:29,391 - main - INFO - Search for 'automat' returned 4 results
+2025-08-03 01:59:29,588 - main - INFO - Search for 'automa' returned 4 results
+2025-08-03 01:59:29,794 - main - INFO - Search for 'autom' returned 4 results
+2025-08-03 01:59:30,003 - main - INFO - Search for 'auto' returned 4 results
+2025-08-03 01:59:30,155 - main - INFO - Search for 'aut' returned 4 results
+2025-08-03 01:59:30,335 - main - INFO - Search for 'au' returned 4 results
+2025-08-03 01:59:30,490 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:31,102 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:31,281 - main - INFO - Search for 'so' returned 4 results
+2025-08-03 01:59:31,700 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 01:59:31,778 - main - INFO - Search for 'ho' returned 4 results
+2025-08-03 01:59:31,846 - main - INFO - Search for 'how' returned 4 results
+2025-08-03 01:59:32,116 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 01:59:32,232 - main - INFO - Search for 'wi' returned 4 results
+2025-08-03 01:59:32,397 - main - INFO - Search for 'wil' returned 4 results
+2025-08-03 01:59:32,550 - main - INFO - Search for 'will' returned 4 results
+2025-08-03 01:59:32,876 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 01:59:33,009 - main - INFO - Search for 'we' returned 4 results
+2025-08-03 01:59:33,609 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:59:33,886 - main - INFO - Search for 'ov' returned 4 results
+2025-08-03 01:59:33,955 - main - INFO - Search for 'ove' returned 4 results
+2025-08-03 01:59:34,064 - main - INFO - Search for 'over' returned 4 results
+2025-08-03 01:59:34,315 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 01:59:34,395 - main - INFO - Search for 'co' returned 4 results
+2025-08-03 01:59:34,481 - main - INFO - Search for 'com' returned 4 results
+2025-08-03 01:59:34,619 - main - INFO - Search for 'come' returned 4 results
+2025-08-03 01:59:35,261 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:59:35,359 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 01:59:35,419 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 01:59:35,537 - main - INFO - Search for 'this' returned 4 results
+2025-08-03 01:59:35,820 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 01:59:35,938 - main - INFO - Search for 'pr' returned 4 results
+2025-08-03 01:59:36,079 - main - INFO - Search for 'pro' returned 4 results
+2025-08-03 01:59:36,356 - main - INFO - Search for 'prob' returned 4 results
+2025-08-03 01:59:36,519 - main - INFO - Search for 'probl' returned 4 results
+2025-08-03 01:59:36,634 - main - INFO - Search for 'proble' returned 4 results
+2025-08-03 01:59:36,726 - main - INFO - Search for 'problem' returned 4 results
+2025-08-03 01:59:37,332 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:59:37,415 - main - INFO - Search for 'or' returned 4 results
+2025-08-03 01:59:37,968 - main - INFO - Search for 'y' returned 4 results
+2025-08-03 01:59:38,204 - main - INFO - Search for 'yo' returned 4 results
+2025-08-03 01:59:38,304 - main - INFO - Search for 'you' returned 4 results
+2025-08-03 01:59:39,101 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 01:59:39,215 - main - INFO - Search for 'ca' returned 4 results
+2025-08-03 01:59:39,378 - main - INFO - Search for 'can' returned 4 results
+2025-08-03 01:59:39,664 - main - INFO - Search for 'u' returned 4 results
+2025-08-03 01:59:39,749 - main - INFO - Search for 'us' returned 4 results
+2025-08-03 01:59:39,922 - main - INFO - Search for 'use' returned 4 results
+2025-08-03 01:59:40,444 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:40,575 - main - INFO - Search for 'an' returned 4 results
+2025-08-03 01:59:40,785 - main - INFO - Search for 'any' returned 4 results
+2025-08-03 01:59:41,144 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:59:41,247 - main - INFO - Search for 'ot' returned 4 results
+2025-08-03 01:59:41,385 - main - INFO - Search for 'oth' returned 4 results
+2025-08-03 01:59:41,435 - main - INFO - Search for 'othe' returned 4 results
+2025-08-03 01:59:41,543 - main - INFO - Search for 'other' returned 4 results
+2025-08-03 01:59:42,031 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 01:59:42,154 - main - INFO - Search for 'co' returned 4 results
+2025-08-03 01:59:42,222 - main - INFO - Search for 'com' returned 4 results
+2025-08-03 01:59:42,501 - main - INFO - Search for 'comb' returned 4 results
+2025-08-03 01:59:42,696 - main - INFO - Search for 'combi' returned 4 results
+2025-08-03 01:59:42,785 - main - INFO - Search for 'combin' returned 4 results
+2025-08-03 01:59:42,896 - main - INFO - Search for 'combina' returned 4 results
+2025-08-03 01:59:43,062 - main - INFO - Search for 'combinat' returned 4 results
+2025-08-03 01:59:43,172 - main - INFO - Search for 'combinati' returned 4 results
+2025-08-03 01:59:43,259 - main - INFO - Search for 'combinatio' returned 4 results
+2025-08-03 01:59:43,327 - main - INFO - Search for 'combination' returned 4 results
+2025-08-03 01:59:46,142 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:46,284 - main - INFO - Search for 'so' returned 4 results
+2025-08-03 01:59:47,287 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:59:47,370 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 01:59:47,471 - main - INFO - Search for 'tha' returned 4 results
+2025-08-03 01:59:47,547 - main - INFO - Search for 'that' returned 4 results
+2025-08-03 01:59:47,845 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 01:59:48,464 - main - INFO - Search for 'd' returned 4 results
+2025-08-03 01:59:48,536 - main - INFO - Search for 'do' returned 4 results
+2025-08-03 01:59:48,667 - main - INFO - Search for 'doe' returned 4 results
+2025-08-03 01:59:48,838 - main - INFO - Search for 'does' returned 4 results
+2025-08-03 01:59:48,959 - main - INFO - Search for 'doesn' returned 4 results
+2025-08-03 01:59:49,048 - main - INFO - Search for 'doesno' returned 4 results
+2025-08-03 01:59:49,155 - main - INFO - Search for 'doesnot' returned 4 results
+2025-08-03 01:59:49,949 - main - INFO - Search for 'd' returned 4 results
+2025-08-03 01:59:50,579 - main - INFO - Search for 'di' returned 4 results
+2025-08-03 01:59:50,691 - main - INFO - Search for 'dis' returned 4 results
+2025-08-03 01:59:50,900 - main - INFO - Search for 'dist' returned 4 results
+2025-08-03 01:59:50,980 - main - INFO - Search for 'distu' returned 4 results
+2025-08-03 01:59:51,083 - main - INFO - Search for 'distub' returned 4 results
+2025-08-03 01:59:51,194 - main - INFO - Search for 'distube' returned 4 results
+2025-08-03 01:59:52,234 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 01:59:52,314 - main - INFO - Search for 'ot' returned 4 results
+2025-08-03 01:59:52,434 - main - INFO - Search for 'oth' returned 4 results
+2025-08-03 01:59:52,509 - main - INFO - Search for 'othe' returned 4 results
+2025-08-03 01:59:52,652 - main - INFO - Search for 'other' returned 4 results
+2025-08-03 01:59:52,932 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:53,071 - main - INFO - Search for 'ap' returned 4 results
+2025-08-03 01:59:53,197 - main - INFO - Search for 'app' returned 4 results
+2025-08-03 01:59:53,398 - main - INFO - Search for 'appl' returned 4 results
+2025-08-03 01:59:53,492 - main - INFO - Search for 'appli' returned 4 results
+2025-08-03 01:59:53,543 - main - INFO - Search for 'applic' returned 4 results
+2025-08-03 01:59:53,625 - main - INFO - Search for 'applica' returned 4 results
+2025-08-03 01:59:53,866 - main - INFO - Search for 'applicat' returned 4 results
+2025-08-03 01:59:53,938 - main - INFO - Search for 'applicati' returned 4 results
+2025-08-03 01:59:54,021 - main - INFO - Search for 'applicatio' returned 4 results
+2025-08-03 01:59:54,148 - main - INFO - Search for 'application' returned 4 results
+2025-08-03 01:59:54,569 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 01:59:54,663 - main - INFO - Search for 'al' returned 4 results
+2025-08-03 01:59:54,809 - main - INFO - Search for 'als' returned 4 results
+2025-08-03 01:59:54,879 - main - INFO - Search for 'also' returned 4 results
+2025-08-03 01:59:55,508 - main - INFO - Search for 'm' returned 4 results
+2025-08-03 01:59:55,569 - main - INFO - Search for 'ma' returned 4 results
+2025-08-03 01:59:55,708 - main - INFO - Search for 'mak' returned 4 results
+2025-08-03 01:59:56,222 - main - INFO - Search for 't' returned 4 results
+2025-08-03 01:59:56,345 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 01:59:56,511 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 01:59:56,565 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 01:59:56,927 - main - INFO - Search for 's' returned 4 results
+2025-08-03 01:59:57,139 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 01:59:57,174 - main - INFO - Search for 'sel' returned 4 results
+2025-08-03 01:59:57,298 - main - INFO - Search for 'sele' returned 4 results
+2025-08-03 01:59:57,448 - main - INFO - Search for 'selec' returned 4 results
+2025-08-03 01:59:57,631 - main - INFO - Search for 'select' returned 4 results
+2025-08-03 01:59:57,772 - main - INFO - Search for 'selecti' returned 4 results
+2025-08-03 01:59:57,867 - main - INFO - Search for 'selectio' returned 4 results
+2025-08-03 01:59:57,953 - main - INFO - Search for 'selection' returned 4 results
+2025-08-03 01:59:58,313 - main - INFO - Search for 'e' returned 4 results
+2025-08-03 01:59:58,872 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 01:59:59,035 - main - INFO - Search for 'wo' returned 4 results
+2025-08-03 01:59:59,122 - main - INFO - Search for 'wor' returned 4 results
+2025-08-03 01:59:59,251 - main - INFO - Search for 'work' returned 4 results
+2025-08-03 01:59:59,669 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 01:59:59,784 - main - INFO - Search for 'pr' returned 4 results
+2025-08-03 01:59:59,930 - main - INFO - Search for 'pro' returned 4 results
+2025-08-03 02:00:00,113 - main - INFO - Search for 'prop' returned 4 results
+2025-08-03 02:00:00,174 - main - INFO - Search for 'prope' returned 4 results
+2025-08-03 02:00:00,342 - main - INFO - Search for 'propel' returned 4 results
+2025-08-03 02:00:00,360 - main - INFO - Search for 'propelr' returned 4 results
+2025-08-03 02:00:00,513 - main - INFO - Search for 'propelry' returned 4 results
+2025-08-03 02:00:06,428 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 02:00:23,477 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 02:00:23,488 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 02:00:24,617 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 02:00:24,642 - main - INFO - Initializing document search backend...
+2025-08-03 02:00:24,643 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:00:24,647 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 02:00:24,652 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:00:29,402 - database - INFO - Connected to existing table: documents
+2025-08-03 02:00:29,402 - database - INFO - Vector store initialized successfully
+2025-08-03 02:00:29,404 - document_processor - INFO - Document processor initialized
+2025-08-03 02:00:29,553 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:00:29,554 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 02:00:29,557 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:00:29,558 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 02:00:29,559 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 02:00:29,571 - api_service - INFO - API server started successfully
+2025-08-03 02:00:29,600 - folder_manager - INFO - Starting background document processor...
+2025-08-03 02:00:29,614 - database - INFO - Vector store closed
+2025-08-03 02:00:29,615 - api_service - INFO - API server shutdown complete
+2025-08-03 02:00:29,617 - folder_manager - INFO - Background processor stopped
+2025-08-03 02:20:28,212 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 02:21:14,015 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 02:21:14,069 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 02:21:16,523 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 02:21:16,893 - main - INFO - Initializing document search backend...
+2025-08-03 02:21:16,893 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:21:16,899 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 02:21:16,900 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:21:23,468 - database - INFO - Connected to existing table: documents
+2025-08-03 02:21:23,470 - database - INFO - Vector store initialized successfully
+2025-08-03 02:21:23,472 - document_processor - INFO - Document processor initialized
+2025-08-03 02:21:23,672 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:21:23,674 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 02:21:23,676 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:21:23,678 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 02:21:23,680 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 02:21:23,692 - api_service - INFO - API server started successfully
+2025-08-03 02:21:23,722 - folder_manager - INFO - Starting background document processor...
+2025-08-03 02:23:18,099 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 02:23:36,834 - main - INFO - Search for 'hh' returned 4 results
+2025-08-03 02:23:38,719 - main - INFO - Search for 'hhS' returned 4 results
+2025-08-03 02:23:54,849 - main - INFO - Search for 'hhSv' returned 4 results
+2025-08-03 02:23:55,809 - main - INFO - Search for 'hhSvi' returned 4 results
+2025-08-03 02:23:55,910 - main - INFO - Search for 'hhSvit' returned 4 results
+2025-08-03 02:23:56,211 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:23:56,371 - main - INFO - Search for 'sa' returned 4 results
+2025-08-03 02:23:56,483 - main - INFO - Search for 'say' returned 4 results
+2025-08-03 02:23:56,580 - main - INFO - Search for 'says' returned 4 results
+2025-08-03 02:23:56,987 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:23:57,068 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:23:57,164 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 02:23:57,248 - main - INFO - Search for 'this' returned 4 results
+2025-08-03 02:23:57,585 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 02:23:57,711 - main - INFO - Search for 'al' returned 4 results
+2025-08-03 02:23:57,943 - main - INFO - Search for 'alt' returned 4 results
+2025-08-03 02:23:58,105 - main - INFO - Search for 'alth' returned 4 results
+2025-08-03 02:23:58,198 - main - INFO - Search for 'altho' returned 4 results
+2025-08-03 02:23:58,334 - main - INFO - Search for 'althou' returned 4 results
+2025-08-03 02:23:58,444 - main - INFO - Search for 'althoug' returned 4 results
+2025-08-03 02:23:58,627 - main - INFO - Search for 'although' returned 4 results
+2025-08-03 02:23:59,104 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:23:59,218 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 02:23:59,465 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 02:23:59,572 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 02:23:59,865 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:23:59,950 - main - INFO - Search for 'is' returned 4 results
+2025-08-03 02:24:00,136 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:24:00,313 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 02:24:00,393 - main - INFO - Search for 'sel' returned 4 results
+2025-08-03 02:24:00,543 - main - INFO - Search for 'selc' returned 4 results
+2025-08-03 02:24:00,760 - main - INFO - Search for 'selct' returned 4 results
+2025-08-03 02:24:00,939 - main - INFO - Search for 'selcte' returned 4 results
+2025-08-03 02:24:01,048 - main - INFO - Search for 'selcted' returned 4 results
+2025-08-03 02:24:01,362 - main - INFO - Search for 'b' returned 4 results
+2025-08-03 02:24:01,451 - main - INFO - Search for 'bu' returned 4 results
+2025-08-03 02:24:01,545 - main - INFO - Search for 'but' returned 4 results
+2025-08-03 02:24:01,874 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:24:02,064 - main - INFO - Search for 'it' returned 4 results
+2025-08-03 02:24:02,487 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:24:02,975 - main - INFO - Search for 'd' returned 4 results
+2025-08-03 02:24:03,137 - main - INFO - Search for 'do' returned 4 results
+2025-08-03 02:24:03,218 - main - INFO - Search for 'doe' returned 4 results
+2025-08-03 02:24:03,402 - main - INFO - Search for 'does' returned 4 results
+2025-08-03 02:24:03,530 - main - INFO - Search for 'doesn' returned 4 results
+2025-08-03 02:24:03,721 - main - INFO - Search for 'doesno' returned 4 results
+2025-08-03 02:24:03,803 - main - INFO - Search for 'doesnot' returned 4 results
+2025-08-03 02:24:05,324 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:24:05,471 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 02:24:05,560 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 02:24:05,667 - main - INFO - Search for 'show' returned 4 results
+2025-08-03 02:24:05,927 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:24:06,021 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:24:07,151 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:24:09,048 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:24:09,403 - main - INFO - Search for 'st' returned 4 results
+2025-08-03 02:24:09,625 - main - INFO - Search for 'sti' returned 4 results
+2025-08-03 02:24:09,833 - main - INFO - Search for 'stil' returned 4 results
+2025-08-03 02:24:10,025 - main - INFO - Search for 'still' returned 4 results
+2025-08-03 02:24:10,414 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:24:10,504 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 02:24:10,588 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 02:24:10,667 - main - INFO - Search for 'show' returned 4 results
+2025-08-03 02:24:10,867 - main - INFO - Search for 'shows' returned 4 results
+2025-08-03 02:24:11,186 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:24:11,269 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:24:11,341 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 02:24:11,444 - main - INFO - Search for 'this' returned 4 results
+2025-08-03 02:24:12,410 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 02:24:12,533 - main - INFO - Search for 'al' returned 4 results
+2025-08-03 02:24:12,675 - main - INFO - Search for 'als' returned 4 results
+2025-08-03 02:24:12,761 - main - INFO - Search for 'also' returned 4 results
+2025-08-03 02:24:13,293 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 02:24:13,412 - main - INFO - Search for 'wh' returned 4 results
+2025-08-03 02:24:13,527 - main - INFO - Search for 'whe' returned 4 results
+2025-08-03 02:24:13,622 - main - INFO - Search for 'when' returned 4 results
+2025-08-03 02:24:13,926 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:24:14,236 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 02:24:14,345 - main - INFO - Search for 'cl' returned 4 results
+2025-08-03 02:24:14,430 - main - INFO - Search for 'cli' returned 4 results
+2025-08-03 02:24:14,617 - main - INFO - Search for 'clic' returned 4 results
+2025-08-03 02:24:14,728 - main - INFO - Search for 'click' returned 4 results
+2025-08-03 02:24:15,265 - main - INFO - Search for 'clic' returned 4 results
+2025-08-03 02:24:15,796 - main - INFO - Search for 'cli' returned 4 results
+2025-08-03 02:24:15,835 - main - INFO - Search for 'cl' returned 4 results
+2025-08-03 02:24:16,318 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 02:24:20,464 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 02:24:20,556 - main - INFO - Search for 'pl' returned 4 results
+2025-08-03 02:24:20,636 - main - INFO - Search for 'ple' returned 4 results
+2025-08-03 02:24:20,871 - main - INFO - Search for 'plea' returned 4 results
+2025-08-03 02:24:20,948 - main - INFO - Search for 'pleas' returned 4 results
+2025-08-03 02:24:21,141 - main - INFO - Search for 'please' returned 4 results
+2025-08-03 02:24:21,426 - main - INFO - Search for 'r' returned 4 results
+2025-08-03 02:24:21,511 - main - INFO - Search for 're' returned 4 results
+2025-08-03 02:24:21,817 - main - INFO - Search for 'res' returned 4 results
+2025-08-03 02:24:21,829 - main - INFO - Search for 'reso' returned 4 results
+2025-08-03 02:24:21,998 - main - INFO - Search for 'resol' returned 4 results
+2025-08-03 02:24:22,109 - main - INFO - Search for 'resolv' returned 4 results
+2025-08-03 02:24:22,168 - main - INFO - Search for 'resolve' returned 4 results
+2025-08-03 02:24:22,495 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:24:22,596 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:24:22,674 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 02:24:22,745 - main - INFO - Search for 'this' returned 4 results
+2025-08-03 02:24:23,037 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:24:23,128 - main - INFO - Search for 'is' returned 4 results
+2025-08-03 02:24:23,333 - main - INFO - Search for 'iss' returned 4 results
+2025-08-03 02:24:23,395 - main - INFO - Search for 'issu' returned 4 results
+2025-08-03 02:24:23,499 - main - INFO - Search for 'issue' returned 4 results
+2025-08-03 02:24:23,812 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 02:24:23,861 - main - INFO - Search for 'an' returned 4 results
+2025-08-03 02:24:24,004 - main - INFO - Search for 'and' returned 4 results
+2025-08-03 02:24:24,319 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 02:24:24,393 - main - INFO - Search for 'pr' returned 4 results
+2025-08-03 02:24:24,481 - main - INFO - Search for 'pre' returned 4 results
+2025-08-03 02:24:24,686 - main - INFO - Search for 'prer' returned 4 results
+2025-08-03 02:24:24,879 - main - INFO - Search for 'prero' returned 4 results
+2025-08-03 02:24:25,169 - main - INFO - Search for 'prerof' returned 4 results
+2025-08-03 02:24:25,314 - main - INFO - Search for 'prerofr' returned 4 results
+2025-08-03 02:24:25,499 - main - INFO - Search for 'prerofrm' returned 4 results
+2025-08-03 02:24:26,279 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 02:24:26,432 - main - INFO - Search for 'pr' returned 4 results
+2025-08-03 02:24:26,557 - main - INFO - Search for 'pro' returned 4 results
+2025-08-03 02:24:26,692 - main - INFO - Search for 'prop' returned 4 results
+2025-08-03 02:24:26,830 - main - INFO - Search for 'prope' returned 4 results
+2025-08-03 02:24:26,983 - main - INFO - Search for 'proper' returned 4 results
+2025-08-03 02:24:27,132 - main - INFO - Search for 'properl' returned 4 results
+2025-08-03 02:24:27,422 - main - INFO - Search for 'properly' returned 4 results
+2025-08-03 02:28:51,317 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 02:29:07,072 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 02:29:07,082 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 02:29:08,080 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 02:29:08,101 - main - INFO - Initializing document search backend...
+2025-08-03 02:29:08,101 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:29:08,106 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 02:29:08,107 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:29:13,056 - database - INFO - Connected to existing table: documents
+2025-08-03 02:29:13,057 - database - INFO - Vector store initialized successfully
+2025-08-03 02:29:13,059 - document_processor - INFO - Document processor initialized
+2025-08-03 02:29:13,211 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:29:13,216 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 02:29:13,220 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:29:13,220 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 02:29:13,221 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 02:29:13,231 - api_service - INFO - API server started successfully
+2025-08-03 02:29:13,265 - folder_manager - INFO - Starting background document processor...
+2025-08-03 02:29:55,790 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 02:30:20,341 - main - INFO - Search for 'hh' returned 4 results
+2025-08-03 02:30:22,882 - main - INFO - Search for 'hha' returned 4 results
+2025-08-03 02:30:23,311 - main - INFO - Search for 'hhac' returned 4 results
+2025-08-03 02:30:24,589 - main - INFO - Search for 'hhacc' returned 4 results
+2025-08-03 02:30:34,020 - main - INFO - Search for 'hhacci' returned 4 results
+2025-08-03 02:30:34,103 - main - INFO - Search for 'hhaccit' returned 4 results
+2025-08-03 02:30:34,442 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:30:34,552 - main - INFO - Search for 'is' returned 4 results
+2025-08-03 02:30:35,350 - main - INFO - Search for 'n' returned 4 results
+2025-08-03 02:30:35,586 - main - INFO - Search for 'nt' returned 4 results
+2025-08-03 02:30:36,083 - main - INFO - Search for 'n' returned 4 results
+2025-08-03 02:30:36,457 - main - INFO - Search for 'no' returned 4 results
+2025-08-03 02:30:36,532 - main - INFO - Search for 'not' returned 4 results
+2025-08-03 02:30:37,841 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:30:38,002 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 02:30:38,088 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 02:30:38,161 - main - INFO - Search for 'show' returned 4 results
+2025-08-03 02:30:38,272 - main - INFO - Search for 'showi' returned 4 results
+2025-08-03 02:30:38,402 - main - INFO - Search for 'showin' returned 4 results
+2025-08-03 02:30:38,497 - main - INFO - Search for 'showing' returned 4 results
+2025-08-03 02:30:38,762 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:30:38,844 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:30:38,982 - main - INFO - Search for 'the' returned 4 results
+2025-08-03 02:30:39,268 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:30:39,425 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 02:30:39,580 - main - INFO - Search for 'sel' returned 4 results
+2025-08-03 02:30:39,659 - main - INFO - Search for 'sele' returned 4 results
+2025-08-03 02:30:39,765 - main - INFO - Search for 'selec' returned 4 results
+2025-08-03 02:30:39,978 - main - INFO - Search for 'select' returned 4 results
+2025-08-03 02:30:40,120 - main - INFO - Search for 'selecte' returned 4 results
+2025-08-03 02:30:40,432 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:30:40,576 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 02:30:40,824 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 02:30:40,872 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 02:30:41,742 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 02:30:42,325 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 02:30:42,465 - main - INFO - Search for 'co' returned 4 results
+2025-08-03 02:30:42,638 - main - INFO - Search for 'cor' returned 4 results
+2025-08-03 02:30:42,829 - main - INFO - Search for 'corr' returned 4 results
+2025-08-03 02:30:42,975 - main - INFO - Search for 'corre' returned 4 results
+2025-08-03 02:30:43,424 - main - INFO - Search for 'correc' returned 4 results
+2025-08-03 02:30:43,681 - main - INFO - Search for 'correct' returned 4 results
+2025-08-03 02:30:43,805 - main - INFO - Search for 'correctl' returned 4 results
+2025-08-03 02:30:43,986 - main - INFO - Search for 'correctly' returned 4 results
+2025-08-03 02:30:47,344 - main - INFO - Search for 'o' returned 4 results
+2025-08-03 02:30:47,529 - main - INFO - Search for 'ot' returned 4 results
+2025-08-03 02:30:47,678 - main - INFO - Search for 'oth' returned 4 results
+2025-08-03 02:30:47,777 - main - INFO - Search for 'othe' returned 4 results
+2025-08-03 02:30:47,864 - main - INFO - Search for 'other' returned 4 results
+2025-08-03 02:30:48,019 - main - INFO - Search for 'othere' returned 4 results
+2025-08-03 02:30:48,365 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:30:48,486 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:30:48,553 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 02:30:48,749 - main - INFO - Search for 'thig' returned 4 results
+2025-08-03 02:30:48,763 - main - INFO - Search for 'thign' returned 4 results
+2025-08-03 02:30:48,945 - main - INFO - Search for 'thigns' returned 4 results
+2025-08-03 02:30:49,258 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 02:30:49,413 - main - INFO - Search for 'ar' returned 4 results
+2025-08-03 02:30:49,508 - main - INFO - Search for 'are' returned 4 results
+2025-08-03 02:30:49,789 - main - INFO - Search for 'c' returned 4 results
+2025-08-03 02:30:49,905 - main - INFO - Search for 'co' returned 4 results
+2025-08-03 02:30:50,036 - main - INFO - Search for 'cor' returned 4 results
+2025-08-03 02:30:50,143 - main - INFO - Search for 'corr' returned 4 results
+2025-08-03 02:30:50,283 - main - INFO - Search for 'corre' returned 4 results
+2025-08-03 02:30:50,481 - main - INFO - Search for 'correc' returned 4 results
+2025-08-03 02:30:50,673 - main - INFO - Search for 'correct' returned 4 results
+2025-08-03 02:30:50,953 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 02:30:51,063 - main - INFO - Search for 'as' returned 4 results
+2025-08-03 02:30:51,516 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:30:52,446 - main - INFO - Search for 'w' returned 4 results
+2025-08-03 02:30:52,637 - main - INFO - Search for 'wa' returned 4 results
+2025-08-03 02:30:52,791 - main - INFO - Search for 'wan' returned 4 results
+2025-08-03 02:30:52,918 - main - INFO - Search for 'want' returned 4 results
+2025-08-03 02:30:53,506 - main - INFO - Search for 'b' returned 4 results
+2025-08-03 02:30:53,626 - main - INFO - Search for 'bu' returned 4 results
+2025-08-03 02:30:53,773 - main - INFO - Search for 'but' returned 4 results
+2025-08-03 02:30:54,111 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:30:54,226 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:30:54,357 - main - INFO - Search for 'the' returned 4 results
+2025-08-03 02:30:54,658 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:30:54,824 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 02:30:54,941 - main - INFO - Search for 'sel' returned 4 results
+2025-08-03 02:30:55,041 - main - INFO - Search for 'sele' returned 4 results
+2025-08-03 02:30:55,204 - main - INFO - Search for 'selec' returned 4 results
+2025-08-03 02:30:55,379 - main - INFO - Search for 'select' returned 4 results
+2025-08-03 02:30:55,540 - main - INFO - Search for 'selecte' returned 4 results
+2025-08-03 02:30:56,845 - main - INFO - Search for 'd' returned 4 results
+2025-08-03 02:30:57,353 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:30:57,937 - main - INFO - Search for 'tz' returned 4 results
+2025-08-03 02:30:58,435 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:30:58,487 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 02:31:00,449 - main - INFO - Search for 'tez' returned 4 results
+2025-08-03 02:31:00,895 - main - INFO - Search for 'tezt' returned 4 results
+2025-08-03 02:31:01,563 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:31:01,689 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 02:31:01,826 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 02:31:01,931 - main - INFO - Search for 'shou' returned 4 results
+2025-08-03 02:31:02,164 - main - INFO - Search for 'shoul' returned 4 results
+2025-08-03 02:31:02,551 - main - INFO - Search for 'should' returned 4 results
+2025-08-03 02:31:03,468 - main - INFO - Search for 'b' returned 4 results
+2025-08-03 02:31:03,660 - main - INFO - Search for 'be' returned 4 results
+2025-08-03 02:31:04,170 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:31:04,270 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 02:31:04,469 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 02:31:05,491 - main - INFO - Search for 'show' returned 4 results
+2025-08-03 02:31:05,641 - main - INFO - Search for 'shown' returned 4 results
+2025-08-03 02:31:08,587 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:31:08,739 - main - INFO - Search for 'it' returned 4 results
+2025-08-03 02:31:09,059 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 02:31:09,169 - main - INFO - Search for 'is' returned 4 results
+2025-08-03 02:31:09,413 - main - INFO - Search for 's' returned 4 results
+2025-08-03 02:31:09,548 - main - INFO - Search for 'sh' returned 4 results
+2025-08-03 02:31:09,636 - main - INFO - Search for 'sho' returned 4 results
+2025-08-03 02:31:09,725 - main - INFO - Search for 'show' returned 4 results
+2025-08-03 02:31:09,812 - main - INFO - Search for 'showi' returned 4 results
+2025-08-03 02:31:09,973 - main - INFO - Search for 'showin' returned 4 results
+2025-08-03 02:31:10,013 - main - INFO - Search for 'showing' returned 4 results
+2025-08-03 02:31:10,479 - main - INFO - Search for 't' returned 4 results
+2025-08-03 02:31:10,580 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 02:31:10,658 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 02:31:10,812 - main - INFO - Search for 'this' returned 4 results
+2025-08-03 02:31:12,392 - main - INFO - Search for 'v' returned 4 results
+2025-08-03 02:33:32,656 - main - INFO - Search for 'vh' returned 4 results
+2025-08-03 02:33:37,716 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 02:34:21,006 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 02:34:34,599 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 02:34:34,609 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 02:34:35,454 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 02:34:35,471 - main - INFO - Initializing document search backend...
+2025-08-03 02:34:35,472 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:34:35,476 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 02:34:35,477 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 02:34:40,736 - database - INFO - Connected to existing table: documents
+2025-08-03 02:34:40,736 - database - INFO - Vector store initialized successfully
+2025-08-03 02:34:40,738 - document_processor - INFO - Document processor initialized
+2025-08-03 02:34:40,868 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:34:40,868 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 02:34:40,868 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 02:34:40,871 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 02:34:40,872 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 02:34:40,883 - api_service - INFO - API server started successfully
+2025-08-03 02:34:40,917 - folder_manager - INFO - Starting background document processor...
+2025-08-03 02:35:21,752 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 17:49:03,876 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 17:49:47,409 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 17:49:47,446 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 17:49:49,422 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 17:49:49,623 - main - INFO - Initializing document search backend...
+2025-08-03 17:49:49,624 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 17:49:49,628 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 17:49:49,629 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 17:49:55,973 - database - INFO - Connected to existing table: documents
+2025-08-03 17:49:55,975 - database - INFO - Vector store initialized successfully
+2025-08-03 17:49:55,977 - document_processor - INFO - Document processor initialized
+2025-08-03 17:49:56,129 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 17:49:56,131 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 17:49:56,131 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 17:49:56,133 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 17:49:56,135 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 17:49:56,145 - api_service - INFO - API server started successfully
+2025-08-03 17:49:56,179 - folder_manager - INFO - Starting background document processor...
+2025-08-03 17:50:45,693 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 17:51:01,570 - main - INFO - Search for 'ha' returned 4 results
+2025-08-03 17:51:01,784 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 17:51:07,316 - main - INFO - Search for 'ht' returned 4 results
+2025-08-03 17:51:07,577 - main - INFO - Search for 'hth' returned 4 results
+2025-08-03 17:51:07,606 - main - INFO - Search for 'hthi' returned 4 results
+2025-08-03 17:51:08,155 - main - INFO - Search for 'hthis' returned 4 results
+2025-08-03 17:51:08,509 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 17:51:08,646 - main - INFO - Search for 'is' returned 4 results
+2025-08-03 17:51:09,313 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 17:51:09,797 - main - INFO - Search for 't' returned 4 results
+2025-08-03 17:51:10,016 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 17:51:10,339 - main - INFO - Search for 'tes' returned 4 results
+2025-08-03 17:51:10,548 - main - INFO - Search for 'test' returned 4 results
+2025-08-03 17:51:11,486 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 17:51:19,972 - main - INFO - Search for 'ahc' returned 4 results
+2025-08-03 17:51:19,986 - main - INFO - Search for 'ah' returned 4 results
+2025-08-03 17:51:41,926 - main - INFO - Search for 'ahcv' returned 4 results
+2025-08-03 17:51:43,867 - main - INFO - Search for 'ahcva' returned 4 results
+2025-08-03 17:51:45,573 - main - INFO - Search for 'ahcvan' returned 4 results
+2025-08-03 17:51:45,660 - main - INFO - Search for 'ahcvano' returned 4 results
+2025-08-03 17:51:45,808 - main - INFO - Search for 'ahcvanow' returned 4 results
+2025-08-03 17:51:46,054 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 17:51:48,741 - main - INFO - Search for 'n' returned 4 results
+2025-08-03 17:51:49,188 - main - INFO - Search for 't' returned 4 results
+2025-08-03 17:51:49,320 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 17:51:49,447 - main - INFO - Search for 'the' returned 4 results
+2025-08-03 17:51:49,798 - main - INFO - Search for 's' returned 4 results
+2025-08-03 17:51:50,029 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 17:51:50,147 - main - INFO - Search for 'sel' returned 4 results
+2025-08-03 17:51:50,244 - main - INFO - Search for 'sele' returned 4 results
+2025-08-03 17:51:50,502 - main - INFO - Search for 'selec' returned 4 results
+2025-08-03 17:51:50,830 - main - INFO - Search for 'select' returned 4 results
+2025-08-03 17:51:50,973 - main - INFO - Search for 'selecte' returned 4 results
+2025-08-03 17:51:51,176 - main - INFO - Search for 'selected' returned 4 results
+2025-08-03 17:51:51,470 - main - INFO - Search for 't' returned 4 results
+2025-08-03 17:51:51,611 - main - INFO - Search for 'te' returned 4 results
+2025-08-03 17:51:51,847 - main - INFO - Search for 'tex' returned 4 results
+2025-08-03 17:51:52,014 - main - INFO - Search for 'text' returned 4 results
+2025-08-03 17:51:52,472 - main - INFO - Search for 'i' returned 4 results
+2025-08-03 17:51:52,794 - main - INFO - Search for 's' returned 4 results
+2025-08-03 17:51:53,057 - main - INFO - Search for 'se' returned 4 results
+2025-08-03 17:51:53,190 - main - INFO - Search for 'see' returned 4 results
+2025-08-03 17:51:53,499 - main - INFO - Search for 't' returned 4 results
+2025-08-03 17:51:53,838 - main - INFO - Search for 'th' returned 4 results
+2025-08-03 17:51:53,927 - main - INFO - Search for 'thi' returned 4 results
+2025-08-03 17:51:53,990 - main - INFO - Search for 'this' returned 4 results
+2025-08-03 17:53:02,615 - main - INFO - Search for 'thish' returned 4 results
+2025-08-03 17:53:02,734 - main - INFO - Search for 'thisho' returned 4 results
+2025-08-03 17:53:44,347 - main - INFO - Search for 'thishov' returned 4 results
+2025-08-03 17:53:50,889 - main - INFO - Search for 'thishovc' returned 4 results
+2025-08-03 17:53:52,457 - main - INFO - Search for 'thishovcv' returned 4 results
+2025-08-03 17:54:40,280 - main - INFO - Search for 'thishovcvy' returned 4 results
+2025-08-03 17:54:40,363 - main - INFO - Search for 'thishovcvyr' returned 4 results
+2025-08-03 17:54:40,688 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 17:54:40,858 - main - INFO - Search for 'ap' returned 4 results
+2025-08-03 17:54:41,316 - main - INFO - Search for 'k' returned 4 results
+2025-08-03 17:54:41,639 - main - INFO - Search for 'p' returned 4 results
+2025-08-03 17:54:41,736 - main - INFO - Search for 'pa' returned 4 results
+2025-08-03 17:54:41,851 - main - INFO - Search for 'pas' returned 4 results
+2025-08-03 17:54:42,225 - main - INFO - Search for 'u' returned 4 results
+2025-08-03 17:54:42,349 - main - INFO - Search for 'us' returned 4 results
+2025-08-03 17:54:42,490 - main - INFO - Search for 'usk' returned 4 results
+2025-08-03 17:54:42,672 - main - INFO - Search for 'usks' returned 4 results
+2025-08-03 17:54:43,464 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 17:54:44,200 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 17:54:44,248 - main - INFO - Search for 'ho' returned 4 results
+2025-08-03 17:54:44,352 - main - INFO - Search for 'hos' returned 4 results
+2025-08-03 17:54:44,596 - main - INFO - Search for 'host' returned 4 results
+2025-08-03 17:54:44,700 - main - INFO - Search for 'hosti' returned 4 results
+2025-08-03 17:54:44,743 - main - INFO - Search for 'hostin' returned 4 results
+2025-08-03 17:54:45,037 - main - INFO - Search for 'hosting' returned 4 results
+2025-08-03 17:54:45,067 - main - INFO - Search for 'hostinge' returned 4 results
+2025-08-03 17:54:45,193 - main - INFO - Search for 'hostinger' returned 4 results
+2025-08-03 17:54:45,610 - main - INFO - Search for 'l' returned 4 results
+2025-08-03 17:54:45,804 - main - INFO - Search for 'lo' returned 4 results
+2025-08-03 17:54:45,872 - main - INFO - Search for 'log' returned 4 results
+2025-08-03 17:54:46,029 - main - INFO - Search for 'logi' returned 4 results
+2025-08-03 17:54:46,141 - main - INFO - Search for 'login' returned 4 results
+2025-08-03 17:54:46,510 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 17:54:46,563 - main - INFO - Search for 'ho' returned 4 results
+2025-08-03 17:54:46,877 - main - INFO - Search for 'r' returned 4 results
+2025-08-03 17:54:46,968 - main - INFO - Search for 'rh' returned 4 results
+2025-08-03 17:54:47,095 - main - INFO - Search for 'rha' returned 4 results
+2025-08-03 18:00:41,180 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 18:00:57,312 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 18:00:57,322 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 18:00:58,392 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 18:00:58,413 - main - INFO - Initializing document search backend...
+2025-08-03 18:00:58,414 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 18:00:58,419 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 18:00:58,419 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 18:01:03,769 - database - INFO - Connected to existing table: documents
+2025-08-03 18:01:03,769 - database - INFO - Vector store initialized successfully
+2025-08-03 18:01:03,772 - document_processor - INFO - Document processor initialized
+2025-08-03 18:01:03,918 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 18:01:03,918 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 18:01:03,921 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 18:01:03,923 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 18:01:03,923 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 18:01:03,929 - api_service - INFO - API server started successfully
+2025-08-03 18:01:03,969 - folder_manager - INFO - Starting background document processor...
+2025-08-03 18:02:35,955 - main - INFO - Search for 'hh' returned 4 results
+2025-08-03 18:02:35,971 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 18:02:35,986 - main - INFO - Search for 'hhh' returned 4 results
+2025-08-03 18:03:04,969 - main - INFO - Search for 'hhhh' returned 4 results

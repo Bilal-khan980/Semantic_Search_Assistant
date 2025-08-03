@@ -1037,6 +1037,15 @@ class UserAnnotationRequest(BaseModel):
     page_num: int
     annotation_data: Dict[str, Any]
 
+class HighlightCaptureRequest(BaseModel):
+    content: str
+    tags: str
+    notes: str
+    source_info: Dict[str, Any]
+    highlight_type: str = "manual_capture"
+    timestamp: str
+    is_highlight: bool = True
+
 @app.post("/annotations")
 async def add_user_annotation(annotation: UserAnnotationRequest):
     """Add a user annotation to a document."""
@@ -1102,6 +1111,68 @@ async def trigger_scan():
         }
     except Exception as e:
         logger.error(f"Error triggering scan: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Highlight Capture Endpoints
+@app.post("/highlights/add")
+async def add_highlight_capture(highlight: HighlightCaptureRequest):
+    """Add a manually captured highlight to the database."""
+    try:
+        if not backend:
+            raise HTTPException(status_code=503, detail="Backend not available")
+
+        # Prepare highlight data for storage
+        highlight_data = {
+            'content': highlight.content,
+            'source': highlight.source_info.get('document_name', 'Manual Capture'),
+            'metadata': {
+                'tags': highlight.tags,
+                'notes': highlight.notes,
+                'source_info': highlight.source_info,
+                'highlight_type': highlight.highlight_type,
+                'timestamp': highlight.timestamp,
+                'is_highlight': highlight.is_highlight,
+                'application': highlight.source_info.get('application', 'Unknown'),
+                'document_type': highlight.source_info.get('document_type', 'Document')
+            }
+        }
+
+        # Add to vector database
+        success = await backend.add_highlight_to_database(highlight_data)
+
+        if success:
+            logger.info(f"✅ Highlight added: {len(highlight.content)} chars from {highlight.source_info.get('application', 'Unknown')}")
+            return {
+                "status": "success",
+                "message": "Highlight added successfully",
+                "content_length": len(highlight.content),
+                "source": highlight.source_info.get('document_name', 'Manual Capture')
+            }
+        else:
+            raise HTTPException(status_code=400, detail="Failed to add highlight")
+
+    except Exception as e:
+        logger.error(f"Error adding highlight: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/highlights")
+async def get_highlights(limit: int = 50, tags: Optional[str] = None):
+    """Get captured highlights with optional tag filtering."""
+    try:
+        if not backend:
+            raise HTTPException(status_code=503, detail="Backend not available")
+
+        # Get highlights from database
+        highlights = await backend.get_highlights(limit=limit, tags=tags)
+
+        return {
+            "status": "success",
+            "highlights": highlights,
+            "total": len(highlights)
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting highlights: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Document Monitoring Endpoints (Disabled - using local monitoring)
