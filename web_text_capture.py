@@ -20,9 +20,9 @@ class WebTextCapture:
     def start_capture(self):
         """Start web-specific text capture."""
         try:
-            keyboard.add_hotkey('ctrl+alt+h', self.capture_web_text)
+            keyboard.add_hotkey('ctrl+shift+g', self.capture_web_text)
             self.is_active = True
-            print("✅ Web text capture active - Press Ctrl+Alt+H")
+            print("✅ Web text capture active - Press Ctrl+Shift+G")
             return True
         except Exception as e:
             print(f"❌ Failed to start: {e}")

@@ -22,10 +22,10 @@ class FixedHighlightCapture:
     def start_capture(self):
         """Start the fixed highlight capture system."""
         try:
-            keyboard.add_hotkey('ctrl+alt+h', self.capture_highlight_simple)
+            keyboard.add_hotkey('ctrl+shift+g', self.capture_highlight_simple)
             self.is_active = True
-            logger.info("✅ Fixed highlight capture active (Ctrl+Alt+H)")
-            print("✅ Fixed highlight capture active - Press Ctrl+Alt+H")
+            logger.info("✅ Fixed highlight capture active (Ctrl+Shift+G)")
+            print("✅ Fixed highlight capture active - Press Ctrl+Shift+G")
             return True
         except Exception as e:
             logger.error(f"Failed to start: {e}")
@@ -240,7 +240,7 @@ def main():
         print("   1. Open Notepad")
         print("   2. Type: 'This is a test of the fixed highlight system'")
         print("   3. Select the text with your mouse (make sure it's blue/highlighted)")
-        print("   4. Press Ctrl+Alt+H")
+        print("   4. Press Ctrl+Shift+G")
         print("   5. Should show the ACTUAL selected text (not any markers!)")
         print()
         print("🛑 Press Ctrl+C here to stop")

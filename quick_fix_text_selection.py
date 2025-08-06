@@ -17,9 +17,9 @@ class SimpleTextCapture:
     def start_capture(self):
         """Start the simple text capture system."""
         try:
-            keyboard.add_hotkey('ctrl+alt+h', self.capture_text)
+            keyboard.add_hotkey('ctrl+shift+g', self.capture_text)
             self.is_active = True
-            print("✅ Simple text capture active - Press Ctrl+Alt+H")
+            print("✅ Simple text capture active - Press Ctrl+Shift+G")
             return True
         except Exception as e:
             print(f"❌ Failed to start: {e}")

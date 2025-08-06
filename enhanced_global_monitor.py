@@ -31,6 +31,13 @@ try:
 except ImportError:
     CLIPBOARD_AVAILABLE = False
 
+# Import highlight capture functionality
+try:
+    from highlight_capture import HighlightCapture
+    HIGHLIGHT_CAPTURE_AVAILABLE = True
+except ImportError:
+    HIGHLIGHT_CAPTURE_AVAILABLE = False
+
 # Import highlight capture system
 try:
     from highlight_capture import HighlightCapture
@@ -234,7 +241,13 @@ class EnhancedGlobalApp:
         # Components
         self.monitor = EnhancedGlobalMonitor(self.on_text_detected)
         self.search_api = SimpleSearchAPI()
-        
+
+        # Initialize highlight capture
+        if HIGHLIGHT_CAPTURE_AVAILABLE:
+            self.highlight_capture = HighlightCapture()
+        else:
+            self.highlight_capture = None
+
         # State
         self.is_monitoring = False
         self.current_query = ""
@@ -287,6 +300,22 @@ class EnhancedGlobalApp:
         self.start_monitor_btn = ttk.Button(control_frame, text="🌍 Start Monitor",
                                            command=self.toggle_monitoring, state="disabled")
         self.start_monitor_btn.pack(side=tk.LEFT, padx=(0, 10))
+
+        # Add Highlight Capture Button (prominent and user-friendly)
+        highlight_state = "normal" if HIGHLIGHT_CAPTURE_AVAILABLE else "disabled"
+        self.highlight_btn = ttk.Button(control_frame, text="🎯 Capture Selected Text",
+                                       command=self.capture_highlight_manual, state=highlight_state)
+        self.highlight_btn.pack(side=tk.LEFT, padx=(0, 10))
+
+        # Add helpful tooltip-style label
+        if HIGHLIGHT_CAPTURE_AVAILABLE:
+            tooltip_text = "Select text anywhere → Click this button → Add tags & notes"
+        else:
+            tooltip_text = "Install packages: pip install keyboard pyperclip pywin32"
+
+        self.highlight_tooltip = tk.Label(control_frame, text=tooltip_text,
+                                        font=('Arial', 8), fg='#666666')
+        self.highlight_tooltip.pack(side=tk.LEFT, padx=(5, 0))
         
 
         
@@ -358,23 +387,15 @@ class EnhancedGlobalApp:
         self.results_text.insert(tk.END, "• Try the manual test box if global monitoring fails\n")
         self.results_text.insert(tk.END, "• Make sure to add documents via web interface first\n\n")
 
-        # Initialize highlight capture system
-        self.highlight_capture = None
+        # Initialize highlight capture system (button-based, no hotkeys)
         if HIGHLIGHT_CAPTURE_AVAILABLE:
-            try:
-                self.highlight_capture = HighlightCapture()
-                if self.highlight_capture.start_global_listener():
-                    self.results_text.insert(tk.END, "✨ HIGHLIGHT CAPTURE ACTIVE!\n")
-                    self.results_text.insert(tk.END, "📝 Select text in ANY app and press Ctrl+Alt+H to capture highlights\n\n")
-                    logger.info("✅ Global highlight capture active (Ctrl+Alt+H)")
-                else:
-                    self.results_text.insert(tk.END, "⚠️ Highlight capture failed to start\n\n")
-                    logger.warning("❌ Failed to start highlight capture")
-            except Exception as e:
-                logger.error(f"Highlight capture initialization error: {e}")
-                self.results_text.insert(tk.END, f"⚠️ Highlight capture error: {e}\n\n")
+            self.results_text.insert(tk.END, "✨ HIGHLIGHT CAPTURE READY!\n")
+            self.results_text.insert(tk.END, "📝 Select text in ANY app and click '📝 Capture Highlight' button\n")
+            self.results_text.insert(tk.END, "🎯 No hotkey conflicts - works with Word, PDF, browsers, etc.\n\n")
+            logger.info("✅ Highlight capture ready (button-based)")
         else:
-            self.results_text.insert(tk.END, "⚠️ Highlight capture not available (missing dependencies)\n\n")
+            self.results_text.insert(tk.END, "⚠️ Highlight capture not available (missing dependencies)\n")
+            self.results_text.insert(tk.END, "   Install: pip install keyboard pyperclip pywin32\n\n")
 
     def check_backend(self):
         """Check backend status."""
@@ -451,9 +472,241 @@ class EnhancedGlobalApp:
             self.start_monitor_btn.config(text="🌍 Start Global Monitor")
             self.monitor_status.config(text="❌ Stopped", foreground="red")
             self.current_word_display.config(text="(not monitoring)", foreground="gray")
-            
 
-        
+    def capture_highlight_manual(self):
+        """Manually capture highlighted text using button click - NO HOTKEY CONFLICTS!"""
+        if not self.highlight_capture:
+            messagebox.showerror("Error", "Highlight capture not available.\n\nInstall required packages:\npip install keyboard pyperclip pywin32")
+            return
+
+        try:
+            # Create a more user-friendly instruction window
+            instruction_window = tk.Toplevel(self.root)
+            instruction_window.title("🎯 Capture Selected Text")
+            instruction_window.geometry("500x350")
+            instruction_window.attributes('-topmost', True)
+            instruction_window.configure(bg='#f0f0f0')
+
+            # Center the window
+            instruction_window.transient(self.root)
+            instruction_window.grab_set()
+
+            # Title
+            title_label = tk.Label(instruction_window,
+                                 text="🎯 Capture Selected Text",
+                                 font=('Arial', 16, 'bold'),
+                                 bg='#f0f0f0', fg='#2c3e50')
+            title_label.pack(pady=20)
+
+            # Instructions
+            instructions = tk.Label(instruction_window,
+                                  text="📝 How to capture text:\n\n"
+                                       "1️⃣ Go to any application (Word, PDF, browser, etc.)\n"
+                                       "2️⃣ Select text with your mouse (highlight it)\n"
+                                       "3️⃣ Come back here and click 'Capture Now'\n"
+                                       "4️⃣ Add your tags and notes\n\n"
+                                       "✅ Works with ALL applications\n"
+                                       "✅ No hotkey conflicts\n"
+                                       "✅ No keyboard shortcuts needed",
+                                  font=('Arial', 11),
+                                  bg='#f0f0f0', fg='#34495e',
+                                  justify=tk.LEFT)
+            instructions.pack(pady=20, padx=30)
+
+            # Button frame
+            button_frame = tk.Frame(instruction_window, bg='#f0f0f0')
+            button_frame.pack(pady=20)
+
+            # Capture button
+            capture_btn = tk.Button(button_frame,
+                                  text="🎯 Capture Now",
+                                  command=lambda: self._start_capture_process(instruction_window),
+                                  bg='#27ae60', fg='white',
+                                  font=('Arial', 12, 'bold'),
+                                  padx=30, pady=10)
+            capture_btn.pack(side=tk.LEFT, padx=10)
+
+            # Cancel button
+            cancel_btn = tk.Button(button_frame,
+                                 text="❌ Cancel",
+                                 command=instruction_window.destroy,
+                                 bg='#e74c3c', fg='white',
+                                 font=('Arial', 12, 'bold'),
+                                 padx=30, pady=10)
+            cancel_btn.pack(side=tk.LEFT, padx=10)
+
+        except Exception as e:
+            logger.error(f"Manual highlight capture error: {e}")
+            messagebox.showerror("Error", f"Failed to open capture dialog: {e}")
+
+    def _start_capture_process(self, instruction_window):
+        """Start the capture process after user clicks capture button."""
+        try:
+            instruction_window.destroy()
+
+            # Show a brief "capturing..." message
+            capture_msg = tk.Toplevel(self.root)
+            capture_msg.title("Capturing...")
+            capture_msg.geometry("300x100")
+            capture_msg.attributes('-topmost', True)
+            capture_msg.configure(bg='#3498db')
+
+            msg_label = tk.Label(capture_msg,
+                               text="🔄 Capturing selected text...\nPlease wait...",
+                               bg='#3498db', fg='white',
+                               font=('Arial', 12, 'bold'))
+            msg_label.pack(expand=True)
+
+            # Center the message
+            x = self.root.winfo_screenwidth() // 2 - 150
+            y = self.root.winfo_screenheight() // 2 - 50
+            capture_msg.geometry(f"+{x}+{y}")
+
+            # Perform capture after a short delay
+            self.root.after(1000, lambda: self._perform_capture(capture_msg))
+
+        except Exception as e:
+            logger.error(f"Start capture process error: {e}")
+            messagebox.showerror("Error", f"Failed to start capture: {e}")
+
+    def _perform_capture(self, capture_msg=None):
+        """Perform the actual capture after delay."""
+        try:
+            # Close the "capturing..." message
+            if capture_msg:
+                capture_msg.destroy()
+
+            # Use the highlight capture system without hotkey - try multiple methods
+            captured_text = None
+
+            # Method 1: Try clipboard method
+            captured_text = self.highlight_capture._try_clipboard_method()
+
+            # Method 2: If that fails, try Windows API method
+            if not captured_text or len(captured_text.strip()) < 3:
+                captured_text = self.highlight_capture._try_windows_api_method()
+
+            # Method 3: If that fails, try alternative shortcuts
+            if not captured_text or len(captured_text.strip()) < 3:
+                captured_text = self.highlight_capture._try_alternative_shortcuts()
+
+            if captured_text and len(captured_text.strip()) >= 3:
+                # Get actual source info from active window
+                try:
+                    import win32gui
+                    hwnd = win32gui.GetForegroundWindow()
+                    window_title = win32gui.GetWindowText(hwnd)
+                    class_name = win32gui.GetClassName(hwnd)
+
+                    source_info = {
+                        'window_title': window_title or 'Unknown Application',
+                        'application': class_name or 'Unknown',
+                        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'capture_method': 'Manual Button Click'
+                    }
+                except:
+                    source_info = {
+                        'window_title': 'Manual Capture',
+                        'application': 'User Selected',
+                        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'capture_method': 'Manual Button Click'
+                    }
+
+                # Show success message briefly
+                self._show_capture_success(len(captured_text))
+
+                # Show the capture dialog
+                self.highlight_capture.show_capture_dialog(captured_text.strip(), source_info)
+            else:
+                # Show helpful error message
+                self._show_capture_failure()
+
+        except Exception as e:
+            logger.error(f"Capture performance error: {e}")
+            messagebox.showerror("Error", f"Failed to capture text: {e}")
+
+    def _show_capture_success(self, text_length):
+        """Show brief success message."""
+        try:
+            success_msg = tk.Toplevel(self.root)
+            success_msg.title("Success!")
+            success_msg.geometry("300x80")
+            success_msg.attributes('-topmost', True)
+            success_msg.configure(bg='#27ae60')
+
+            msg_label = tk.Label(success_msg,
+                               text=f"✅ Captured {text_length} characters!",
+                               bg='#27ae60', fg='white',
+                               font=('Arial', 12, 'bold'))
+            msg_label.pack(expand=True)
+
+            # Center and auto-close
+            x = self.root.winfo_screenwidth() // 2 - 150
+            y = self.root.winfo_screenheight() // 2 - 40
+            success_msg.geometry(f"+{x}+{y}")
+
+            self.root.after(2000, lambda: success_msg.destroy() if success_msg.winfo_exists() else None)
+
+        except Exception as e:
+            logger.error(f"Show success message error: {e}")
+
+    def _show_capture_failure(self):
+        """Show helpful failure message with troubleshooting."""
+        try:
+            error_window = tk.Toplevel(self.root)
+            error_window.title("❌ No Text Captured")
+            error_window.geometry("450x300")
+            error_window.attributes('-topmost', True)
+            error_window.configure(bg='#f8f9fa')
+
+            # Title
+            title_label = tk.Label(error_window,
+                                 text="❌ No Text Captured",
+                                 font=('Arial', 14, 'bold'),
+                                 bg='#f8f9fa', fg='#e74c3c')
+            title_label.pack(pady=15)
+
+            # Troubleshooting tips
+            tips_text = (
+                "🔧 Troubleshooting Tips:\n\n"
+                "✅ Make sure text is selected (highlighted in blue)\n"
+                "✅ Select at least 3-4 characters\n"
+                "✅ Keep text selected when clicking 'Capture Now'\n"
+                "✅ Try manually pressing Ctrl+C first to test\n\n"
+                "📱 Application-specific tips:\n"
+                "• Word/Notepad: Should work perfectly\n"
+                "• PDF files: Make sure text is selectable\n"
+                "• Web pages: Some sites block copying\n"
+                "• Secure apps: May prevent text copying"
+            )
+
+            tips_label = tk.Label(error_window,
+                                text=tips_text,
+                                font=('Arial', 10),
+                                bg='#f8f9fa', fg='#2c3e50',
+                                justify=tk.LEFT)
+            tips_label.pack(pady=10, padx=20)
+
+            # Close button
+            close_btn = tk.Button(error_window,
+                                text="OK",
+                                command=error_window.destroy,
+                                bg='#3498db', fg='white',
+                                font=('Arial', 11, 'bold'),
+                                padx=20, pady=5)
+            close_btn.pack(pady=15)
+
+        except Exception as e:
+            logger.error(f"Show failure message error: {e}")
+            # Fallback to simple messagebox
+            messagebox.showwarning("No Text Captured",
+                                 "No text was captured or text was too short.\n\n"
+                                 "Make sure to:\n"
+                                 "• Select text with your mouse\n"
+                                 "• Keep the text selected\n"
+                                 "• Try selecting at least 3-4 characters")
+
+
     def on_text_detected(self, text: str):
         """Handle text detected from monitoring."""
         self.current_query = text

@@ -45,20 +45,11 @@ class HighlightCapture:
         self.source_info = {}
         
     def start_global_listener(self):
-        """Start the global hotkey listener."""
-        if not CAPTURE_AVAILABLE:
-            messagebox.showerror("Error", "Required libraries not available.\nInstall: pip install keyboard pyperclip pywin32")
-            return False
-            
-        try:
-            # Register global hotkey Ctrl+Alt+H (safer, less conflicts)
-            keyboard.add_hotkey('ctrl+alt+h', self.capture_highlight)
-            self.is_active = True
-            logger.info("✅ Global highlight capture active (Ctrl+Alt+H)")
-            return True
-        except Exception as e:
-            logger.error(f"Failed to start global listener: {e}")
-            return False
+        """Start the global hotkey listener - DISABLED in favor of UI button."""
+        # Hotkey functionality disabled to avoid conflicts
+        # Use the "Capture Selected Text" button in the UI instead
+        logger.info("ℹ️ Hotkey listener disabled - use UI button instead")
+        return True
     
     def stop_global_listener(self):
         """Stop the global hotkey listener."""
@@ -709,23 +700,25 @@ def main():
     # Create highlight capture system
     capture = HighlightCapture()
     
-    # Start global listener
+    # Start global listener (now button-based)
     if capture.start_global_listener():
-        print("✅ Global highlight capture is active!")
-        print("📝 Select text in any application and press Ctrl+Alt+H")
-        print("🛑 Close this window to stop")
-        
+        print("✅ Highlight capture system ready!")
+        print("📝 Use the 'Capture Selected Text' button in the main UI")
+        print("🛑 No hotkey conflicts - button-based approach")
+
         # Show status window
         status_window = tk.Toplevel(root)
-        status_window.title("Highlight Capture Active")
-        status_window.geometry("400x200")
+        status_window.title("Highlight Capture Ready")
+        status_window.geometry("450x250")
         status_window.attributes('-topmost', True)
-        
-        status_label = tk.Label(status_window, 
-                              text="🎯 Global Highlight Capture Active!\n\n"
-                                   "📝 Select text in any app\n"
-                                   "⌨️ Press Ctrl+Alt+H\n"
-                                   "💾 Add tags and notes\n\n"
+
+        status_label = tk.Label(status_window,
+                              text="🎯 Highlight Capture System Ready!\n\n"
+                                   "✅ No hotkey conflicts\n"
+                                   "✅ Works with ALL applications\n"
+                                   "✅ Button-based approach\n\n"
+                                   "Use the 'Capture Selected Text' button\n"
+                                   "in the main application window\n\n"
                                    "Close this window to stop",
                               font=('Arial', 12), justify=tk.CENTER)
         status_label.pack(expand=True)

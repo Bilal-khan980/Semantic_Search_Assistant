@@ -2622,3 +2622,87 @@
 2025-08-03 18:02:35,971 - main - INFO - Search for 'h' returned 4 results
 2025-08-03 18:02:35,986 - main - INFO - Search for 'hhh' returned 4 results
 2025-08-03 18:03:04,969 - main - INFO - Search for 'hhhh' returned 4 results
+2025-08-03 18:07:46,389 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 18:08:00,377 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 18:08:00,385 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 18:08:01,325 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 18:08:01,338 - main - INFO - Initializing document search backend...
+2025-08-03 18:08:01,338 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 18:08:01,341 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 18:08:01,343 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 18:08:06,780 - database - INFO - Connected to existing table: documents
+2025-08-03 18:08:06,780 - database - INFO - Vector store initialized successfully
+2025-08-03 18:08:06,782 - document_processor - INFO - Document processor initialized
+2025-08-03 18:08:06,921 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 18:08:06,922 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 18:08:06,922 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 18:08:06,931 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 18:08:06,931 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 18:08:06,937 - api_service - INFO - API server started successfully
+2025-08-03 18:08:06,978 - folder_manager - INFO - Starting background document processor...
+2025-08-03 18:08:43,610 - main - INFO - Search for 'h' returned 4 results
+2025-08-03 18:09:02,008 - main - INFO - Search for 'hh' returned 4 results
+2025-08-03 18:09:14,988 - main - INFO - Search for 'hhh' returned 4 results
+2025-08-03 18:09:28,337 - main - INFO - Search for 'hhhb' returned 4 results
+2025-08-03 18:09:28,501 - main - INFO - Search for 'hhhbl' returned 4 results
+2025-08-03 18:09:28,660 - main - INFO - Search for 'hhhbli' returned 4 results
+2025-08-03 18:09:28,844 - main - INFO - Search for 'hhhblin' returned 4 results
+2025-08-03 18:09:29,029 - main - INFO - Search for 'hhhblink' returned 4 results
+2025-08-03 18:09:29,480 - main - INFO - Search for 'hhhblin' returned 4 results
+2025-08-03 18:09:29,734 - main - INFO - Search for 'hhhblind' returned 4 results
+2025-08-03 18:09:30,632 - main - INFO - Search for 'hhhblin' returned 4 results
+2025-08-03 18:09:30,813 - main - INFO - Search for 'hhhbli' returned 4 results
+2025-08-03 18:09:30,990 - main - INFO - Search for 'hhhbl' returned 4 results
+2025-08-03 18:09:31,173 - main - INFO - Search for 'hhhb' returned 4 results
+2025-08-03 18:09:31,368 - main - INFO - Search for 'hhhbf' returned 4 results
+2025-08-03 18:09:32,816 - main - INFO - Search for 'hhhbfd' returned 4 results
+2025-08-03 18:09:35,957 - api_service - ERROR - Error adding highlight: 'DocumentSearchBackend' object has no attribute 'add_highlight_to_database'
+2025-08-03 18:09:44,107 - main - INFO - Search for 'hhhbfdb' returned 4 results
+2025-08-03 18:09:44,247 - main - INFO - Search for 'hhhbfdbl' returned 4 results
+2025-08-03 18:09:44,453 - main - INFO - Search for 'hhhbfdbli' returned 4 results
+2025-08-03 18:09:44,659 - main - INFO - Search for 'hhhbfdblin' returned 4 results
+2025-08-03 18:09:53,402 - main - INFO - Search for 'b' returned 4 results
+2025-08-03 18:09:53,525 - main - INFO - Search for 'bl' returned 4 results
+2025-08-03 18:09:53,770 - main - INFO - Search for 'bli' returned 4 results
+2025-08-03 18:09:54,053 - main - INFO - Search for 'blin' returned 4 results
+2025-08-03 18:09:55,403 - main - INFO - Search for 'blind' returned 4 results
+2025-08-03 18:10:13,577 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 18:10:14,690 - main - INFO - Search for 'ap' returned 4 results
+2025-08-03 18:10:14,810 - main - INFO - Search for 'app' returned 4 results
+2025-08-03 18:10:21,622 - main - INFO - Search for 'ap' returned 4 results
+2025-08-03 18:10:21,781 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 18:10:23,804 - main - INFO - Search for 'v' returned 4 results
+2025-08-03 18:10:23,963 - main - INFO - Search for 'vo' returned 4 results
+2025-08-03 18:10:24,053 - main - INFO - Search for 'voi' returned 4 results
+2025-08-03 18:10:24,312 - main - INFO - Search for 'voic' returned 4 results
+2025-08-03 18:10:24,436 - main - INFO - Search for 'voice' returned 4 results
+2025-08-03 18:10:25,518 - main - INFO - Search for 'voicen' returned 4 results
+2025-08-03 18:10:25,674 - main - INFO - Search for 'voicena' returned 4 results
+2025-08-03 18:10:26,786 - main - INFO - Search for 'voicenav' returned 4 results
+2025-08-03 18:10:26,920 - main - INFO - Search for 'voicenavi' returned 4 results
+2025-08-03 18:10:27,143 - main - INFO - Search for 'voicenavig' returned 4 results
+2025-08-03 18:10:27,286 - main - INFO - Search for 'voicenaviga' returned 4 results
+2025-08-03 18:10:27,559 - main - INFO - Search for 'voicenavigat' returned 4 results
+2025-08-03 18:10:27,734 - main - INFO - Search for 'voicenavigate' returned 4 results
+2025-08-03 18:10:28,009 - main - INFO - Search for 'voicenavigated' returned 4 results
+2025-08-03 18:10:28,415 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 18:10:28,674 - main - INFO - Search for 'ap' returned 4 results
+2025-08-03 18:10:29,622 - main - INFO - Search for 'a' returned 4 results
+2025-08-03 18:12:57,520 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-03 18:13:11,071 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-03 18:13:11,079 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-03 18:13:11,971 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-03 18:13:11,988 - main - INFO - Initializing document search backend...
+2025-08-03 18:13:11,988 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 18:13:11,994 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-03 18:13:11,994 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-03 18:13:17,235 - database - INFO - Connected to existing table: documents
+2025-08-03 18:13:17,236 - database - INFO - Vector store initialized successfully
+2025-08-03 18:13:17,237 - document_processor - INFO - Document processor initialized
+2025-08-03 18:13:17,364 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 18:13:17,370 - folder_manager - INFO - Starting folder monitoring...
+2025-08-03 18:13:17,370 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-03 18:13:17,374 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-03 18:13:17,374 - folder_manager - INFO - Monitoring 2 folders
+2025-08-03 18:13:17,380 - api_service - INFO - API server started successfully
+2025-08-03 18:13:17,419 - folder_manager - INFO - Starting background document processor...
