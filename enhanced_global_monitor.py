@@ -231,7 +231,7 @@ class EnhancedGlobalApp:
     
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Real-time Semantic Search")
+        self.root.title("Semantic Search Assistant")
         self.root.geometry("900x650")
         self.root.configure(bg='#f0f0f0')
         
@@ -269,9 +269,9 @@ class EnhancedGlobalApp:
         main_frame.pack(fill=tk.BOTH, expand=True)
         
         # Title
-        title_label = ttk.Label(main_frame, text="🔍 Real-time Semantic Search",
-                               font=('Arial', 18, 'bold'))
-        title_label.pack(pady=(0, 20))
+        title_label = ttk.Label(main_frame, text="Semantic Search Assistant",
+                               font=('Arial', 16, 'bold'))
+        title_label.pack(pady=(0, 15))
         
 
         
@@ -293,29 +293,21 @@ class EnhancedGlobalApp:
         control_frame = ttk.Frame(main_frame)
         control_frame.pack(fill=tk.X, pady=(0, 15))
         
-        self.start_backend_btn = ttk.Button(control_frame, text="🚀 Start Backend", 
+        self.start_backend_btn = ttk.Button(control_frame, text="Start Backend",
                                            command=self.start_backend)
         self.start_backend_btn.pack(side=tk.LEFT, padx=(0, 10))
         
-        self.start_monitor_btn = ttk.Button(control_frame, text="🌍 Start Monitor",
+        self.start_monitor_btn = ttk.Button(control_frame, text="Start Monitor",
                                            command=self.toggle_monitoring, state="disabled")
         self.start_monitor_btn.pack(side=tk.LEFT, padx=(0, 10))
 
-        # Add Highlight Capture Button (prominent and user-friendly)
+        # Add Highlight Capture Button (professional and compact)
         highlight_state = "normal" if HIGHLIGHT_CAPTURE_AVAILABLE else "disabled"
-        self.highlight_btn = ttk.Button(control_frame, text="🎯 Capture Selected Text",
+        self.highlight_btn = ttk.Button(control_frame, text="Capture Text",
                                        command=self.capture_highlight_manual, state=highlight_state)
         self.highlight_btn.pack(side=tk.LEFT, padx=(0, 10))
 
-        # Add helpful tooltip-style label
-        if HIGHLIGHT_CAPTURE_AVAILABLE:
-            tooltip_text = "1. Click button → 2. Go select text → 3. Text captured automatically"
-        else:
-            tooltip_text = "Install packages: pip install keyboard pyperclip pywin32"
-
-        self.highlight_tooltip = tk.Label(control_frame, text=tooltip_text,
-                                        font=('Arial', 8), fg='#666666')
-        self.highlight_tooltip.pack(side=tk.LEFT, padx=(5, 0))
+        # Remove tooltip to save space - professional tools don't need instructions
         
 
         
@@ -372,30 +364,14 @@ class EnhancedGlobalApp:
         self.target_window = None
         self.mouse_tracking_active = False
         
-        # Initial message
-        self.results_text.insert(tk.END, "🔍 Start global monitoring and type in Word or Notepad!\n\n")
-        self.results_text.insert(tk.END, "💡 Supported applications:\n")
-        self.results_text.insert(tk.END, "• Microsoft Word, WordPad, Notepad\n")
-        self.results_text.insert(tk.END, "• VS Code, Sublime Text, Atom\n")
-        self.results_text.insert(tk.END, "• Any text editor or input field\n\n")
-        self.results_text.insert(tk.END, "🖱️ How to use search results:\n")
-        self.results_text.insert(tk.END, "• 🖱️ Drag & Drop: Click and drag any highlighted chunk to external apps\n")
-        self.results_text.insert(tk.END, "• ✋ Hover: Move mouse over chunks to see hand cursor\n")
-        self.results_text.insert(tk.END, "• 📝 Drop anywhere: Word, Notepad, VS Code, etc.\n\n")
-        self.results_text.insert(tk.END, "🔧 Troubleshooting:\n")
-        self.results_text.insert(tk.END, "• Run as Administrator for best results\n")
-        self.results_text.insert(tk.END, "• Try the manual test box if global monitoring fails\n")
-        self.results_text.insert(tk.END, "• Make sure to add documents via web interface first\n\n")
+        # Professional status message
+        self.results_text.insert(tk.END, "Ready for semantic search. Start monitoring to begin.\n\n")
 
         # Initialize highlight capture system (button-based, no hotkeys)
         if HIGHLIGHT_CAPTURE_AVAILABLE:
-            self.results_text.insert(tk.END, "✨ HIGHLIGHT CAPTURE READY!\n")
-            self.results_text.insert(tk.END, "📝 Select text in ANY app and click '📝 Capture Highlight' button\n")
-            self.results_text.insert(tk.END, "🎯 No hotkey conflicts - works with Word, PDF, browsers, etc.\n\n")
             logger.info("✅ Highlight capture ready (button-based)")
         else:
-            self.results_text.insert(tk.END, "⚠️ Highlight capture not available (missing dependencies)\n")
-            self.results_text.insert(tk.END, "   Install: pip install keyboard pyperclip pywin32\n\n")
+            self.results_text.insert(tk.END, "⚠️ Highlight capture unavailable. Install: pip install keyboard pyperclip pywin32\n\n")
 
     def check_backend(self):
         """Check backend status."""
@@ -433,14 +409,14 @@ class EnhancedGlobalApp:
     def on_backend_started(self):
         """Backend started successfully."""
         self.backend_status.config(text="✅ Running", foreground="green")
-        self.start_backend_btn.config(text="✅ Backend Running", state="normal")
+        self.start_backend_btn.config(text="Backend Running", state="normal")
         self.start_monitor_btn.config(state="normal")
-        messagebox.showinfo("Success", "Backend started!\n\nNext steps:\n1. Click 'Start Global Monitor'\n2. Open Word/Notepad and start typing!")
+        messagebox.showinfo("Success", "Backend started!\n\nNext steps:\n1. Click 'Start Monitor'\n2. Open Word/Notepad and start typing!")
         
     def on_backend_failed(self):
         """Backend failed to start."""
         self.backend_status.config(text="❌ Failed", foreground="red")
-        self.start_backend_btn.config(text="🚀 Start Backend", state="normal")
+        self.start_backend_btn.config(text="Start Backend", state="normal")
         messagebox.showerror("Error", "Backend failed to start.\nCheck console for errors.")
         
     def toggle_monitoring(self):
@@ -449,7 +425,7 @@ class EnhancedGlobalApp:
             success = self.monitor.start_monitoring()
             if success:
                 self.is_monitoring = True
-                self.start_monitor_btn.config(text="🛑 Stop Monitor")
+                self.start_monitor_btn.config(text="Stop Monitor")
                 self.monitor_status.config(text="✅ Active", foreground="green")
                 self.current_word_display.config(text="Ready! Type in Word/Notepad...", foreground="blue")
                 
@@ -469,7 +445,7 @@ class EnhancedGlobalApp:
         else:
             self.monitor.stop_monitoring()
             self.is_monitoring = False
-            self.start_monitor_btn.config(text="🌍 Start Global Monitor")
+            self.start_monitor_btn.config(text="Start Monitor")
             self.monitor_status.config(text="❌ Stopped", foreground="red")
             self.current_word_display.config(text="(not monitoring)", foreground="gray")
 
@@ -488,72 +464,56 @@ class EnhancedGlobalApp:
             messagebox.showerror("Error", f"Failed to start capture: {e}")
 
     def _start_capture_mode(self):
-        """Start capture mode - show instruction and wait for text selection."""
+        """Start capture mode with compact floating tool."""
         try:
-            # Create capture mode window
+            # Create compact floating capture tool
             self.capture_window = tk.Toplevel(self.root)
-            self.capture_window.title("🎯 Capture Mode Active")
-            self.capture_window.geometry("500x350")
+            self.capture_window.title("Text Capture")
+            self.capture_window.geometry("280x120")
             self.capture_window.attributes('-topmost', True)
-            self.capture_window.configure(bg='#e8f5e8')
+            self.capture_window.configure(bg='#2c3e50')
+            self.capture_window.resizable(False, False)
 
-            # Center the window
-            x = self.root.winfo_screenwidth() // 2 - 250
-            y = self.root.winfo_screenheight() // 2 - 175
+            # Position in top-right corner
+            x = self.root.winfo_screenwidth() - 300
+            y = 50
             self.capture_window.geometry(f"+{x}+{y}")
 
-            # Title
-            title_label = tk.Label(self.capture_window,
-                                 text="🎯 Capture Mode Active!",
-                                 font=('Arial', 16, 'bold'),
-                                 bg='#e8f5e8', fg='#27ae60')
-            title_label.pack(pady=20)
+            # Remove window decorations for cleaner look
+            self.capture_window.overrideredirect(True)
 
-            # Instructions
-            instructions_text = (
-                "📝 Now select text in any application:\n\n"
-                "1️⃣ Go to Word, PDF, browser, or any app\n"
-                "2️⃣ Select text with your mouse\n"
-                "3️⃣ Text will be captured automatically!\n\n"
-                "💡 This window will stay on top so you can\n"
-                "see when text is captured."
-            )
+            # Main frame with rounded appearance
+            main_frame = tk.Frame(self.capture_window, bg='#2c3e50', padx=15, pady=10)
+            main_frame.pack(fill='both', expand=True)
 
-            instructions_label = tk.Label(self.capture_window,
-                                        text=instructions_text,
-                                        font=('Arial', 12),
-                                        bg='#e8f5e8', fg='#2c3e50',
-                                        justify=tk.CENTER)
-            instructions_label.pack(pady=15)
+            # Title bar with close button
+            title_frame = tk.Frame(main_frame, bg='#2c3e50')
+            title_frame.pack(fill='x', pady=(0, 8))
 
-            # Status label
-            self.capture_status_label = tk.Label(self.capture_window,
-                                                text="⏳ Waiting for text selection...",
-                                                font=('Arial', 11, 'bold'),
-                                                bg='#e8f5e8', fg='#f39c12')
-            self.capture_status_label.pack(pady=10)
+            title_label = tk.Label(title_frame, text="🎯 Text Capture Active",
+                                 font=('Segoe UI', 10, 'bold'),
+                                 bg='#2c3e50', fg='#ecf0f1')
+            title_label.pack(side='left')
 
-            # Activity indicator
-            self.activity_label = tk.Label(self.capture_window,
-                                         text="🔍 Monitoring active - select text in any app",
-                                         font=('Arial', 9),
-                                         bg='#e8f5e8', fg='#666666')
-            self.activity_label.pack(pady=5)
+            close_btn = tk.Button(title_frame, text="✕", command=self._stop_capture_mode,
+                                bg='#e74c3c', fg='white', font=('Arial', 8, 'bold'),
+                                width=3, height=1, bd=0, relief='flat')
+            close_btn.pack(side='right')
 
-            # Button frame
-            button_frame = tk.Frame(self.capture_window, bg='#e8f5e8')
-            button_frame.pack(pady=20)
+            # Status with icon
+            self.capture_status_label = tk.Label(main_frame,
+                                                text="🔍 Select text anywhere...",
+                                                font=('Segoe UI', 9),
+                                                bg='#2c3e50', fg='#95a5a6')
+            self.capture_status_label.pack(pady=5)
 
-            # Stop capture button
-            stop_btn = tk.Button(button_frame,
-                               text="🛑 Stop Capture Mode",
-                               command=self._stop_capture_mode,
-                               bg='#e74c3c', fg='white',
-                               font=('Arial', 12, 'bold'),
-                               padx=20, pady=8)
-            stop_btn.pack()
+            # Progress indicator
+            self.progress_label = tk.Label(main_frame, text="●",
+                                         font=('Arial', 12),
+                                         bg='#2c3e50', fg='#f39c12')
+            self.progress_label.pack()
 
-            # Start monitoring clipboard for changes
+            # Start monitoring
             self.capture_active = True
             self.last_clipboard = ""
             try:
@@ -561,17 +521,22 @@ class EnhancedGlobalApp:
             except:
                 pass
 
-            # Start monitoring
-            logger.info("Starting text selection monitoring...")
-            self._monitor_clipboard()
+            # Start monitoring with PDF-optimized settings
+            logger.info("Starting enhanced text selection monitoring...")
+            self._monitor_clipboard_enhanced()
+
+            # Animate progress indicator
+            self._animate_progress()
 
         except Exception as e:
             logger.error(f"Start capture mode error: {e}")
-            messagebox.showerror("Error", f"Failed to start capture mode: {e}")
+            # Fallback to simple message
+            self.capture_active = True
+            self._monitor_clipboard_enhanced()
 
-    def _monitor_clipboard(self):
-        """Monitor for text selection by trying to copy selected text."""
-        if not self.capture_active or not hasattr(self, 'capture_window') or not self.capture_window.winfo_exists():
+    def _monitor_clipboard_enhanced(self):
+        """Enhanced monitoring that works with PDFs and all applications."""
+        if not self.capture_active:
             return
 
         try:
@@ -582,65 +547,126 @@ class EnhancedGlobalApp:
             except:
                 pass
 
-            # Try to copy currently selected text
-            try:
-                # Send Ctrl+C to copy any selected text
-                keyboard.send('ctrl+c')
-                time.sleep(0.1)  # Brief wait for copy operation
+            # Try multiple copy methods for better PDF compatibility
+            captured_text = None
 
-                # Check if clipboard changed
+            # Method 1: Standard Ctrl+C
+            try:
+                keyboard.send('ctrl+c')
+                time.sleep(0.3)  # Longer wait for PDFs
                 new_clipboard = pyperclip.paste()
 
-                # If clipboard changed and has meaningful content
                 if (new_clipboard != original_clipboard and
                     new_clipboard and
                     len(new_clipboard.strip()) >= 3):
+                    captured_text = new_clipboard.strip()
 
-                    # Text was selected and copied!
-                    self._text_captured(new_clipboard.strip())
-                    return
-                else:
-                    # Restore original clipboard if nothing was selected
-                    try:
-                        pyperclip.copy(original_clipboard)
-                    except:
-                        pass
+            except Exception as e:
+                logger.debug(f"Standard copy failed: {e}")
 
-            except Exception as copy_error:
-                logger.debug(f"Copy attempt error: {copy_error}")
+            # Method 2: Alternative copy for PDFs (Ctrl+Insert)
+            if not captured_text:
+                try:
+                    keyboard.send('ctrl+insert')
+                    time.sleep(0.3)
+                    new_clipboard = pyperclip.paste()
+
+                    if (new_clipboard != original_clipboard and
+                        new_clipboard and
+                        len(new_clipboard.strip()) >= 3):
+                        captured_text = new_clipboard.strip()
+
+                except Exception as e:
+                    logger.debug(f"Alternative copy failed: {e}")
+
+            # Method 3: Windows API copy for stubborn applications
+            if not captured_text:
+                try:
+                    import win32gui
+                    import win32con
+
+                    # Get foreground window and send WM_COPY
+                    hwnd = win32gui.GetForegroundWindow()
+                    if hwnd:
+                        win32gui.SendMessage(hwnd, win32con.WM_COPY, 0, 0)
+                        time.sleep(0.4)
+                        new_clipboard = pyperclip.paste()
+
+                        if (new_clipboard != original_clipboard and
+                            new_clipboard and
+                            len(new_clipboard.strip()) >= 3):
+                            captured_text = new_clipboard.strip()
+
+                except Exception as e:
+                    logger.debug(f"Windows API copy failed: {e}")
+
+            # If we captured text, process it
+            if captured_text:
+                self._text_captured_silent(captured_text)
+                return
+            else:
                 # Restore original clipboard
                 try:
                     pyperclip.copy(original_clipboard)
                 except:
                     pass
 
-            # Continue monitoring
-            self.root.after(1000, self._monitor_clipboard)
+            # Continue monitoring with adaptive timing
+            next_check = 800 if self._is_pdf_application() else 1200
+            self.root.after(next_check, self._monitor_clipboard_enhanced)
 
         except Exception as e:
-            logger.error(f"Monitor clipboard error: {e}")
+            logger.error(f"Enhanced monitor error: {e}")
             # Continue monitoring even if there's an error
-            self.root.after(2000, self._monitor_clipboard)
+            self.root.after(2000, self._monitor_clipboard_enhanced)
 
-    def _text_captured(self, captured_text):
-        """Handle when text is captured."""
+    def _is_pdf_application(self):
+        """Check if current foreground application is a PDF reader."""
         try:
-            # Update status
+            import win32gui
+            hwnd = win32gui.GetForegroundWindow()
+            window_title = win32gui.GetWindowText(hwnd).lower()
+            class_name = win32gui.GetClassName(hwnd).lower()
+
+            pdf_indicators = ['adobe', 'acrobat', 'reader', 'pdf', 'foxit', 'sumatra']
+            return any(indicator in window_title or indicator in class_name
+                      for indicator in pdf_indicators)
+        except:
+            return False
+
+    def _animate_progress(self):
+        """Animate the progress indicator."""
+        if not self.capture_active or not hasattr(self, 'progress_label'):
+            return
+
+        try:
+            current_text = self.progress_label.cget('text')
+            if current_text == "●":
+                self.progress_label.config(text="○")
+            else:
+                self.progress_label.config(text="●")
+
+            self.root.after(1000, self._animate_progress)
+        except:
+            pass
+
+    def _text_captured_silent(self, captured_text):
+        """Handle when text is captured - silent mode without popups."""
+        try:
+            # Update status in floating tool
             if hasattr(self, 'capture_status_label') and self.capture_status_label.winfo_exists():
-                self.capture_status_label.config(text=f"✅ Captured {len(captured_text)} characters!",
+                self.capture_status_label.config(text=f"✅ {len(captured_text)} chars captured",
                                                 fg='#27ae60')
 
             # Stop capture mode
             self.capture_active = False
 
-            # Close capture window after a brief delay
-            self.root.after(1500, self._close_capture_window)
-
             # Get source info
             source_info = self._get_source_application_info()
 
-            # Show capture dialog
-            self.root.after(1600, lambda: self._show_priority_capture_dialog(captured_text, source_info))
+            # Close floating tool and show capture dialog directly
+            self.root.after(800, self._close_capture_window)
+            self.root.after(900, lambda: self._show_priority_capture_dialog(captured_text, source_info))
 
         except Exception as e:
             logger.error(f"Text captured error: {e}")
@@ -668,33 +694,13 @@ class EnhancedGlobalApp:
 
 
     def _process_captured_text(self, captured_text):
-        """Process the captured selected text."""
+        """Process the captured selected text - no popup messages."""
         try:
-            # Show success message briefly
-            success_msg = tk.Toplevel(self.root)
-            success_msg.title("✅ Text Captured!")
-            success_msg.geometry("300x80")
-            success_msg.attributes('-topmost', True)
-            success_msg.configure(bg='#27ae60')
-
-            msg_label = tk.Label(success_msg,
-                               text=f"✅ Captured {len(captured_text)} characters!",
-                               bg='#27ae60', fg='white',
-                               font=('Arial', 12, 'bold'))
-            msg_label.pack(expand=True)
-
-            # Center and auto-close
-            x = self.root.winfo_screenwidth() // 2 - 150
-            y = self.root.winfo_screenheight() // 2 - 40
-            success_msg.geometry(f"+{x}+{y}")
-
-            self.root.after(1500, lambda: success_msg.destroy() if success_msg.winfo_exists() else None)
-
             # Get source info
             source_info = self._get_source_application_info()
 
-            # Show the priority capture dialog
-            self.root.after(1600, lambda: self._show_priority_capture_dialog(captured_text, source_info))
+            # Show the priority capture dialog directly
+            self._show_priority_capture_dialog(captured_text, source_info)
 
         except Exception as e:
             logger.error(f"Process captured text error: {e}")
@@ -836,7 +842,7 @@ class EnhancedGlobalApp:
         try:
             # Create enhanced capture dialog
             dialog = tk.Toplevel(self.root)
-            dialog.title("🎯 Captured Text - Add Tags & Notes")
+            dialog.title("Captured Text")
             dialog.geometry("700x600")
             dialog.attributes('-topmost', True)
             dialog.configure(bg='#f8f9fa')
@@ -909,7 +915,7 @@ class EnhancedGlobalApp:
                 dialog.destroy()
 
             save_btn = tk.Button(button_frame,
-                               text="💾 Save Highlight",
+                               text="Save",
                                command=save_highlight,
                                bg='#27ae60', fg='white',
                                font=('Arial', 12, 'bold'),
@@ -918,7 +924,7 @@ class EnhancedGlobalApp:
 
             # Cancel button
             cancel_btn = tk.Button(button_frame,
-                                 text="❌ Cancel",
+                                 text="Cancel",
                                  command=dialog.destroy,
                                  bg='#e74c3c', fg='white',
                                  font=('Arial', 12, 'bold'),
@@ -934,7 +940,7 @@ class EnhancedGlobalApp:
         """Show failure message for immediate capture."""
         try:
             error_window = tk.Toplevel(self.root)
-            error_window.title("❌ No Text Selected")
+            error_window.title("No Text Selected")
             error_window.geometry("500x350")
             error_window.attributes('-topmost', True)
             error_window.configure(bg='#f8f9fa')
@@ -946,33 +952,19 @@ class EnhancedGlobalApp:
                                  bg='#f8f9fa', fg='#e74c3c')
             title_label.pack(pady=15)
 
-            # Instructions
-            instructions_text = (
-                "📝 How to use the button correctly:\n\n"
-                "1️⃣ First: Go to any application (Word, PDF, browser)\n"
-                "2️⃣ Second: Select text with your mouse (highlight it)\n"
-                "3️⃣ Third: Come back here and click the button\n"
-                "4️⃣ Fourth: Text should be captured automatically\n\n"
-                "🔧 Troubleshooting:\n"
-                "• Make sure text stays selected when you switch apps\n"
-                "• Try selecting at least 3-4 characters\n"
-                "• Some applications may not allow text copying\n"
-                "• Test with Notepad first to verify it works"
-            )
-
-            instructions_label = tk.Label(error_window,
-                                        text=instructions_text,
-                                        font=('Arial', 10),
-                                        bg='#f8f9fa', fg='#2c3e50',
-                                        justify=tk.LEFT)
-            instructions_label.pack(pady=10, padx=20)
+            # Professional message
+            message_label = tk.Label(error_window,
+                                   text="Select text in any application, then click Capture Text.",
+                                   font=('Arial', 11),
+                                   bg='#f8f9fa', fg='#2c3e50')
+            message_label.pack(pady=20, padx=20)
 
             # Try again button
             button_frame = tk.Frame(error_window, bg='#f8f9fa')
             button_frame.pack(pady=15)
 
             try_again_btn = tk.Button(button_frame,
-                                    text="🔄 Try Again",
+                                    text="Try Again",
                                     command=lambda: [error_window.destroy(), self.capture_highlight_manual()],
                                     bg='#3498db', fg='white',
                                     font=('Arial', 11, 'bold'),
@@ -980,7 +972,7 @@ class EnhancedGlobalApp:
             try_again_btn.pack(side=tk.LEFT, padx=10)
 
             close_btn = tk.Button(button_frame,
-                                text="❌ Close",
+                                text="Close",
                                 command=error_window.destroy,
                                 bg='#95a5a6', fg='white',
                                 font=('Arial', 11, 'bold'),
@@ -1033,8 +1025,8 @@ class EnhancedGlobalApp:
             with open(master_file, 'a', encoding='utf-8') as f:
                 f.write(json.dumps(highlight_data, ensure_ascii=False) + '\n')
 
-            # Show success message
-            self._show_save_success(highlight_data)
+            # Log success (no popup)
+            logger.info(f"✅ Saved highlight: {len(highlight_data['text'])} chars, priority: {highlight_data['priority']}")
 
             logger.info(f"Saved priority highlight: {len(text)} chars, priority: {is_priority}")
 
@@ -1042,66 +1034,7 @@ class EnhancedGlobalApp:
             logger.error(f"Save priority highlight error: {e}")
             messagebox.showerror("Save Error", f"Failed to save highlight: {e}")
 
-    def _show_save_success(self, highlight_data):
-        """Show success message after saving highlight."""
-        try:
-            success_window = tk.Toplevel(self.root)
-            success_window.title("✅ Highlight Saved!")
-            success_window.geometry("400x250")
-            success_window.attributes('-topmost', True)
-            success_window.configure(bg='#d5f4e6')
 
-            # Center the window
-            x = self.root.winfo_screenwidth() // 2 - 200
-            y = self.root.winfo_screenheight() // 2 - 125
-            success_window.geometry(f"+{x}+{y}")
-
-            # Success message
-            title_label = tk.Label(success_window,
-                                 text="✅ Highlight Saved Successfully!",
-                                 font=('Arial', 14, 'bold'),
-                                 bg='#d5f4e6', fg='#27ae60')
-            title_label.pack(pady=15)
-
-            # Details
-            details_text = (
-                f"📝 Text: {len(highlight_data['text'])} characters\n"
-                f"🏷️ Tags: {', '.join(highlight_data['tags']) if highlight_data['tags'] else 'None'}\n"
-                f"📝 Notes: {'Yes' if highlight_data['notes'] else 'None'}\n"
-                f"⭐ Priority: {'High (shows first)' if highlight_data['priority'] == 'high' else 'Normal'}\n"
-                f"📱 Source: {highlight_data['source']['window_title']}"
-            )
-
-            details_label = tk.Label(success_window,
-                                   text=details_text,
-                                   font=('Arial', 10),
-                                   bg='#d5f4e6', fg='#2c3e50',
-                                   justify=tk.LEFT)
-            details_label.pack(pady=10, padx=20)
-
-            # Info about search priority
-            if highlight_data['priority'] == 'high':
-                priority_info = tk.Label(success_window,
-                                       text="🎯 This highlight will appear FIRST in search results!",
-                                       font=('Arial', 10, 'bold'),
-                                       bg='#d5f4e6', fg='#e67e22')
-                priority_info.pack(pady=5)
-
-            # Close button
-            close_btn = tk.Button(success_window,
-                                text="✅ Great!",
-                                command=success_window.destroy,
-                                bg='#27ae60', fg='white',
-                                font=('Arial', 11, 'bold'),
-                                padx=20, pady=5)
-            close_btn.pack(pady=15)
-
-            # Auto-close after 5 seconds
-            self.root.after(5000, lambda: success_window.destroy() if success_window.winfo_exists() else None)
-
-        except Exception as e:
-            logger.error(f"Show save success error: {e}")
-            messagebox.showinfo("Success", "Highlight saved successfully!")
 
 
     def on_text_detected(self, text: str):
