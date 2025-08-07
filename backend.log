@@ -2706,3 +2706,76 @@
 2025-08-03 18:13:17,374 - folder_manager - INFO - Monitoring 2 folders
 2025-08-03 18:13:17,380 - api_service - INFO - API server started successfully
 2025-08-03 18:13:17,419 - folder_manager - INFO - Starting background document processor...
+2025-08-07 13:03:02,873 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-07 13:03:28,858 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-07 13:03:28,867 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-07 13:03:30,742 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-07 13:03:30,920 - main - INFO - Initializing document search backend...
+2025-08-07 13:03:30,920 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-07 13:03:30,925 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-07 13:03:30,926 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-07 13:03:36,766 - database - INFO - Connected to existing table: documents
+2025-08-07 13:03:36,766 - database - INFO - Vector store initialized successfully
+2025-08-07 13:03:36,774 - document_processor - INFO - Document processor initialized
+2025-08-07 13:03:36,872 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-07 13:03:36,872 - folder_manager - INFO - Starting folder monitoring...
+2025-08-07 13:03:36,872 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-07 13:03:36,872 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-07 13:03:36,880 - folder_manager - INFO - Monitoring 2 folders
+2025-08-07 13:03:36,880 - api_service - INFO - API server started successfully
+2025-08-07 13:03:36,903 - folder_manager - INFO - Starting background document processor...
+2025-08-07 13:15:14,651 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-07 13:15:28,264 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-07 13:15:28,276 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-07 13:15:29,117 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-07 13:15:29,133 - main - INFO - Initializing document search backend...
+2025-08-07 13:15:29,133 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-07 13:15:29,141 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-07 13:15:29,141 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-07 13:15:33,687 - database - INFO - Connected to existing table: documents
+2025-08-07 13:15:33,687 - database - INFO - Vector store initialized successfully
+2025-08-07 13:15:33,687 - document_processor - INFO - Document processor initialized
+2025-08-07 13:15:33,834 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-07 13:15:33,834 - folder_manager - INFO - Starting folder monitoring...
+2025-08-07 13:15:33,834 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-07 13:15:33,834 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-07 13:15:33,834 - folder_manager - INFO - Monitoring 2 folders
+2025-08-07 13:15:33,842 - api_service - INFO - API server started successfully
+2025-08-07 13:15:33,858 - folder_manager - INFO - Starting background document processor...
+2025-08-08 02:02:51,438 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-08 02:03:32,241 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-08 02:03:32,279 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-08 02:03:34,205 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-08 02:03:34,531 - main - INFO - Initializing document search backend...
+2025-08-08 02:03:34,531 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-08 02:03:34,536 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-08 02:03:34,537 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-08 02:03:39,493 - database - INFO - Connected to existing table: documents
+2025-08-08 02:03:39,493 - database - INFO - Vector store initialized successfully
+2025-08-08 02:03:39,496 - document_processor - INFO - Document processor initialized
+2025-08-08 02:03:39,667 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-08 02:03:39,667 - folder_manager - INFO - Starting folder monitoring...
+2025-08-08 02:03:39,668 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-08 02:03:39,671 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-08 02:03:39,672 - folder_manager - INFO - Monitoring 2 folders
+2025-08-08 02:03:39,681 - api_service - INFO - API server started successfully
+2025-08-08 02:03:39,717 - folder_manager - INFO - Starting background document processor...
+2025-08-08 02:12:24,785 - __main__ - INFO - Starting Semantic Search Assistant backend...
+2025-08-08 02:12:41,987 - datasets - INFO - PyTorch version 2.4.0 available.
+2025-08-08 02:12:41,995 - datasets - INFO - JAX version 0.5.2 available.
+2025-08-08 02:12:43,074 - folder_manager - INFO - Loaded 2 connected folders
+2025-08-08 02:12:43,099 - main - INFO - Initializing document search backend...
+2025-08-08 02:12:43,099 - database - INFO - Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+2025-08-08 02:12:43,099 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-08 02:12:43,099 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-08-08 02:12:47,544 - database - INFO - Connected to existing table: documents
+2025-08-08 02:12:47,549 - database - INFO - Vector store initialized successfully
+2025-08-08 02:12:47,549 - document_processor - INFO - Document processor initialized
+2025-08-08 02:12:47,679 - main - INFO - Added test_docs folder to monitoring: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-08 02:12:47,679 - folder_manager - INFO - Starting folder monitoring...
+2025-08-08 02:12:47,679 - folder_manager - INFO - Started monitoring folder: C:\Users\Abdul Wasay\OneDrive\Desktop\BilalProject\Semantic_Search_Assistant\test_docs
+2025-08-08 02:12:47,687 - folder_manager - WARNING - Folder does not exist, skipping monitoring: E:\PROJECT\Semantic_Search_Assistant\test_docs
+2025-08-08 02:12:47,687 - folder_manager - INFO - Monitoring 2 folders
+2025-08-08 02:12:47,696 - api_service - INFO - API server started successfully
+2025-08-08 02:12:47,729 - folder_manager - INFO - Starting background document processor...
+2025-08-08 02:35:27,154 - __main__ - INFO - Starting Semantic Search Assistant backend...

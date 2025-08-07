@@ -309,7 +309,7 @@ class EnhancedGlobalApp:
 
         # Add helpful tooltip-style label
         if HIGHLIGHT_CAPTURE_AVAILABLE:
-            tooltip_text = "Select text anywhere → Click this button → Add tags & notes"
+            tooltip_text = "1. Click button → 2. Go select text → 3. Text captured automatically"
         else:
             tooltip_text = "Install packages: pip install keyboard pyperclip pywin32"
 
@@ -474,100 +474,281 @@ class EnhancedGlobalApp:
             self.current_word_display.config(text="(not monitoring)", foreground="gray")
 
     def capture_highlight_manual(self):
-        """Manually capture highlighted text using button click - NO HOTKEY CONFLICTS!"""
+        """Start capture mode - user will select text after clicking button."""
         if not self.highlight_capture:
             messagebox.showerror("Error", "Highlight capture not available.\n\nInstall required packages:\npip install keyboard pyperclip pywin32")
             return
 
         try:
-            # Create a more user-friendly instruction window
-            instruction_window = tk.Toplevel(self.root)
-            instruction_window.title("🎯 Capture Selected Text")
-            instruction_window.geometry("500x350")
-            instruction_window.attributes('-topmost', True)
-            instruction_window.configure(bg='#f0f0f0')
-
-            # Center the window
-            instruction_window.transient(self.root)
-            instruction_window.grab_set()
-
-            # Title
-            title_label = tk.Label(instruction_window,
-                                 text="🎯 Capture Selected Text",
-                                 font=('Arial', 16, 'bold'),
-                                 bg='#f0f0f0', fg='#2c3e50')
-            title_label.pack(pady=20)
-
-            # Instructions
-            instructions = tk.Label(instruction_window,
-                                  text="📝 How to capture text:\n\n"
-                                       "1️⃣ Go to any application (Word, PDF, browser, etc.)\n"
-                                       "2️⃣ Select text with your mouse (highlight it)\n"
-                                       "3️⃣ Come back here and click 'Capture Now'\n"
-                                       "4️⃣ Add your tags and notes\n\n"
-                                       "✅ Works with ALL applications\n"
-                                       "✅ No hotkey conflicts\n"
-                                       "✅ No keyboard shortcuts needed",
-                                  font=('Arial', 11),
-                                  bg='#f0f0f0', fg='#34495e',
-                                  justify=tk.LEFT)
-            instructions.pack(pady=20, padx=30)
-
-            # Button frame
-            button_frame = tk.Frame(instruction_window, bg='#f0f0f0')
-            button_frame.pack(pady=20)
-
-            # Capture button
-            capture_btn = tk.Button(button_frame,
-                                  text="🎯 Capture Now",
-                                  command=lambda: self._start_capture_process(instruction_window),
-                                  bg='#27ae60', fg='white',
-                                  font=('Arial', 12, 'bold'),
-                                  padx=30, pady=10)
-            capture_btn.pack(side=tk.LEFT, padx=10)
-
-            # Cancel button
-            cancel_btn = tk.Button(button_frame,
-                                 text="❌ Cancel",
-                                 command=instruction_window.destroy,
-                                 bg='#e74c3c', fg='white',
-                                 font=('Arial', 12, 'bold'),
-                                 padx=30, pady=10)
-            cancel_btn.pack(side=tk.LEFT, padx=10)
+            # Show instruction and start capture mode
+            self._start_capture_mode()
 
         except Exception as e:
             logger.error(f"Manual highlight capture error: {e}")
-            messagebox.showerror("Error", f"Failed to open capture dialog: {e}")
+            messagebox.showerror("Error", f"Failed to start capture: {e}")
 
-    def _start_capture_process(self, instruction_window):
-        """Start the capture process after user clicks capture button."""
+    def _start_capture_mode(self):
+        """Start capture mode - show instruction and wait for text selection."""
         try:
-            instruction_window.destroy()
+            # Create capture mode window
+            self.capture_window = tk.Toplevel(self.root)
+            self.capture_window.title("🎯 Capture Mode Active")
+            self.capture_window.geometry("500x350")
+            self.capture_window.attributes('-topmost', True)
+            self.capture_window.configure(bg='#e8f5e8')
 
-            # Show a brief "capturing..." message
-            capture_msg = tk.Toplevel(self.root)
-            capture_msg.title("Capturing...")
-            capture_msg.geometry("300x100")
-            capture_msg.attributes('-topmost', True)
-            capture_msg.configure(bg='#3498db')
+            # Center the window
+            x = self.root.winfo_screenwidth() // 2 - 250
+            y = self.root.winfo_screenheight() // 2 - 175
+            self.capture_window.geometry(f"+{x}+{y}")
 
-            msg_label = tk.Label(capture_msg,
-                               text="🔄 Capturing selected text...\nPlease wait...",
-                               bg='#3498db', fg='white',
+            # Title
+            title_label = tk.Label(self.capture_window,
+                                 text="🎯 Capture Mode Active!",
+                                 font=('Arial', 16, 'bold'),
+                                 bg='#e8f5e8', fg='#27ae60')
+            title_label.pack(pady=20)
+
+            # Instructions
+            instructions_text = (
+                "📝 Now select text in any application:\n\n"
+                "1️⃣ Go to Word, PDF, browser, or any app\n"
+                "2️⃣ Select text with your mouse\n"
+                "3️⃣ Text will be captured automatically!\n\n"
+                "💡 This window will stay on top so you can\n"
+                "see when text is captured."
+            )
+
+            instructions_label = tk.Label(self.capture_window,
+                                        text=instructions_text,
+                                        font=('Arial', 12),
+                                        bg='#e8f5e8', fg='#2c3e50',
+                                        justify=tk.CENTER)
+            instructions_label.pack(pady=15)
+
+            # Status label
+            self.capture_status_label = tk.Label(self.capture_window,
+                                                text="⏳ Waiting for text selection...",
+                                                font=('Arial', 11, 'bold'),
+                                                bg='#e8f5e8', fg='#f39c12')
+            self.capture_status_label.pack(pady=10)
+
+            # Activity indicator
+            self.activity_label = tk.Label(self.capture_window,
+                                         text="🔍 Monitoring active - select text in any app",
+                                         font=('Arial', 9),
+                                         bg='#e8f5e8', fg='#666666')
+            self.activity_label.pack(pady=5)
+
+            # Button frame
+            button_frame = tk.Frame(self.capture_window, bg='#e8f5e8')
+            button_frame.pack(pady=20)
+
+            # Stop capture button
+            stop_btn = tk.Button(button_frame,
+                               text="🛑 Stop Capture Mode",
+                               command=self._stop_capture_mode,
+                               bg='#e74c3c', fg='white',
+                               font=('Arial', 12, 'bold'),
+                               padx=20, pady=8)
+            stop_btn.pack()
+
+            # Start monitoring clipboard for changes
+            self.capture_active = True
+            self.last_clipboard = ""
+            try:
+                self.last_clipboard = pyperclip.paste()
+            except:
+                pass
+
+            # Start monitoring
+            logger.info("Starting text selection monitoring...")
+            self._monitor_clipboard()
+
+        except Exception as e:
+            logger.error(f"Start capture mode error: {e}")
+            messagebox.showerror("Error", f"Failed to start capture mode: {e}")
+
+    def _monitor_clipboard(self):
+        """Monitor for text selection by trying to copy selected text."""
+        if not self.capture_active or not hasattr(self, 'capture_window') or not self.capture_window.winfo_exists():
+            return
+
+        try:
+            # Save current clipboard
+            original_clipboard = ""
+            try:
+                original_clipboard = pyperclip.paste()
+            except:
+                pass
+
+            # Try to copy currently selected text
+            try:
+                # Send Ctrl+C to copy any selected text
+                keyboard.send('ctrl+c')
+                time.sleep(0.1)  # Brief wait for copy operation
+
+                # Check if clipboard changed
+                new_clipboard = pyperclip.paste()
+
+                # If clipboard changed and has meaningful content
+                if (new_clipboard != original_clipboard and
+                    new_clipboard and
+                    len(new_clipboard.strip()) >= 3):
+
+                    # Text was selected and copied!
+                    self._text_captured(new_clipboard.strip())
+                    return
+                else:
+                    # Restore original clipboard if nothing was selected
+                    try:
+                        pyperclip.copy(original_clipboard)
+                    except:
+                        pass
+
+            except Exception as copy_error:
+                logger.debug(f"Copy attempt error: {copy_error}")
+                # Restore original clipboard
+                try:
+                    pyperclip.copy(original_clipboard)
+                except:
+                    pass
+
+            # Continue monitoring
+            self.root.after(1000, self._monitor_clipboard)
+
+        except Exception as e:
+            logger.error(f"Monitor clipboard error: {e}")
+            # Continue monitoring even if there's an error
+            self.root.after(2000, self._monitor_clipboard)
+
+    def _text_captured(self, captured_text):
+        """Handle when text is captured."""
+        try:
+            # Update status
+            if hasattr(self, 'capture_status_label') and self.capture_status_label.winfo_exists():
+                self.capture_status_label.config(text=f"✅ Captured {len(captured_text)} characters!",
+                                                fg='#27ae60')
+
+            # Stop capture mode
+            self.capture_active = False
+
+            # Close capture window after a brief delay
+            self.root.after(1500, self._close_capture_window)
+
+            # Get source info
+            source_info = self._get_source_application_info()
+
+            # Show capture dialog
+            self.root.after(1600, lambda: self._show_priority_capture_dialog(captured_text, source_info))
+
+        except Exception as e:
+            logger.error(f"Text captured error: {e}")
+            self._stop_capture_mode()
+
+    def _close_capture_window(self):
+        """Close the capture window."""
+        try:
+            if hasattr(self, 'capture_window') and self.capture_window.winfo_exists():
+                self.capture_window.destroy()
+        except:
+            pass
+
+    def _stop_capture_mode(self):
+        """Stop capture mode."""
+        try:
+            self.capture_active = False
+            if hasattr(self, 'capture_window') and self.capture_window.winfo_exists():
+                self.capture_window.destroy()
+        except:
+            pass
+
+
+
+
+
+    def _process_captured_text(self, captured_text):
+        """Process the captured selected text."""
+        try:
+            # Show success message briefly
+            success_msg = tk.Toplevel(self.root)
+            success_msg.title("✅ Text Captured!")
+            success_msg.geometry("300x80")
+            success_msg.attributes('-topmost', True)
+            success_msg.configure(bg='#27ae60')
+
+            msg_label = tk.Label(success_msg,
+                               text=f"✅ Captured {len(captured_text)} characters!",
+                               bg='#27ae60', fg='white',
                                font=('Arial', 12, 'bold'))
             msg_label.pack(expand=True)
 
-            # Center the message
+            # Center and auto-close
             x = self.root.winfo_screenwidth() // 2 - 150
-            y = self.root.winfo_screenheight() // 2 - 50
-            capture_msg.geometry(f"+{x}+{y}")
+            y = self.root.winfo_screenheight() // 2 - 40
+            success_msg.geometry(f"+{x}+{y}")
 
-            # Perform capture after a short delay
-            self.root.after(1000, lambda: self._perform_capture(capture_msg))
+            self.root.after(1500, lambda: success_msg.destroy() if success_msg.winfo_exists() else None)
+
+            # Get source info
+            source_info = self._get_source_application_info()
+
+            # Show the priority capture dialog
+            self.root.after(1600, lambda: self._show_priority_capture_dialog(captured_text, source_info))
 
         except Exception as e:
-            logger.error(f"Start capture process error: {e}")
-            messagebox.showerror("Error", f"Failed to start capture: {e}")
+            logger.error(f"Process captured text error: {e}")
+            messagebox.showerror("Error", f"Failed to process text: {e}")
+
+
+
+
+
+    def _get_source_application_info(self):
+        """Get information about the source application where text was selected."""
+        try:
+            import win32gui
+
+            # Get all windows to find the most likely source
+            windows = []
+
+            def enum_windows_callback(hwnd, windows):
+                if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd):
+                    windows.append((hwnd, win32gui.GetWindowText(hwnd), win32gui.GetClassName(hwnd)))
+                return True
+
+            win32gui.EnumWindows(enum_windows_callback, windows)
+
+            # Filter out our own windows and find likely source
+            for hwnd, title, class_name in windows:
+                if not self.highlight_capture._is_our_own_window(title):
+                    # This is likely the source application
+                    return {
+                        'window_title': title,
+                        'application': class_name,
+                        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'capture_method': 'Manual Button Click',
+                        'priority': 'high'  # Mark as high priority
+                    }
+
+            # Fallback if no suitable window found
+            return {
+                'window_title': 'Unknown Application',
+                'application': 'Manual Capture',
+                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'capture_method': 'Manual Button Click',
+                'priority': 'high'
+            }
+
+        except Exception as e:
+            logger.error(f"Get source info error: {e}")
+            return {
+                'window_title': 'Manual Capture',
+                'application': 'User Selected',
+                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'capture_method': 'Manual Button Click',
+                'priority': 'high'
+            }
 
     def _perform_capture(self, capture_msg=None):
         """Perform the actual capture after delay."""
@@ -650,61 +831,277 @@ class EnhancedGlobalApp:
         except Exception as e:
             logger.error(f"Show success message error: {e}")
 
-    def _show_capture_failure(self):
-        """Show helpful failure message with troubleshooting."""
+    def _show_priority_capture_dialog(self, captured_text, source_info):
+        """Show capture dialog with priority highlighting option."""
+        try:
+            # Create enhanced capture dialog
+            dialog = tk.Toplevel(self.root)
+            dialog.title("🎯 Captured Text - Add Tags & Notes")
+            dialog.geometry("700x600")
+            dialog.attributes('-topmost', True)
+            dialog.configure(bg='#f8f9fa')
+
+            # Center the dialog
+            x = self.root.winfo_screenwidth() // 2 - 350
+            y = self.root.winfo_screenheight() // 2 - 300
+            dialog.geometry(f"+{x}+{y}")
+
+            # Title with source info
+            title_text = f"🎯 Captured from: {source_info.get('window_title', 'Unknown')}"
+            title_label = tk.Label(dialog, text=title_text,
+                                 font=('Arial', 14, 'bold'),
+                                 bg='#f8f9fa', fg='#2c3e50')
+            title_label.pack(pady=15)
+
+            # Captured text display
+            text_frame = tk.LabelFrame(dialog, text="📝 Captured Text:",
+                                     font=('Arial', 12, 'bold'))
+            text_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
+
+            text_display = tk.Text(text_frame, wrap=tk.WORD, font=('Arial', 11),
+                                 height=8, bg='#ffffff', relief='sunken', bd=2)
+            text_display.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+            text_display.insert('1.0', captured_text)
+            text_display.config(state='disabled')
+
+            # Priority checkbox (checked by default for manual captures)
+            priority_frame = tk.Frame(dialog, bg='#f8f9fa')
+            priority_frame.pack(fill=tk.X, padx=20, pady=5)
+
+            priority_var = tk.BooleanVar(value=True)  # Default to high priority
+            priority_check = tk.Checkbutton(priority_frame,
+                                          text="⭐ High Priority (show first in search results)",
+                                          variable=priority_var,
+                                          font=('Arial', 11, 'bold'),
+                                          bg='#f8f9fa', fg='#e67e22')
+            priority_check.pack(anchor='w')
+
+            # Tags input
+            tags_frame = tk.LabelFrame(dialog, text="🏷️ Tags (comma-separated):",
+                                     font=('Arial', 11, 'bold'))
+            tags_frame.pack(fill=tk.X, padx=20, pady=5)
+
+            tags_entry = tk.Entry(tags_frame, font=('Arial', 11), relief='sunken', bd=2)
+            tags_entry.pack(fill=tk.X, padx=10, pady=8)
+            tags_entry.focus()  # Focus on tags for quick entry
+
+            # Notes input
+            notes_frame = tk.LabelFrame(dialog, text="📝 Personal Notes:",
+                                      font=('Arial', 11, 'bold'))
+            notes_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=5)
+
+            notes_text = tk.Text(notes_frame, wrap=tk.WORD, font=('Arial', 11),
+                                height=4, relief='sunken', bd=2)
+            notes_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
+
+            # Button frame
+            button_frame = tk.Frame(dialog, bg='#f8f9fa')
+            button_frame.pack(fill=tk.X, padx=20, pady=15)
+
+            # Save button
+            def save_highlight():
+                tags = tags_entry.get().strip()
+                notes = notes_text.get('1.0', tk.END).strip()
+                is_priority = priority_var.get()
+
+                # Save with priority information
+                self._save_priority_highlight(captured_text, tags, notes, source_info, is_priority)
+                dialog.destroy()
+
+            save_btn = tk.Button(button_frame,
+                               text="💾 Save Highlight",
+                               command=save_highlight,
+                               bg='#27ae60', fg='white',
+                               font=('Arial', 12, 'bold'),
+                               padx=25, pady=8)
+            save_btn.pack(side=tk.LEFT, padx=5)
+
+            # Cancel button
+            cancel_btn = tk.Button(button_frame,
+                                 text="❌ Cancel",
+                                 command=dialog.destroy,
+                                 bg='#e74c3c', fg='white',
+                                 font=('Arial', 12, 'bold'),
+                                 padx=25, pady=8)
+            cancel_btn.pack(side=tk.RIGHT, padx=5)
+
+        except Exception as e:
+            logger.error(f"Show priority capture dialog error: {e}")
+            # Fallback to original dialog
+            self.highlight_capture.show_capture_dialog(captured_text, source_info)
+
+    def _show_immediate_capture_failure(self):
+        """Show failure message for immediate capture."""
         try:
             error_window = tk.Toplevel(self.root)
-            error_window.title("❌ No Text Captured")
-            error_window.geometry("450x300")
+            error_window.title("❌ No Text Selected")
+            error_window.geometry("500x350")
             error_window.attributes('-topmost', True)
             error_window.configure(bg='#f8f9fa')
 
             # Title
             title_label = tk.Label(error_window,
-                                 text="❌ No Text Captured",
+                                 text="❌ No Text Was Selected",
                                  font=('Arial', 14, 'bold'),
                                  bg='#f8f9fa', fg='#e74c3c')
             title_label.pack(pady=15)
 
-            # Troubleshooting tips
-            tips_text = (
-                "🔧 Troubleshooting Tips:\n\n"
-                "✅ Make sure text is selected (highlighted in blue)\n"
-                "✅ Select at least 3-4 characters\n"
-                "✅ Keep text selected when clicking 'Capture Now'\n"
-                "✅ Try manually pressing Ctrl+C first to test\n\n"
-                "📱 Application-specific tips:\n"
-                "• Word/Notepad: Should work perfectly\n"
-                "• PDF files: Make sure text is selectable\n"
-                "• Web pages: Some sites block copying\n"
-                "• Secure apps: May prevent text copying"
+            # Instructions
+            instructions_text = (
+                "📝 How to use the button correctly:\n\n"
+                "1️⃣ First: Go to any application (Word, PDF, browser)\n"
+                "2️⃣ Second: Select text with your mouse (highlight it)\n"
+                "3️⃣ Third: Come back here and click the button\n"
+                "4️⃣ Fourth: Text should be captured automatically\n\n"
+                "🔧 Troubleshooting:\n"
+                "• Make sure text stays selected when you switch apps\n"
+                "• Try selecting at least 3-4 characters\n"
+                "• Some applications may not allow text copying\n"
+                "• Test with Notepad first to verify it works"
             )
 
-            tips_label = tk.Label(error_window,
-                                text=tips_text,
-                                font=('Arial', 10),
-                                bg='#f8f9fa', fg='#2c3e50',
-                                justify=tk.LEFT)
-            tips_label.pack(pady=10, padx=20)
+            instructions_label = tk.Label(error_window,
+                                        text=instructions_text,
+                                        font=('Arial', 10),
+                                        bg='#f8f9fa', fg='#2c3e50',
+                                        justify=tk.LEFT)
+            instructions_label.pack(pady=10, padx=20)
+
+            # Try again button
+            button_frame = tk.Frame(error_window, bg='#f8f9fa')
+            button_frame.pack(pady=15)
+
+            try_again_btn = tk.Button(button_frame,
+                                    text="🔄 Try Again",
+                                    command=lambda: [error_window.destroy(), self.capture_highlight_manual()],
+                                    bg='#3498db', fg='white',
+                                    font=('Arial', 11, 'bold'),
+                                    padx=20, pady=5)
+            try_again_btn.pack(side=tk.LEFT, padx=10)
+
+            close_btn = tk.Button(button_frame,
+                                text="❌ Close",
+                                command=error_window.destroy,
+                                bg='#95a5a6', fg='white',
+                                font=('Arial', 11, 'bold'),
+                                padx=20, pady=5)
+            close_btn.pack(side=tk.LEFT, padx=10)
+
+        except Exception as e:
+            logger.error(f"Show immediate failure message error: {e}")
+            messagebox.showwarning("No Text Selected",
+                                 "Please select text first, then click the button.\n\n"
+                                 "Steps:\n"
+                                 "1. Select text in any application\n"
+                                 "2. Come back here\n"
+                                 "3. Click the capture button")
+
+    def _save_priority_highlight(self, text, tags, notes, source_info, is_priority):
+        """Save highlight with priority information for search results."""
+        try:
+            import json
+            import os
+            from datetime import datetime
+
+            # Create highlights directory if it doesn't exist
+            highlights_dir = Path("highlights")
+            highlights_dir.mkdir(exist_ok=True)
+
+            # Create highlight data
+            highlight_data = {
+                'id': f"highlight_{int(time.time())}_{hash(text) % 10000}",
+                'text': text,
+                'tags': [tag.strip() for tag in tags.split(',') if tag.strip()],
+                'notes': notes,
+                'source': source_info,
+                'priority': 'high' if is_priority else 'normal',
+                'created_at': datetime.now().isoformat(),
+                'type': 'manual_highlight',
+                'length': len(text),
+                'word_count': len(text.split())
+            }
+
+            # Save to individual file
+            filename = f"highlight_{highlight_data['id']}.json"
+            filepath = highlights_dir / filename
+
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(highlight_data, f, indent=2, ensure_ascii=False)
+
+            # Also append to master highlights file for quick access
+            master_file = highlights_dir / "all_highlights.jsonl"
+            with open(master_file, 'a', encoding='utf-8') as f:
+                f.write(json.dumps(highlight_data, ensure_ascii=False) + '\n')
+
+            # Show success message
+            self._show_save_success(highlight_data)
+
+            logger.info(f"Saved priority highlight: {len(text)} chars, priority: {is_priority}")
+
+        except Exception as e:
+            logger.error(f"Save priority highlight error: {e}")
+            messagebox.showerror("Save Error", f"Failed to save highlight: {e}")
+
+    def _show_save_success(self, highlight_data):
+        """Show success message after saving highlight."""
+        try:
+            success_window = tk.Toplevel(self.root)
+            success_window.title("✅ Highlight Saved!")
+            success_window.geometry("400x250")
+            success_window.attributes('-topmost', True)
+            success_window.configure(bg='#d5f4e6')
+
+            # Center the window
+            x = self.root.winfo_screenwidth() // 2 - 200
+            y = self.root.winfo_screenheight() // 2 - 125
+            success_window.geometry(f"+{x}+{y}")
+
+            # Success message
+            title_label = tk.Label(success_window,
+                                 text="✅ Highlight Saved Successfully!",
+                                 font=('Arial', 14, 'bold'),
+                                 bg='#d5f4e6', fg='#27ae60')
+            title_label.pack(pady=15)
+
+            # Details
+            details_text = (
+                f"📝 Text: {len(highlight_data['text'])} characters\n"
+                f"🏷️ Tags: {', '.join(highlight_data['tags']) if highlight_data['tags'] else 'None'}\n"
+                f"📝 Notes: {'Yes' if highlight_data['notes'] else 'None'}\n"
+                f"⭐ Priority: {'High (shows first)' if highlight_data['priority'] == 'high' else 'Normal'}\n"
+                f"📱 Source: {highlight_data['source']['window_title']}"
+            )
+
+            details_label = tk.Label(success_window,
+                                   text=details_text,
+                                   font=('Arial', 10),
+                                   bg='#d5f4e6', fg='#2c3e50',
+                                   justify=tk.LEFT)
+            details_label.pack(pady=10, padx=20)
+
+            # Info about search priority
+            if highlight_data['priority'] == 'high':
+                priority_info = tk.Label(success_window,
+                                       text="🎯 This highlight will appear FIRST in search results!",
+                                       font=('Arial', 10, 'bold'),
+                                       bg='#d5f4e6', fg='#e67e22')
+                priority_info.pack(pady=5)
 
             # Close button
-            close_btn = tk.Button(error_window,
-                                text="OK",
-                                command=error_window.destroy,
-                                bg='#3498db', fg='white',
+            close_btn = tk.Button(success_window,
+                                text="✅ Great!",
+                                command=success_window.destroy,
+                                bg='#27ae60', fg='white',
                                 font=('Arial', 11, 'bold'),
                                 padx=20, pady=5)
             close_btn.pack(pady=15)
 
+            # Auto-close after 5 seconds
+            self.root.after(5000, lambda: success_window.destroy() if success_window.winfo_exists() else None)
+
         except Exception as e:
-            logger.error(f"Show failure message error: {e}")
-            # Fallback to simple messagebox
-            messagebox.showwarning("No Text Captured",
-                                 "No text was captured or text was too short.\n\n"
-                                 "Make sure to:\n"
-                                 "• Select text with your mouse\n"
-                                 "• Keep the text selected\n"
-                                 "• Try selecting at least 3-4 characters")
+            logger.error(f"Show save success error: {e}")
+            messagebox.showinfo("Success", "Highlight saved successfully!")
 
 
     def on_text_detected(self, text: str):
@@ -725,12 +1122,85 @@ class EnhancedGlobalApp:
             threading.Thread(target=self._search_background, args=(text,), daemon=True).start()
             
     def _search_background(self, query: str):
-        """Search in background."""
+        """Search in background with priority highlights first."""
         try:
+            # Get regular search results
             results = self.search_api.search(query)
-            self.root.after(0, lambda: self._update_results(query, results))
+
+            # Get priority highlights that match the query
+            priority_highlights = self._search_priority_highlights(query)
+
+            # Combine results with priority highlights first
+            combined_results = priority_highlights + results
+
+            self.root.after(0, lambda: self._update_results(query, combined_results))
         except Exception as e:
             logger.error(f"Search error: {e}")
+
+    def _search_priority_highlights(self, query: str):
+        """Search through saved priority highlights."""
+        try:
+            import json
+            from pathlib import Path
+
+            highlights_dir = Path("highlights")
+            if not highlights_dir.exists():
+                return []
+
+            master_file = highlights_dir / "all_highlights.jsonl"
+            if not master_file.exists():
+                return []
+
+            matching_highlights = []
+            query_lower = query.lower()
+
+            with open(master_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        highlight = json.loads(line.strip())
+
+                        # Only include high priority highlights
+                        if highlight.get('priority') != 'high':
+                            continue
+
+                        # Check if query matches text, tags, or notes
+                        text_match = query_lower in highlight.get('text', '').lower()
+                        tags_match = any(query_lower in tag.lower() for tag in highlight.get('tags', []))
+                        notes_match = query_lower in highlight.get('notes', '').lower()
+
+                        if text_match or tags_match or notes_match:
+                            # Convert to search result format
+                            search_result = {
+                                'id': highlight['id'],
+                                'content': highlight['text'],
+                                'source': f"📌 Priority Highlight from {highlight['source']['window_title']}",
+                                'similarity': 1.0,  # High similarity for exact matches
+                                'is_priority_highlight': True,
+                                'tags': highlight.get('tags', []),
+                                'notes': highlight.get('notes', ''),
+                                'created_at': highlight.get('created_at'),
+                                'metadata': {
+                                    'type': 'priority_highlight',
+                                    'source_app': highlight['source']['window_title'],
+                                    'tags': highlight.get('tags', []),
+                                    'notes': highlight.get('notes', ''),
+                                    'priority': True
+                                }
+                            }
+                            matching_highlights.append(search_result)
+
+                    except json.JSONDecodeError:
+                        continue
+
+            # Sort by creation date (newest first)
+            matching_highlights.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+
+            logger.info(f"Found {len(matching_highlights)} priority highlights for query: {query}")
+            return matching_highlights
+
+        except Exception as e:
+            logger.error(f"Search priority highlights error: {e}")
+            return []
             
     def _update_results(self, query: str, results: List[Dict[str, Any]]):
         """Update search results with copyable chunks."""
@@ -759,37 +1229,74 @@ class EnhancedGlobalApp:
             source = result.get('source', 'Unknown').replace('\\', '/')
             similarity = result.get('similarity', 0) * 100
 
-            # Skip low relevance results
-            if similarity < 30:
+            is_priority = result.get('is_priority_highlight', False)
+
+            # Skip low relevance results (but not priority highlights)
+            if not is_priority and similarity < 30:
                 continue
 
-            # Chunk card header
-            self.results_text.insert(tk.END, f"┌─ Result {i} ", "card_header")
-            self.results_text.insert(tk.END, f"[{similarity:.1f}%] ", "score")
+            # Special formatting for priority highlights
+            if is_priority:
+                # Priority highlight header with special styling
+                self.results_text.insert(tk.END, f"⭐ PRIORITY {i} ", "priority_header")
+                self.results_text.insert(tk.END, f"[YOUR HIGHLIGHT] ", "priority_score")
 
-            # Source filename
-            filename = source.split('/')[-1] if '/' in source else source
-            self.results_text.insert(tk.END, f"from {filename}\n", "source")
+                # Source with priority indicator
+                filename = source.split('/')[-1] if '/' in source else source
+                self.results_text.insert(tk.END, f"from {filename}\n", "priority_source")
 
-            # Content box
-            self.results_text.insert(tk.END, "│\n", "card_border")
-            chunk_start = self.results_text.index(tk.INSERT)
-            self.results_text.insert(tk.END, "│ ", "card_border")
+                # Show tags if available
+                tags = result.get('tags', [])
+                if tags:
+                    self.results_text.insert(tk.END, f"🏷️ Tags: {', '.join(tags)}\n", "priority_tags")
 
-            # Truncate long content
-            display_content = content
-            if len(content) > 200:
-                display_content = content[:200] + "..."
+                # Show notes if available
+                notes = result.get('notes', '')
+                if notes:
+                    self.results_text.insert(tk.END, f"📝 Notes: {notes[:100]}{'...' if len(notes) > 100 else ''}\n", "priority_notes")
 
-            self.results_text.insert(tk.END, display_content, "content")
-            chunk_end = self.results_text.index(tk.INSERT)
-            self.results_text.insert(tk.END, "\n│\n", "card_border")
-            self.results_text.insert(tk.END, "└" + "─" * 50 + "\n\n", "card_footer")
+                # Content box with priority styling
+                self.results_text.insert(tk.END, "┌" + "─" * 50 + "\n", "priority_border")
+                chunk_start = self.results_text.index(tk.INSERT)
+                self.results_text.insert(tk.END, "│ ", "priority_border")
 
-            # Tag the chunk for easy copying and dragging
-            self.results_text.tag_add(f"chunk_{i}", chunk_start, chunk_end)
-            self.results_text.tag_config(f"chunk_{i}", background="#f0f8ff", relief="raised",
-                                       borderwidth=1, lmargin1=20, lmargin2=20)
+                # Full content for priority highlights (no truncation)
+                self.results_text.insert(tk.END, content, "priority_content")
+                chunk_end = self.results_text.index(tk.INSERT)
+                self.results_text.insert(tk.END, "\n└" + "─" * 50 + "\n\n", "priority_border")
+
+                # Tag the chunk with priority styling
+                self.results_text.tag_add(f"chunk_{i}", chunk_start, chunk_end)
+                self.results_text.tag_config(f"chunk_{i}", background="#fff3cd", relief="raised",
+                                           borderwidth=2, lmargin1=20, lmargin2=20)
+            else:
+                # Regular result formatting
+                self.results_text.insert(tk.END, f"┌─ Result {i} ", "card_header")
+                self.results_text.insert(tk.END, f"[{similarity:.1f}%] ", "score")
+
+                # Source filename
+                filename = source.split('/')[-1] if '/' in source else source
+                self.results_text.insert(tk.END, f"from {filename}\n", "source")
+
+                # Content box
+                self.results_text.insert(tk.END, "│\n", "card_border")
+                chunk_start = self.results_text.index(tk.INSERT)
+                self.results_text.insert(tk.END, "│ ", "card_border")
+
+                # Truncate long content for regular results
+                display_content = content
+                if len(content) > 200:
+                    display_content = content[:200] + "..."
+
+                self.results_text.insert(tk.END, display_content, "content")
+                chunk_end = self.results_text.index(tk.INSERT)
+                self.results_text.insert(tk.END, "\n│\n", "card_border")
+                self.results_text.insert(tk.END, "└" + "─" * 50 + "\n\n", "card_footer")
+
+                # Tag the chunk for easy copying and dragging
+                self.results_text.tag_add(f"chunk_{i}", chunk_start, chunk_end)
+                self.results_text.tag_config(f"chunk_{i}", background="#f0f8ff", relief="raised",
+                                           borderwidth=1, lmargin1=20, lmargin2=20)
 
         # Configure elegant text styles
         self.results_text.tag_config("header", font=('Arial', 14, 'bold'), foreground='#1e40af')
@@ -798,6 +1305,15 @@ class EnhancedGlobalApp:
         self.results_text.tag_config("source", font=('Arial', 9), foreground='#6b7280')
         self.results_text.tag_config("content", font=('Arial', 10), foreground='#111827', spacing1=3, spacing3=3)
         self.results_text.tag_config("card_border", font=('Arial', 10), foreground='#d1d5db')
+
+        # Configure priority highlight styles
+        self.results_text.tag_config("priority_header", font=('Arial', 12, 'bold'), foreground='#d97706', background='#fef3c7')
+        self.results_text.tag_config("priority_score", font=('Arial', 10, 'bold'), foreground='#92400e')
+        self.results_text.tag_config("priority_source", font=('Arial', 9, 'bold'), foreground='#78350f')
+        self.results_text.tag_config("priority_tags", font=('Arial', 9), foreground='#1d4ed8')
+        self.results_text.tag_config("priority_notes", font=('Arial', 9), foreground='#7c2d12')
+        self.results_text.tag_config("priority_content", font=('Arial', 10, 'bold'), foreground='#111827', spacing1=3, spacing3=3)
+        self.results_text.tag_config("priority_border", font=('Arial', 10), foreground='#d97706')
         self.results_text.tag_config("card_footer", font=('Arial', 10), foreground='#d1d5db')
         self.results_text.tag_config("no_results", font=('Arial', 11), foreground='#6b7280')
         self.results_text.tag_config("tips", font=('Arial', 10, 'bold'), foreground='#1e40af')
