@@ -27,9 +27,23 @@ class AutoIndexer:
         self.search_engine = search_engine
         self.config = config
         
-        # Monitoring settings
+        # Monitoring settings - use Desktop/SemanticFiles
+        import winreg
+
+        # Get the actual Desktop path from Windows registry
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders") as key:
+                desktop_path = Path(winreg.QueryValueEx(key, "Desktop")[0])
+        except:
+            # Fallback to common Desktop locations
+            desktop_path = Path(os.path.expanduser("~/Desktop"))
+            if not desktop_path.exists():
+                desktop_path = Path(os.path.expanduser("~/OneDrive/Desktop"))
+
+        semantic_files_path = desktop_path / "SemanticFiles"
+
         self.watch_folders = [
-            "test_docs",
+            str(semantic_files_path),
             "data/documents",
             "documents"
         ]
@@ -125,20 +139,25 @@ class AutoIndexer:
         """Index a single file."""
         try:
             logger.info(f"📄 Indexing: {file_path}")
-            
+
             # Process the file
-            success = await self.document_processor.process_file(file_path)
-            
-            if success:
+            chunks = await self.document_processor.process_file(file_path)
+
+            if chunks and len(chunks) > 0:
+                # Add to vector store
+                from database import VectorStore
+                if hasattr(self.search_engine, 'vector_store'):
+                    await self.search_engine.vector_store.add_document(file_path, chunks)
+
                 # Update tracking
                 self.indexed_files[file_path] = self.get_file_info(file_path)
                 self.save_index_state()
-                logger.info(f"✅ Indexed: {file_path}")
+                logger.info(f"✅ Indexed: {file_path} ({len(chunks)} chunks)")
                 return True
             else:
-                logger.error(f"❌ Failed to index: {file_path}")
+                logger.error(f"❌ No chunks generated for: {file_path}")
                 return False
-                
+
         except Exception as e:
             logger.error(f"❌ Error indexing {file_path}: {e}")
             return False

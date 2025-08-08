@@ -303,7 +303,7 @@ class EnhancedGlobalApp:
 
         # Add Highlight Capture Button (professional and compact)
         highlight_state = "normal" if HIGHLIGHT_CAPTURE_AVAILABLE else "disabled"
-        self.highlight_btn = ttk.Button(control_frame, text="Capture Text",
+        self.highlight_btn = ttk.Button(control_frame, text="Highlight Text",
                                        command=self.capture_highlight_manual, state=highlight_state)
         self.highlight_btn.pack(side=tk.LEFT, padx=(0, 10))
 
@@ -954,7 +954,7 @@ class EnhancedGlobalApp:
 
             # Professional message
             message_label = tk.Label(error_window,
-                                   text="Select text in any application, then click Capture Text.",
+                                   text="Select text in any application, then click Highlight Text.",
                                    font=('Arial', 11),
                                    bg='#f8f9fa', fg='#2c3e50')
             message_label.pack(pady=20, padx=20)

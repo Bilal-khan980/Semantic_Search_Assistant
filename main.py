@@ -69,15 +69,30 @@ class DocumentSearchBackend:
         # self.document_monitor.add_context_callback(self._handle_context_event)
         logger.info("✅ Document monitor configured (client-side)")
 
-        # Add test_docs folder to monitoring
-        test_docs_path = Path("test_docs")
-        if test_docs_path.exists():
-            await self.folder_manager.add_folder(str(test_docs_path))
-            logger.info(f"Added test_docs folder to monitoring: {test_docs_path.absolute()}")
+        # Add SemanticFiles folder from Desktop to monitoring
+        import os
+        import winreg
+
+        # Get the actual Desktop path from Windows registry
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders") as key:
+                desktop_path = Path(winreg.QueryValueEx(key, "Desktop")[0])
+        except:
+            # Fallback to common Desktop locations
+            desktop_path = Path(os.path.expanduser("~/Desktop"))
+            if not desktop_path.exists():
+                desktop_path = Path(os.path.expanduser("~/OneDrive/Desktop"))
+
+        semantic_files_path = desktop_path / "SemanticFiles"
+
+        if semantic_files_path.exists():
+            await self.folder_manager.add_folder(str(semantic_files_path))
+            logger.info(f"Added SemanticFiles folder to monitoring: {semantic_files_path.absolute()}")
         else:
-            logger.warning("test_docs folder not found, creating it...")
-            test_docs_path.mkdir(exist_ok=True)
-            await self.folder_manager.add_folder(str(test_docs_path))
+            logger.warning("SemanticFiles folder not found on Desktop, creating it...")
+            semantic_files_path.mkdir(exist_ok=True)
+            await self.folder_manager.add_folder(str(semantic_files_path))
+            logger.info(f"Created SemanticFiles folder on Desktop: {semantic_files_path.absolute()}")
 
         # Start folder monitoring
         await self.folder_manager.start_monitoring()
